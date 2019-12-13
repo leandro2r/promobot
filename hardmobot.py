@@ -3,10 +3,11 @@
 import notify2
 import re
 import time
-import urllib
+import urllib.request
 from bs4 import BeautifulSoup
 from config import Config
 from datetime import datetime
+from dbus import exceptions
 from http.client import IncompleteRead
 from json import dumps
 
@@ -67,16 +68,18 @@ class Hardmobot(Config):
             )
 
         if level != 'INFO':
-            notify2.init('alert')
-            n = notify2.Notification(
-                level,
-                msg,
-            )
-            n.show()
+            try:
+                notify2.init('alert')
+                n = notify2.Notification(
+                    level,
+                    msg,
+                )
+                n.show()
+            except (exceptions.DBusException) as e:
+                print('[ERROR] Error on alert: {}'.format(e))
 
     def main(self):
         topic = []
-        add = True
 
         hdr = {
             'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
@@ -119,6 +122,8 @@ class Hardmobot(Config):
                 time.sleep(20)
 
         for kw in self.data.keys():
+            add = True
+
             for each in topic:
                 title = each.find(
                     'a',
