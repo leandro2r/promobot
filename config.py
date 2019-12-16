@@ -35,6 +35,10 @@ class Config():
             'https': os.environ.get('HTTPS_PROXY', proxy)
         })
 
+        if 'HTTP_PROXY' or 'HTTPS_PROXY' in os.environ and proxy:
+            os.environ['HTTP_PROXY'] = proxy
+            os.environ['HTTPS_PROXY'] = proxy
+
         self.data['url'] = os.environ.get(
             'URL',
             'http://www.hardmob.com.br/forums/407-Promocoes?s=&pp=50&daysprune=1&sort=dateline&order=desc'
