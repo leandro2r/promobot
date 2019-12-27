@@ -3,7 +3,10 @@ import re
 
 class Config():
     data = {
-        'url': '',
+        'url': {
+            'hardmob': '',
+            'pelando': ''
+        },
         'keywords': [],
         'proxies': {
             'http': '',
@@ -39,10 +42,16 @@ class Config():
             os.environ['HTTP_PROXY'] = proxy
             os.environ['HTTPS_PROXY'] = proxy
 
-        self.data['url'] = os.environ.get(
-            'URL',
-            'http://www.hardmob.com.br/forums/407-Promocoes?s=&pp=50&daysprune=1&sort=dateline&order=desc'
-        )
+        self.data['url'] = {
+            'hardmob': os.environ.get(
+                'HARDMOB_URL',
+                'http://www.hardmob.com.br/forums/407-Promocoes?s=&pp=50&daysprune=1&sort=dateline&order=desc'
+            ),
+            'pelando': os.environ.get(
+                'PELANDO_URL',
+                'https://www.pelando.com.br/recentes'
+            )
+        }
 
         self.data['keywords'] = os.environ['KEYWORDS'].split(';')
 
