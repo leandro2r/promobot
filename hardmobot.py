@@ -130,30 +130,31 @@ class Hardmobot(Config):
                     {'class': 'title'}
                 )
 
-                url = '{}/{}'.format(
-                    hm_url,
-                    title.get('href').lower(),
-                )
+                if title:
+                    url = '{}/{}'.format(
+                        hm_url,
+                        title.get('href').lower(),
+                    )
 
-                if kw in url:
-                    for p in list(self.data.values()):
-                        for v in p:
-                            if url == v['url']:
-                                add = False
-                                break
+                    if kw in url:
+                        for p in list(self.data.values()):
+                            for v in p:
+                                if url == v['url']:
+                                    add = False
+                                    break
 
-                    if add:
-                        self.data[kw].append({
-                            'title': title.find(text=True),
-                            'desc': each.get('title').replace('\n', ''),
-                            'url': url,
-                            'datetime': datetime.now().strftime('%d-%m-%Y %H:%M')
-                        })
+                        if add:
+                            self.data[kw].append({
+                                'title': title.find(text=True),
+                                'desc': each.get('title').replace('\n', ''),
+                                'url': url,
+                                'datetime': datetime.now().strftime('%d-%m-%Y %H:%M')
+                            })
 
-                        self.alert(
-                            kw,
-                            self.data[kw][-1],
-                        )
+                            self.alert(
+                                kw,
+                                self.data[kw][-1],
+                            )
 
         return self.data
 
