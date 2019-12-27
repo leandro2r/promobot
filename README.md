@@ -1,4 +1,4 @@
-# HardmoBot (Python)
+# PromoBot (Python)
 
 ### Requirements
 
