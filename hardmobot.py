@@ -147,6 +147,7 @@ class Hardmobot(Config):
                             'title': title.find(text=True),
                             'desc': each.get('title').replace('\n', ''),
                             'url': url,
+                            'datetime': datetime.now().strftime('%d-%m-%Y %H:%M')
                         })
 
                         self.alert(
