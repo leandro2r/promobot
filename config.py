@@ -3,16 +3,13 @@ import re
 
 class Config():
     data = {
-        'url': {
-            'hardmob': '',
-            'pelando': ''
-        },
         'keywords': [],
         'proxies': {
             'http': '',
             'https': ''
         },
         'telegram': {},
+        'src': [],
     }
 
     def check_proxy(self):
@@ -42,16 +39,30 @@ class Config():
             os.environ['HTTP_PROXY'] = proxy
             os.environ['HTTPS_PROXY'] = proxy
 
-        self.data['url'] = {
-            'hardmob': os.environ.get(
-                'HARDMOB_URL',
-                'http://www.hardmob.com.br/forums/407-Promocoes?s=&pp=50&daysprune=1&sort=dateline&order=desc'
-            ),
-            'pelando': os.environ.get(
-                'PELANDO_URL',
-                'https://www.pelando.com.br/recentes'
-            )
-        }
+        self.data['src'].extend([
+            {
+                'url': 'http://www.hardmob.com.br/forums/407-Promocoes?s=&pp=50&daysprune=1&sort=dateline&order=desc',
+                'topic': {
+                    'tag': 'div',
+                    'class': 'threadinfo'
+                },
+                'thread': {
+                    'tag': 'a',
+                    'class': 'title'
+                }
+            },
+            {
+                'url': 'https://www.pelando.com.br/recentes',
+                'topic': {
+                    'tag': 'article',
+                    'class': ''
+                },
+                'thread': {
+                    'tag': 'a',
+                    'class': 'cept-tt thread-link linkPlain thread-title--card'
+                }
+            }
+        ])
 
         self.data['keywords'] = os.environ['KEYWORDS'].split(';')
 

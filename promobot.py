@@ -35,30 +35,32 @@ class Promobot(Config):
 
     def alert(self, level='', msg=''):
         if type(msg) == dict:
-            try:
-                text = urllib.parse.urlencode({
-                    'chat_id': self.config['telegram']['chat_id'],
-                    'parse_mode': 'Markdown',
-                    'text': 'Keyword: [{}]({})'.format(
-                        level,
-                        msg['url']
-                    ),
-                }).encode()
+            if (self.config['telegram']['token'] and
+                self.config['telegram']['chat_id']):
+                try:
+                    text = urllib.parse.urlencode({
+                        'chat_id': self.config['telegram']['chat_id'],
+                        'parse_mode': 'Markdown',
+                        'text': 'Keyword: [{}]({})'.format(
+                            level,
+                            msg['url']
+                        ),
+                    }).encode()
 
-                req = urllib.request.urlopen(
-                    self.config['telegram']['url'],
-                    text,
-                )
-            except (urllib.error.HTTPError, IncompleteRead, OSError) as e:
-                self.alert(
-                    'ERROR',
-                    'Error on publishing data on telegram (proxy {}): {}'.format(
-                        self.config['proxies']['http'],
-                        e
+                    req = urllib.request.urlopen(
+                        self.config['telegram']['url'],
+                        text,
                     )
-                )
-                self.__init__()
-                time.sleep(20)
+                except (urllib.error.HTTPError, IncompleteRead, OSError) as e:
+                    self.alert(
+                        'ERROR',
+                        'Error on publishing data on telegram (proxy {}): {}'.format(
+                            self.config['proxies']['http'],
+                            e
+                        )
+                    )
+                    self.__init__()
+                    time.sleep(20)
 
             level = msg['title']
             msg = '{}\n---\n{}'.format(
@@ -84,7 +86,7 @@ class Promobot(Config):
             except (exceptions.DBusException) as e:
                 print('[ERROR] Error on alert: {}'.format(e))
 
-    def add_thread(self, kw, url, add, title, desc):
+    def add_thread(self, kw, add, title, desc, url):
         if title:
             title = re.sub(r'\n|\t', '', title)
 
@@ -111,23 +113,52 @@ class Promobot(Config):
                     self.data[kw][-1],
                 )
 
-    def pelando(self):
+    def pelando(self, kw, each, t_title, add):
+        title = t_title.find(text=True)
+        desc = each.find(
+            'div',
+            {'class': 'cept-description-container overflow--wrap-break width--all-12  size--all-s size--fromW3-m'}
+        )
+        url = t_title.get('href').lower()
+
+        self.add_thread(kw, add, title, desc, url)
+
+    def hardmob(self, kw, each, t_title, add, url):
+        title = t_title.find(text=True)
+        desc = each.get('title')
+        url = '{}/{}'.format(
+            re.search(
+                r'.*://[^/]+',
+                url,
+            ).group(),
+            t_title.get('href').lower(),
+        )
+
+        self.add_thread(kw, add, title, desc, url)
+
+    def find_thread(self, src):
         topic = []
-        url = self.config['url']['pelando']
 
         while len(topic) == 0:
             try:
                 req = urllib.request.Request(
-                    url=url,
+                    url=src['url'],
                     headers=self.hdr
                 )
                 content = urllib.request.urlopen(req).read()
 
                 soup = BeautifulSoup(content, "html.parser")
 
-                topic = soup.findAll(
-                    'article'
-                )
+                if src['topic'].get('class'):
+                    topic = soup.findAll(
+                        src['topic']['tag'],
+                        { 'class': src['topic']['class'] }
+                    )
+                else:
+                    topic = soup.findAll(
+                        src['topic']['tag']
+                    )
+
             except (urllib.error.HTTPError, IncompleteRead, OSError) as e:
                 self.alert(
                     'ERROR',
@@ -148,84 +179,25 @@ class Promobot(Config):
             add = True
 
             for each in topic:
-                t_title = each.find(
-                    'a',
-                    {'class': 'cept-tt thread-link linkPlain thread-title--card'}
-                )
-
-                desc = each.find(
-                    'div',
-                    {'class': 'cept-description-container overflow--wrap-break width--all-12  size--all-s size--fromW3-m'}
-                )
-
-                if t_title:
-                    title = t_title.find(text=True)
-                    url = t_title.get('href').lower()
-
-                    self.add_thread(kw, url, add, title, desc)
-
-    def hardmob(self):
-        topic = []
-        url = self.config['url']['hardmob']
-
-        hm_url = re.search(
-            r'.*://[^/]+',
-            url,
-        ).group()
-
-        while len(topic) == 0:
-            try:
-                req = urllib.request.Request(
-                    url=url,
-                    headers=self.hdr
-                )
-                content = urllib.request.urlopen(req).read()
-
-                soup = BeautifulSoup(content, 'html.parser')
-
-                topic = soup.findAll(
-                    'div',
-                    {'class': 'threadinfo'}
-                )
-            except (urllib.error.HTTPError, IncompleteRead, OSError) as e:
-                self.alert(
-                    'ERROR',
-                    'Error on getting data (proxy {}): {}'.format(
-                        self.config['proxies']['http'],
-                        e,
+                if src['thread'].get('class'):
+                    t_title = each.find(
+                        src['thread']['tag'],
+                        { 'class': src['thread']['class'] }
                     )
-                )
-                self.__init__()
-                time.sleep(20)
-
-            if len(topic) == 0:
-                self.alert('ERROR', 'Error on searching topics')
-                self.__init__()
-                time.sleep(20)
-
-        for kw in self.data.keys():
-            add = True
-
-            for each in topic:
-                t_title = each.find(
-                    'a',
-                    {'class': 'title'}
-                )
-
-                desc = each.get('title')
-
-                if t_title:
-                    title = t_title.find(text=True)
-                    url = '{}/{}'.format(
-                        hm_url,
-                        t_title.get('href').lower(),
+                else:
+                    t_title = each.find(
+                        src['thread']['tag']
                     )
 
-                    self.add_thread(kw, url, add, title, desc)
+                if t_title:
+                    if 'hardmob' in src['url']:
+                        self.hardmob(kw, each, t_title, add, src['url'])
+                    elif 'pelando' in src['url']:
+                        self.pelando(kw, each, t_title, add)
 
     def main(self):
-        self.hardmob()
-        self.pelando()
+        for i in self.config['src']:
+            self.find_thread(i)
 
         return self.data
 
