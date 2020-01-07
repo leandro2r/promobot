@@ -1,5 +1,7 @@
 import os
+import random
 import re
+
 
 class Config():
     data = {
@@ -12,32 +14,38 @@ class Config():
         'src': [],
     }
 
-    def check_proxy(self):
+    def set_proxy(self):
         ip = ''
+        ips = [
+            'http://192.168.50.178:80',
+            'http://192.168.100.178:80',
+            'http://192.168.50.223:80',
+            'http://192.168.100.219:80'
+        ]
         proxy_file = '/etc/environment'
 
-        if os.path.exists(proxy_file):
+        if ips:
+            ip = random.choice(ips)
+
+        elif os.path.exists(proxy_file):
             with open(proxy_file, 'r') as f:
                 get_proxy = re.search(r'http://\S+', f.read())
                 f.close()
 
                 ip = get_proxy.group()
 
-        print('[INFO] Getting proxy: {}'.format(ip))
+        print('[INFO] Setting proxy: {}'.format(ip))
 
-        return ip
+        os.environ['HTTP_PROXY'] = ip
+        os.environ['HTTPS_PROXY'] = ip
 
     def __init__(self):
-        proxy = self.check_proxy()
+        self.set_proxy()
 
         self.data['proxies'].update({
-            'http': os.environ.get('HTTP_PROXY', proxy),
-            'https': os.environ.get('HTTPS_PROXY', proxy)
+            'http': os.environ.get('HTTP_PROXY'),
+            'https': os.environ.get('HTTPS_PROXY')
         })
-
-        if 'HTTP_PROXY' or 'HTTPS_PROXY' in os.environ and proxy:
-            os.environ['HTTP_PROXY'] = proxy
-            os.environ['HTTPS_PROXY'] = proxy
 
         self.data['src'].extend([
             {
@@ -76,4 +84,11 @@ class Config():
 
         self.data['telegram']['url'] = 'https://api.telegram.org/bot{}/sendMessage'.format(
             self.data['telegram']['token']
+        )
+
+        print(
+            '[INFO] Initializing script:\n\t{}\n\t{}'.format(
+                self.data['keywords'],
+                self.data['proxies'],
+            )
         )

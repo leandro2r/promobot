@@ -60,7 +60,7 @@ class Promobot(Config):
                         )
                     )
                     self.__init__()
-                    time.sleep(20)
+                    time.sleep(10)
 
             level = msg['title']
             msg = '{}\n---\n{}'.format(
@@ -113,28 +113,28 @@ class Promobot(Config):
                     self.data[kw][-1],
                 )
 
-    def pelando(self, kw, each, t_title, add):
-        title = t_title.find(text=True)
-        desc = each.find(
+    def pelando(self, each, t_title):
+        d = {}
+        d['title'] = t_title.find(text=True)
+        d['desc'] = each.find(
             'div',
             {'class': 'cept-description-container overflow--wrap-break width--all-12  size--all-s size--fromW3-m'}
         )
-        url = t_title.get('href').lower()
+        d['url'] = t_title.get('href').lower()
+        return d
 
-        self.add_thread(kw, add, title, desc, url)
-
-    def hardmob(self, kw, each, t_title, add, url):
-        title = t_title.find(text=True)
-        desc = each.get('title')
-        url = '{}/{}'.format(
+    def hardmob(self, each, t_title, url):
+        d = {}
+        d['title'] = t_title.find(text=True)
+        d['desc'] = each.get('title')
+        d['url'] = '{}/{}'.format(
             re.search(
                 r'.*://[^/]+',
                 url,
             ).group(),
             t_title.get('href').lower(),
         )
-
-        self.add_thread(kw, add, title, desc, url)
+        return d
 
     def find_thread(self, src):
         topic = []
@@ -168,12 +168,16 @@ class Promobot(Config):
                     )
                 )
                 self.__init__()
-                time.sleep(20)
+                time.sleep(10)
 
             if len(topic) == 0:
-                self.alert('ERROR', 'Error on searching topics')
+                self.alert(
+                    'ERROR', 'Error on searching topics (proxy {})'.format(
+                        self.config['proxies']['http'],
+                    )
+                )
                 self.__init__()
-                time.sleep(20)
+                time.sleep(10)
 
         for kw in self.data.keys():
             add = True
@@ -190,10 +194,14 @@ class Promobot(Config):
                     )
 
                 if t_title:
+                    t = {}
+
                     if 'hardmob' in src['url']:
-                        self.hardmob(kw, each, t_title, add, src['url'])
+                        t = self.hardmob(each, t_title, src['url'])
                     elif 'pelando' in src['url']:
-                        self.pelando(kw, each, t_title, add)
+                        t = self.pelando(each, t_title)
+
+                    self.add_thread(kw, add, t['title'], t['desc'], t['url'])
 
     def main(self):
         for i in self.config['src']:
@@ -211,7 +219,7 @@ class Promobot(Config):
                     dumps(res, indent=2, ensure_ascii=False),
                 )
             )
-            time.sleep(20)
+            time.sleep(10)
 
 
 if __name__ == '__main__':
