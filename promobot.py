@@ -54,8 +54,7 @@ class Promobot(Config):
                 except (urllib.error.HTTPError, IncompleteRead, OSError) as e:
                     self.alert(
                         'ERROR',
-                        'Error on publishing data on telegram (proxy {}): {}'.format(
-                            self.config['proxies']['http'],
+                        'Error on publishing data on telegram: {}'.format(
                             e
                         )
                     )
@@ -162,8 +161,7 @@ class Promobot(Config):
             except (urllib.error.HTTPError, IncompleteRead, OSError) as e:
                 self.alert(
                     'ERROR',
-                    'Error on getting data (proxy {}): {}'.format(
-                        self.config['proxies']['http'],
+                    'Error on getting data: {}'.format(
                         e,
                     )
                 )
@@ -172,12 +170,9 @@ class Promobot(Config):
 
             if len(topic) == 0:
                 self.alert(
-                    'ERROR', 'Error on searching topics (proxy {})'.format(
-                        self.config['proxies']['http'],
-                    )
+                    'ERROR', 'Error on searching topics'
                 )
-                self.__init__()
-                time.sleep(10)
+                time.sleep(20)
 
         for kw in self.data.keys():
             add = True

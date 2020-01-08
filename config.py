@@ -1,3 +1,4 @@
+import base64
 import os
 import random
 import re
@@ -16,12 +17,7 @@ class Config():
 
     def set_proxy(self):
         ip = ''
-        ips = [
-            'http://192.168.50.178:80',
-            'http://192.168.100.178:80',
-            'http://192.168.50.223:80',
-            'http://192.168.100.219:80'
-        ]
+        ips = []
         proxy_file = '/etc/environment'
 
         if ips:
@@ -36,8 +32,17 @@ class Config():
 
         print('[INFO] Setting proxy: {}'.format(ip))
 
-        os.environ['HTTP_PROXY'] = ip
-        os.environ['HTTPS_PROXY'] = ip
+        ip_auth = ip.replace(
+            'http://',
+            'http://{}'.format(
+                base64.b64decode(
+                    os.environ.get('AUTH_PROXY', '')
+                ).decode('utf-8').strip()
+            )
+        )
+
+        os.environ['HTTP_PROXY'] = ip_auth
+        os.environ['HTTPS_PROXY'] = ip_auth
 
     def __init__(self):
         self.set_proxy()
@@ -87,8 +92,7 @@ class Config():
         )
 
         print(
-            '[INFO] Initializing script:\n\t{}\n\t{}'.format(
+            '[INFO] Setting keywords: {}'.format(
                 self.data['keywords'],
-                self.data['proxies'],
             )
         )

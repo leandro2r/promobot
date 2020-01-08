@@ -14,3 +14,10 @@ TOKEN=<telegram-token>
 CHAT_ID=<chat_id-token>
 KEYWORDS=<keyword1>;<keyword2>
 ```
+
+If your environment has proxy configuration, there are more environment variables such as
+```
+HTTP_PROXY=<http-proxy>
+HTTPS_PROXY=<https-proxy>
+AUTH_PROXY=<user>:<passwd>@
+```
