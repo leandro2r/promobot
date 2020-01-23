@@ -92,7 +92,10 @@ class Promobot(Config):
         if desc:
             desc = re.sub(r'\n|\t', '', desc)
 
-        if kw in url:
+        if re.match(
+                r'.*{}.*'.format(kw),
+                url
+            ):
             for p in list(self.data.values()):
                 for v in p:
                     if url == v['url']:
@@ -146,7 +149,7 @@ class Promobot(Config):
                 )
                 content = urllib.request.urlopen(req).read()
 
-                soup = BeautifulSoup(content, "html.parser")
+                soup = BeautifulSoup(content, 'html.parser')
 
                 if src['topic'].get('class'):
                     topic = soup.findAll(
