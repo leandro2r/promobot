@@ -50,6 +50,7 @@ class Promobot(Config):
                     req = urllib.request.urlopen(
                         self.config['telegram']['url'],
                         text,
+                        timeout=20,
                     )
                 except (urllib.error.HTTPError, IncompleteRead, OSError) as e:
                     self.alert(
@@ -147,7 +148,10 @@ class Promobot(Config):
                     url=src['url'],
                     headers=self.hdr
                 )
-                content = urllib.request.urlopen(req).read()
+                content = urllib.request.urlopen(
+                    req,
+                    timeout=20,
+                ).read()
 
                 soup = BeautifulSoup(content, 'html.parser')
 
