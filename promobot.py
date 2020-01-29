@@ -216,9 +216,9 @@ class Promobot(Config):
             res = self.main()
             self.alert(
                 'INFO',
-                'Response at {}:\n{}\n\n'.format(
-                    datetime.now().strftime('%H:%M'),
+                'GET\n{}\n(Response at {})'.format(
                     dumps(res, indent=2, ensure_ascii=False),
+                    datetime.now().strftime('%H:%M'),
                 )
             )
             time.sleep(10)

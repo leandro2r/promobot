@@ -92,7 +92,7 @@ class Config():
         )
 
         print(
-            '[INFO] Setting keywords: {}'.format(
+            '[INFO] Using keywords: {}'.format(
                 self.data['keywords'],
             )
         )
