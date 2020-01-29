@@ -15,35 +15,6 @@ class Config():
         'src': [],
     }
 
-    def set_proxy(self):
-        ip = ''
-        ips = []
-        proxy_file = '/etc/environment'
-
-        if ips:
-            ip = random.choice(ips)
-
-        elif os.path.exists(proxy_file):
-            with open(proxy_file, 'r') as f:
-                get_proxy = re.search(r'http://\S+', f.read())
-                f.close()
-
-                ip = get_proxy.group()
-
-        print('[INFO] Setting proxy: {}'.format(ip))
-
-        ip_auth = ip.replace(
-            'http://',
-            'http://{}'.format(
-                base64.b64decode(
-                    os.environ.get('AUTH_PROXY', '')
-                ).decode('utf-8').strip()
-            )
-        )
-
-        os.environ['HTTP_PROXY'] = ip_auth
-        os.environ['HTTPS_PROXY'] = ip_auth
-
     def __init__(self):
         self.set_proxy()
 
@@ -54,7 +25,8 @@ class Config():
 
         self.data['src'].extend([
             {
-                'url': 'http://www.hardmob.com.br/forums/407-Promocoes?s=&pp=50&daysprune=1&sort=dateline&order=desc',
+                'url': 'http://www.hardmob.com.br/forums/407-Promocoes'
+                       '?s=&pp=50&daysprune=1&sort=dateline&order=desc',
                 'topic': {
                     'tag': 'div',
                     'class': 'threadinfo'
@@ -87,12 +59,43 @@ class Config():
             'chat_id': os.environ.get('CHAT_ID', '')
         })
 
-        self.data['telegram']['url'] = 'https://api.telegram.org/bot{}/sendMessage'.format(
-            self.data['telegram']['token']
-        )
+        self.data['telegram'].update({
+            'url': 'https://api.telegram.org/bot{}/sendMessage'.format(
+                self.data['telegram']['token']
+            )
+        })
 
         print(
             '[INFO] Using keywords: {}'.format(
                 self.data['keywords'],
             )
         )
+
+    def set_proxy(self):
+        ip = ''
+        ips = []
+        proxy_file = '/etc/environment'
+
+        if ips:
+            ip = random.choice(ips)
+
+        elif os.path.exists(proxy_file):
+            with open(proxy_file, 'r') as f:
+                get_proxy = re.search(r'http://\S+', f.read())
+                f.close()
+
+                ip = get_proxy.group()
+
+        print('[INFO] Setting proxy: {}'.format(ip))
+
+        ip_auth = ip.replace(
+            'http://',
+            'http://{}'.format(
+                base64.b64decode(
+                    os.environ.get('AUTH_PROXY', '')
+                ).decode('utf-8').strip()
+            )
+        )
+
+        os.environ['HTTP_PROXY'] = ip_auth
+        os.environ['HTTPS_PROXY'] = ip_auth

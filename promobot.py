@@ -29,14 +29,17 @@ class Promobot(Config):
                 })
 
         self.hdr.update({
-            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) '
+                          'AppleWebKit/537.11 (KHTML, like Gecko) '
+                          'Chrome/23.0.1271.64 Safari/537.11',
+            'Accept': 'text/html,application/xhtml+xml,'
+                      'application/xml;q=0.9,*/*;q=0.8'
         })
 
     def alert(self, level='', msg=''):
         if type(msg) == dict:
             if (self.config['telegram']['token'] and
-                self.config['telegram']['chat_id']):
+               self.config['telegram']['chat_id']):
                 try:
                     text = urllib.parse.urlencode({
                         'chat_id': self.config['telegram']['chat_id'],
@@ -47,7 +50,7 @@ class Promobot(Config):
                         ),
                     }).encode()
 
-                    req = urllib.request.urlopen(
+                    urllib.request.urlopen(
                         self.config['telegram']['url'],
                         text,
                         timeout=20,
@@ -96,7 +99,7 @@ class Promobot(Config):
         if re.match(
                 r'.*{}.*'.format(kw),
                 url
-            ):
+           ):
             for p in list(self.data.values()):
                 for v in p:
                     if url == v['url']:
@@ -121,7 +124,10 @@ class Promobot(Config):
         d['title'] = t_title.find(text=True)
         d['desc'] = each.find(
             'div',
-            {'class': 'cept-description-container overflow--wrap-break width--all-12  size--all-s size--fromW3-m'}
+            {
+                'class': 'cept-description-container overflow--wrap-break '
+                         'width--all-12  size--all-s size--fromW3-m'
+            }
         )
         d['url'] = t_title.get('href').lower()
         return d
@@ -158,7 +164,7 @@ class Promobot(Config):
                 if src['topic'].get('class'):
                     topic = soup.findAll(
                         src['topic']['tag'],
-                        { 'class': src['topic']['class'] }
+                        {'class': src['topic']['class']}
                     )
                 else:
                     topic = soup.findAll(
@@ -188,7 +194,7 @@ class Promobot(Config):
                 if src['thread'].get('class'):
                     t_title = each.find(
                         src['thread']['tag'],
-                        { 'class': src['thread']['class'] }
+                        {'class': src['thread']['class']}
                     )
                 else:
                     t_title = each.find(
