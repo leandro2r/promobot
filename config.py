@@ -2,6 +2,7 @@ import base64
 import os
 import random
 import re
+from datetime import datetime
 
 
 class Config():
@@ -66,7 +67,9 @@ class Config():
         })
 
         print(
-            '[INFO] Using keywords: {}'.format(
+            '{} - {} - Using keywords: {}'.format(
+                datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
+                'INFO',
                 self.data['keywords'],
             )
         )
@@ -86,7 +89,13 @@ class Config():
 
                 ip = get_proxy.group()
 
-        print('[INFO] Setting proxy: {}'.format(ip))
+        print(
+            '{} - {} - Setting proxy: {}'.format(
+                datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
+                'INFO',
+                ip,
+            )
+        )
 
         ip_auth = ip.replace(
             'http://',

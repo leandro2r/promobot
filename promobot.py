@@ -72,7 +72,8 @@ class Promobot(Config):
             )
         else:
             print(
-                '[{}] {}'.format(
+                '{} - {} - {}'.format(
+                    datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
                     level,
                     msg,
                 )
@@ -180,12 +181,13 @@ class Promobot(Config):
                 )
                 self.__init__()
                 time.sleep(10)
+                continue
 
             if len(topic) == 0:
                 self.alert(
                     'ERROR', 'Error on searching topics'
                 )
-                time.sleep(20)
+                time.sleep(10)
 
         for kw in self.data.keys():
             add = True
