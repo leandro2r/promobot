@@ -63,7 +63,6 @@ class Promobot(Config):
                         )
                     )
                     self.__init__()
-                    time.sleep(10)
 
             level = msg['title']
             msg = '{}\n---\n{}'.format(
@@ -79,7 +78,9 @@ class Promobot(Config):
                 )
             )
 
-        if level != 'INFO':
+        if level == 'ERROR':
+            time.sleep(10)
+        elif level != 'INFO' and level != 'DEBUG':
             try:
                 notify2.init('alert')
                 n = notify2.Notification(
@@ -88,7 +89,12 @@ class Promobot(Config):
                 )
                 n.show()
             except (exceptions.DBusException) as e:
-                print('[ERROR] Error on alert: {}'.format(e))
+                self.alert(
+                    'ERROR',
+                    'Error on alert: {}'.format(
+                        e
+                    )
+                )
 
     def add_thread(self, kw, add, title, desc, url):
         if title:
@@ -146,7 +152,8 @@ class Promobot(Config):
         )
         return d
 
-    def find_thread(self, src):
+    def get_topic(self, src):
+        content = ''
         topic = []
 
         while len(topic) == 0:
@@ -155,11 +162,20 @@ class Promobot(Config):
                     url=src['url'],
                     headers=self.hdr
                 )
+
                 content = urllib.request.urlopen(
                     req,
                     timeout=20,
                 ).read()
+            except (urllib.error.HTTPError, IncompleteRead, OSError) as e:
+                self.alert(
+                    'ERROR',
+                    'Error on getting data: {}'.format(
+                        e,
+                    )
+                )
 
+            if content:
                 soup = BeautifulSoup(content, 'html.parser')
 
                 if src['topic'].get('class'):
@@ -172,22 +188,17 @@ class Promobot(Config):
                         src['topic']['tag']
                     )
 
-            except (urllib.error.HTTPError, IncompleteRead, OSError) as e:
-                self.alert(
-                    'ERROR',
-                    'Error on getting data: {}'.format(
-                        e,
+                if len(topic) == 0:
+                    self.alert(
+                        'ERROR', 'Error on searching topics'
                     )
-                )
+            else:
                 self.__init__()
-                time.sleep(10)
-                continue
 
-            if len(topic) == 0:
-                self.alert(
-                    'ERROR', 'Error on searching topics'
-                )
-                time.sleep(10)
+        return topic
+
+    def find_thread(self, src):
+        topic = self.get_topic(src)
 
         for kw in self.data.keys():
             add = True
@@ -223,10 +234,10 @@ class Promobot(Config):
         while True:
             res = self.main()
             self.alert(
-                'INFO',
-                'GET\n{}\n(Response at {})'.format(
+                'DEBUG',
+                'Data\n{}\n(Response at {})'.format(
                     dumps(res, indent=2, ensure_ascii=False),
-                    datetime.now().strftime('%H:%M'),
+                    datetime.now().strftime('%H:%M:%S'),
                 )
             )
             time.sleep(10)
