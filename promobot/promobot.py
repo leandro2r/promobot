@@ -1,4 +1,7 @@
-#!/bin/python3
+if __package__ is None or __package__ == '':
+    from config import Config
+else:
+    from promobot.config import Config
 
 import notify2
 import re
@@ -22,7 +25,7 @@ class Promobot(Config):
             Config().data
         )
 
-        for kw in self.config['keywords']:
+        for kw in self.config.get('keywords', []):
             if not self.data.get(kw):
                 self.data.update({
                     kw.lower(): []
@@ -228,20 +231,10 @@ class Promobot(Config):
         for i in self.config['src']:
             self.find_thread(i)
 
-        return self.data
-
-    def loop(self):
-        while True:
-            res = self.main()
-            self.alert(
-                'DEBUG',
-                'Data\n{}\n(Response at {})'.format(
-                    dumps(res, indent=2, ensure_ascii=False),
-                    datetime.now().strftime('%H:%M:%S'),
-                )
+        self.alert(
+            'DEBUG',
+            'Data\n{}\n(Response at {})'.format(
+                dumps(self.data, indent=2, ensure_ascii=False),
+                datetime.now().strftime('%H:%M:%S'),
             )
-            time.sleep(10)
-
-
-if __name__ == '__main__':
-    Promobot().loop()
+        )

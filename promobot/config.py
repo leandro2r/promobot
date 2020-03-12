@@ -19,11 +19,6 @@ class Config():
     def __init__(self):
         self.set_proxy()
 
-        self.data['proxies'].update({
-            'http': os.environ.get('HTTP_PROXY'),
-            'https': os.environ.get('HTTPS_PROXY')
-        })
-
         self.data['src'].extend([
             {
                 'url': 'http://www.hardmob.com.br/forums/407-Promocoes'
@@ -79,6 +74,11 @@ class Config():
         ips = []
         proxy_file = '/etc/environment'
 
+        proxy_enabled = bool(os.environ.get('PROXY_ENABLED', False))
+
+        if not proxy_enabled:
+            return
+
         if ips:
             ip = random.choice(ips)
 
@@ -108,3 +108,8 @@ class Config():
 
         os.environ['HTTP_PROXY'] = ip_auth
         os.environ['HTTPS_PROXY'] = ip_auth
+
+        self.data['proxies'].update({
+            'http': os.environ.get('HTTP_PROXY'),
+            'https': os.environ.get('HTTPS_PROXY')
+        })
