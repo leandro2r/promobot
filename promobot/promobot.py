@@ -29,9 +29,9 @@ class Promobot(Config):
                 })
 
         self.hdr.update({
-            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) '
-                          'AppleWebKit/537.11 (KHTML, like Gecko) '
-                          'Chrome/23.0.1271.64 Safari/537.11',
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) '
+                          'AppleWebKit/537.36 (KHTML, like Gecko) '
+                          'Chrome/35.0.1916.47 Safari/537.36',
             'Accept': 'text/html,application/xhtml+xml,'
                       'application/xml;q=0.9,*/*;q=0.8'
         })
@@ -53,7 +53,7 @@ class Promobot(Config):
                     urllib.request.urlopen(
                         self.config['telegram']['url'],
                         text,
-                        timeout=20,
+                        timeout=60,
                     )
                 except (urllib.error.HTTPError, IncompleteRead, OSError) as e:
                     self.alert(
@@ -165,7 +165,7 @@ class Promobot(Config):
 
                 content = urllib.request.urlopen(
                     req,
-                    timeout=20,
+                    timeout=60,
                 ).read()
             except (urllib.error.HTTPError, IncompleteRead, OSError) as e:
                 self.alert(
