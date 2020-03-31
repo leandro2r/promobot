@@ -5,6 +5,7 @@ else:
 
 import notify2
 import re
+import socket
 import time
 import urllib.request
 from bs4 import BeautifulSoup
@@ -16,6 +17,7 @@ from json import dumps
 
 
 class Promobot(Config):
+    timeout = 10
     config = {}
     data = {}
     hdr = {}
@@ -39,6 +41,8 @@ class Promobot(Config):
                       'application/xml;q=0.9,*/*;q=0.8'
         })
 
+        socket.setdefaulttimeout(self.timeout)
+
     def alert(self, level='', msg=''):
         if type(msg) == dict:
             if (self.config['telegram']['token'] and
@@ -56,7 +60,6 @@ class Promobot(Config):
                     urllib.request.urlopen(
                         self.config['telegram']['url'],
                         text,
-                        timeout=60,
                     )
                 except (urllib.error.HTTPError, IncompleteRead, OSError) as e:
                     self.alert(
@@ -112,7 +115,7 @@ class Promobot(Config):
            ):
             for p in list(self.data.values()):
                 for v in p:
-                    if url == v['url']:
+                    if v['url'] in url:
                         add = False
                         break
 
@@ -120,7 +123,7 @@ class Promobot(Config):
                 self.data[kw].append({
                     'title': title,
                     'desc': desc,
-                    'url': url,
+                    'url': re.sub(r'(\?)(?!.*\1).*$', '', url),
                     'datetime': datetime.now().strftime('%d-%m-%Y %H:%M')
                 })
 
@@ -168,9 +171,10 @@ class Promobot(Config):
 
                 content = urllib.request.urlopen(
                     req,
-                    timeout=60,
                 ).read()
             except (urllib.error.HTTPError, IncompleteRead, OSError) as e:
+                content = ''
+
                 self.alert(
                     'ERROR',
                     'Error on getting data: {}'.format(
