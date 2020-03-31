@@ -74,9 +74,13 @@ class Config():
         ips = []
         proxy_file = '/etc/environment'
 
-        proxy_enabled = bool(os.environ.get('PROXY_ENABLED', False))
+        proxy_enabled = eval(
+            os.environ.get('PROXY_ENABLED', False).title()
+        )
 
         if not proxy_enabled:
+            del os.environ['HTTP_PROXY']
+            del os.environ['HTTPS_PROXY']
             return
 
         if ips:
