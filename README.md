@@ -10,9 +10,9 @@ $ pip install -r requirements.txt
 ### Environment variables
 
 ```
-TOKEN=<telegram-token>
-CHAT_ID=<chat_id-token>
-KEYWORDS=<keyword1>;<keyword2>
+TELEGRAM_TOKEN=<telegram-token>
+TELEGRAM_CHAT_ID=<chat_id-token>
+INITIAL_KEYWORDS=<keyword1>;<keyword2>
 ```
 
 If your environment has proxy configuration, there are more environment variables such as

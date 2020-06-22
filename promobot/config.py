@@ -7,19 +7,19 @@ from datetime import datetime
 
 class Config():
     data = {
-        'keywords': [],
+        'db': {},
         'proxies': {
             'http': '',
             'https': ''
         },
         'telegram': {},
-        'src': [],
+        'urls': [],
     }
 
     def __init__(self):
         self.set_proxy()
 
-        self.data['src'].extend([
+        self.data['urls'].extend([
             {
                 'url': 'http://www.hardmob.com.br/forums/407-Promocoes'
                        '?s=&pp=50&daysprune=1&sort=dateline&order=desc',
@@ -45,14 +45,22 @@ class Config():
             }
         ])
 
-        self.data['keywords'] = os.environ['KEYWORDS'].split(';')
+        self.data['db'].update({
+            'host': os.environ.get('DB_HOST', 'localhost:27017'),
+            'user': os.environ.get('MONGO_INITDB_ROOT_USERNAME'),
+            'passwd': os.environ.get('MONGO_INITDB_ROOT_PASSWORD'),
+            'client': os.environ.get(
+                'MONGO_INITDB_DATABASE',
+                'promobot'
+            ),
+        })
 
         self.data['telegram'].update({
             'token': os.environ.get(
-                'TOKEN',
-                '',
+                'TELEGRAM_TOKEN',
+                ''
             ),
-            'chat_id': os.environ.get('CHAT_ID', '')
+            'chat_id': os.environ.get('TELEGRAM_CHAT_ID', '')
         })
 
         self.data['telegram'].update({
@@ -60,14 +68,6 @@ class Config():
                 self.data['telegram']['token']
             )
         })
-
-        print(
-            '{} - {} - Using keywords: {}'.format(
-                datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
-                'INFO',
-                self.data['keywords'],
-            )
-        )
 
     def set_proxy(self):
         ip = ''

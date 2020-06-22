@@ -1,47 +1,69 @@
-if __package__ is None or __package__ == '':
-    from config import Config
-else:
-    from promobot.config import Config
-
 import notify2
 import re
 import socket
 import time
 import urllib.request
 from bs4 import BeautifulSoup
-from config import Config
 from datetime import datetime
 from dbus import exceptions
 from http.client import IncompleteRead
 from json import dumps
 
 
-class Promobot(Config):
+class Promobot():
     timeout = 10
     config = {}
     data = {}
-    hdr = {}
+    header = {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) '
+                      'AppleWebKit/537.36 (KHTML, like Gecko) '
+                      'Chrome/35.0.1916.47 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,'
+                  'application/xml;q=0.9,*/*;q=0.8'
+    }
 
-    def __init__(self):
-        self.config.update(
-            Config().data
-        )
-
-        for kw in self.config.get('keywords', []):
-            if not self.data.get(kw):
-                self.data.update({
-                    kw.lower(): []
-                })
-
-        self.hdr.update({
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) '
-                          'AppleWebKit/537.36 (KHTML, like Gecko) '
-                          'Chrome/35.0.1916.47 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,'
-                      'application/xml;q=0.9,*/*;q=0.8'
+    def __init__(self, **kwargs):
+        self.config.update({
+            'proxies': kwargs.get('proxies'),
+            'telegram': kwargs.get('telegram'),
+            'src': kwargs.get('urls'),
         })
 
         socket.setdefaulttimeout(self.timeout)
+
+    def manage_keywords(self, keys):
+        result = []
+        add = list(
+            set(keys) - set(self.data.keys())
+        )
+        remove = list(
+            set(self.data.keys()) - set(keys)
+        )
+
+        for kw in add:
+            self.data.update({
+                kw.lower(): []
+            })
+
+        for kw in remove:
+            self.data.pop(kw.lower())
+
+        if add:
+            action = 'Adding'
+            result = add
+        elif remove:
+            action = 'Removing'
+            result = remove
+
+        if result:
+            print(
+                '{} - {} - {} keywords: {}'.format(
+                    datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
+                    'INFO',
+                    action,
+                    result,
+                )
+            )
 
     def alert(self, level='', msg=''):
         if type(msg) == dict:
@@ -68,7 +90,6 @@ class Promobot(Config):
                             e
                         )
                     )
-                    self.__init__()
 
             level = msg['title']
             msg = '{}\n---\n{}'.format(
@@ -166,7 +187,7 @@ class Promobot(Config):
             try:
                 req = urllib.request.Request(
                     url=src['url'],
-                    headers=self.hdr
+                    headers=self.header
                 )
 
                 content = urllib.request.urlopen(
@@ -199,8 +220,6 @@ class Promobot(Config):
                     self.alert(
                         'ERROR', 'Error on searching topics'
                     )
-            else:
-                self.__init__()
 
         return topic
 
