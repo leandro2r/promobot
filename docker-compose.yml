@@ -1,0 +1,26 @@
+version: '3.7'
+
+services:
+  api:
+    build: .
+    image: leandro2r/promobot
+    environment:
+      - TELEGRAM_TOKEN=
+      - MONGO_INITDB_ROOT_USERNAME=promobot
+      - MONGO_INITDB_ROOT_PASSWORD=juliusrock
+      - MONGO_INITDB_DATABASE=promobot
+    command: "api.py"
+
+  mongodb:
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=promobot
+      - MONGO_INITDB_ROOT_PASSWORD=juliusrock
+      - MONGO_INITDB_DATABASE=promobot
+    volumes:
+      - data:/data/db
+    ports:
+      - 27017:27017
+
+volumes:
+  data:
