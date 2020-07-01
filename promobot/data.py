@@ -14,21 +14,25 @@ class Data():
 
         self.db = conn[client]
 
-    def set_inital_keywords(self):
+    def add_keywords(self, keywords=[]):
         d = []
-        initial = os.environ.get('INITIAL_KEYWORDS')
+        col = self.db['keyword']
 
-        if initial:
-            for v in initial.split(';') :
-                d.append({
-                    'keyword': v,
-                })
-
-            col = self.db['keyword']
-            col.insert_many(
-                d,
-                ordered=False
+        if not keywords:
+            initial = os.environ.get(
+                'INITIAL_KEYWORDS'
             )
+            keywords = initial.split(';')
+
+        for v in keywords:
+            d.append({
+                'keyword': v,
+            })
+
+        col.insert_many(
+            d,
+            ordered=False,
+        )
 
     def get_keywords(self):
         col = self.db['keyword']
@@ -40,3 +44,17 @@ class Data():
         )
 
         return keywords
+
+    def del_keywords(self, keywords):
+        col = self.db['keyword']
+
+        if keywords:
+            col.delete_many({
+                'keyword': {
+                    '$in': keywords
+                }
+            })
+
+            return True
+
+        return False
