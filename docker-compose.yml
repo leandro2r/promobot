@@ -6,6 +6,7 @@ services:
     image: leandro2r/promobot
     environment:
       - TELEGRAM_TOKEN=
+      - DB_HOST=mongodb
       - MONGO_INITDB_ROOT_USERNAME=promobot
       - MONGO_INITDB_ROOT_PASSWORD=juliusrock
       - MONGO_INITDB_DATABASE=promobot
