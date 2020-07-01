@@ -28,7 +28,7 @@ def send_welcome(message):
 
 @bot.message_handler(commands=['add', 'del', 'list'])
 def handle_commands(message):
-    done = False
+    msg = 'Empty keyword list.'
     cmd = message.text.split()[0]
     args = message.text.split()[1:]
 
@@ -37,20 +37,21 @@ def handle_commands(message):
     )
 
     if len(args) > 0:
-        items = '\n'.join(args)
-
         if cmd == '/add':
-            done = data.add_keywords(args)
+            data.add_keywords(args)
         elif cmd == '/del':
-            done = data.del_keywords(args)
+            data.del_keywords(args)
 
-    items = '\n'.join(
-        data.get_keywords()
-    )
+    items = data.get_keywords()
+
+    if items:
+        msg = '\n'.join(
+            items
+        )
 
     bot.reply_to(
         message,
-        items
+        msg
     )
 
 
