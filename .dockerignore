@@ -1,0 +1,13 @@
+build
+dist
+*.egg-info
+*.pyc
+__pycache__
+.vscode
+.DS_Store
+.gitignore
+README.md
+env.*
+tmp
+docker-compose.yml
+Dockerfile
