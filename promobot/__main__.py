@@ -1,18 +1,43 @@
-#!/bin/python3
-
 if __package__ is None or __package__ == '':
+    import bot
     from config import Config
     from data import Data
     from monitor import Monitor
 else:
+    import promobot.bot as bot
     from promobot.config import Config
     from promobot.data import Data
     from promobot.monitor import Monitor
 
+import argparse
 import time
 
 
-def main():
+def create_parser():
+    parser = argparse.ArgumentParser(
+        description='Promobot monitor keywords found in BR '
+                    'promotion sites managed by telegram chatbot.'
+    )
+
+    parser.add_argument(
+        '-m', '--module',
+        required=False,
+        help='Module of BR promotion site. Default: all',
+        type=str,
+        default='all',
+    )
+
+    parser.add_argument(
+        '--bot',
+        action="store_true",
+        help='Run bot module. Default: {}'.format(False),
+        default=False,
+    )
+
+    return parser
+
+
+def main(module):
     config = Config().data
 
     data = Data(
@@ -21,7 +46,7 @@ def main():
 
     data.add_keywords()
 
-    promobot = Promobot(
+    monitor = Monitor(
         env=config.get('env'),
         proxies=config.get('proxies'),
         telegram=config.get('telegram'),
@@ -32,16 +57,25 @@ def main():
         chats = data.list_chats()
         keywords = data.list_keywords()
 
-        promobot.manage_chats(
+        monitor.manage_chats(
             chats
         )
-        promobot.manage_keywords(
+        monitor.manage_keywords(
             keywords
         )
 
-        promobot.main()
+        monitor.main()
         time.sleep(10)
 
 
+def manage():
+    args = create_parser().parse_args()
+
+    if args.bot:
+        bot.main()
+    else:
+        main(args.module)
+
+
 if __name__ == '__main__':
-    main()
+    manage()

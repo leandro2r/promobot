@@ -13,7 +13,9 @@ ENV MONGO_INITDB_ROOT_USERNAME=
 ENV MONGO_INITDB_ROOT_PASSWORD=
 ENV MONGO_INITDB_DATABASE=
 
-COPY . /opt/promobot
+WORKDIR /opt/promobot
+
+COPY . .
 
 RUN apk --no-cache add ca-certificates &&\
     apk update && apk add \
@@ -26,9 +28,8 @@ RUN apk --no-cache add ca-certificates &&\
     dbus-x11 \
     py-dbus-dev &&\
     pip install -U pip setuptools &&\
-    pip install -r /opt/promobot/requirements.txt
+    ./setup.py install &&\
+    rm -rf /opt/promobot/*
 
-WORKDIR /opt/promobot/promobot
-
-ENTRYPOINT [ "python" ]
-CMD [ "__main__.py" ]
+ENTRYPOINT [ "promobot" ]
+CMD [ "" ]
