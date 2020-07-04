@@ -1,11 +1,11 @@
-import notify2
+# import notify2
 import re
 import socket
 import time
 import urllib.request
 from bs4 import BeautifulSoup
 from datetime import datetime
-from dbus import exceptions
+# from dbus import exceptions
 from http.client import IncompleteRead
 from json import dumps
 
@@ -128,22 +128,23 @@ class Monitor():
 
         if level == 'ERROR':
             time.sleep(10)
-        elif level != 'INFO' and level != 'DEBUG':
-            if self.config['env'].get('notify'):
-                try:
-                    notify2.init('alert')
-                    n = notify2.Notification(
-                        level,
-                        msg,
-                    )
-                    n.show()
-                except (exceptions.DBusException) as e:
-                    self.alert(
-                        'ERROR',
-                        'Error on alert: {}'.format(
-                            e
-                        )
-                    )
+        # Alert environment notify
+        # elif level != 'INFO' and level != 'DEBUG':
+        #     if self.config['env'].get('notify'):
+        #         try:
+        #             notify2.init('alert')
+        #             n = notify2.Notification(
+        #                 level,
+        #                 msg,
+        #             )
+        #             n.show()
+        #         except (exceptions.DBusException) as e:
+        #             self.alert(
+        #                 'ERROR',
+        #                 'Error on alert: {}'.format(
+        #                     e
+        #                 )
+        #             )
 
     def add_thread(self, kw, add, title, desc, url):
         if title:

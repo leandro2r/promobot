@@ -20,13 +20,14 @@ COPY . .
 RUN apk --no-cache add ca-certificates &&\
     apk update && apk add \
     tzdata \
-    gcc \
-    g++ \
-    make \
-    glib-dev \
-    libnotify-dev \
-    dbus-x11 \
-    py3-dbus-dev &&\
+    # gcc \
+    # g++ \
+    # make \
+    # glib-dev \
+    # libnotify-dev \
+    # dbus-x11 \
+    # py3-dbus-dev \
+    &&\
     pip install -U pip setuptools &&\
     ./setup.py install &&\
     rm -rf /opt/promobot/*
