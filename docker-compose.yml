@@ -16,7 +16,7 @@ services:
 
   bot:
     <<: *promobot
-    command: "bot.py"
+    command: "--bot"
 
   mongodb:
     image: mongo:latest
@@ -27,8 +27,6 @@ services:
       - MONGO_INITDB_DATABASE=promobot
     volumes:
       - data:/data/db
-    ports:
-      - 27017:27017
 
 volumes:
   data:

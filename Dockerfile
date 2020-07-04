@@ -26,10 +26,9 @@ RUN apk --no-cache add ca-certificates &&\
     glib-dev \
     libnotify-dev \
     dbus-x11 \
-    py-dbus-dev &&\
+    py3-dbus-dev &&\
     pip install -U pip setuptools &&\
     ./setup.py install &&\
     rm -rf /opt/promobot/*
 
 ENTRYPOINT [ "promobot" ]
-CMD [ "" ]
