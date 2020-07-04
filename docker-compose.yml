@@ -1,7 +1,7 @@
 version: '3.7'
 
 services:
-  promobot: &promobot
+  monitor: &promobot
     build: .
     image: leandro2r/promobot
     restart: always
@@ -14,9 +14,9 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=juliusrock
       - MONGO_INITDB_DATABASE=promobot
 
-  api:
+  bot:
     <<: *promobot
-    command: "api.py"
+    command: "bot.py"
 
   mongodb:
     image: mongo:latest

@@ -10,7 +10,7 @@ from http.client import IncompleteRead
 from json import dumps
 
 
-class Promobot():
+class Monitor():
     timeout = 10
     config = {}
     data = {}
