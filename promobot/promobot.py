@@ -29,7 +29,27 @@ class Promobot():
             'src': kwargs.get('urls'),
         })
 
+        self.config['telegram'].update({
+            'chat_id': []
+        })
+
         socket.setdefaulttimeout(self.timeout)
+
+    def manage_chats(self, chats):
+        result = []
+        config = self.config.get('telegram')
+        add = list(
+            set(chats) - set(config.get('chat_id'))
+        )
+        remove = list(
+            set(config.get('chat_id')) - set(chats)
+        )
+
+        if add:
+            config.get('chat_id').extend(add)
+
+        for chat in remove:
+            config.get('chat_id').remove(chat)
 
     def manage_keywords(self, keys):
         result = []
@@ -66,30 +86,30 @@ class Promobot():
             )
 
     def alert(self, level='', msg=''):
-        if type(msg) == dict:
-            if (self.config['telegram']['token'] and
-               self.config['telegram']['chat_id']):
-                try:
-                    text = urllib.parse.urlencode({
-                        'chat_id': self.config['telegram']['chat_id'],
-                        'parse_mode': 'Markdown',
-                        'text': 'Keyword: [{}]({})'.format(
-                            level,
-                            msg['url']
-                        ),
-                    }).encode()
+        if isinstance(msg, dict):
+            if self.config['telegram'].get('token'):
+                for chat_id in self.config['telegram'].get('chat_id'):
+                    try:
+                        text = urllib.parse.urlencode({
+                            'chat_id': chat_id,
+                            'parse_mode': 'Markdown',
+                            'text': 'Keyword: [{}]({})'.format(
+                                level,
+                                msg['url']
+                            ),
+                        }).encode()
 
-                    urllib.request.urlopen(
-                        self.config['telegram']['url'],
-                        text,
-                    )
-                except (urllib.error.HTTPError, IncompleteRead, OSError) as e:
-                    self.alert(
-                        'ERROR',
-                        'Error on publishing data on telegram: {}'.format(
-                            e
+                        urllib.request.urlopen(
+                            self.config['telegram']['url'],
+                            text,
                         )
-                    )
+                    except (urllib.error.HTTPError, IncompleteRead, OSError) as e:
+                        self.alert(
+                            'ERROR',
+                            'Error on publishing data on telegram: {}'.format(
+                                e
+                            )
+                        )
 
             level = msg['title']
             msg = '{}\n---\n{}'.format(

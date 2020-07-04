@@ -60,7 +60,7 @@ class Config():
                 'TELEGRAM_TOKEN',
                 ''
             ),
-            'chat_id': os.environ.get('TELEGRAM_CHAT_ID', '')
+            'chat_passwd': os.environ.get('TELEGRAM_CHAT_PASSWD', '')
         })
 
         self.data['telegram'].update({

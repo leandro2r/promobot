@@ -28,7 +28,12 @@ def main():
     )
 
     while True:
-        keywords = data.get_keywords()
+        chats = data.list_chats()
+        keywords = data.list_keywords()
+
+        promobot.manage_chats(
+            chats
+        )
         promobot.manage_keywords(
             keywords
         )

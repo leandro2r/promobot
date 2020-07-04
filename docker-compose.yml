@@ -4,8 +4,10 @@ services:
   api:
     build: .
     image: leandro2r/promobot
+    restart: always
     environment:
       - TELEGRAM_TOKEN=
+      - TELEGRAM_CHAT_PASSWD=
       - DB_HOST=mongodb
       - MONGO_INITDB_ROOT_USERNAME=promobot
       - MONGO_INITDB_ROOT_PASSWORD=juliusrock
@@ -14,6 +16,7 @@ services:
 
   mongodb:
     image: mongo:latest
+    restart: always
     environment:
       - MONGO_INITDB_ROOT_USERNAME=promobot
       - MONGO_INITDB_ROOT_PASSWORD=juliusrock
