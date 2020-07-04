@@ -1,17 +1,21 @@
 version: '3.7'
 
 services:
-  api:
+  promobot: &promobot
     build: .
     image: leandro2r/promobot
     restart: always
     environment:
       - TELEGRAM_TOKEN=
       - TELEGRAM_CHAT_PASSWD=
+      - INITIAL_KEYWORDS=
       - DB_HOST=mongodb
       - MONGO_INITDB_ROOT_USERNAME=promobot
       - MONGO_INITDB_ROOT_PASSWORD=juliusrock
       - MONGO_INITDB_DATABASE=promobot
+
+  api:
+    <<: *promobot
     command: "api.py"
 
   mongodb:

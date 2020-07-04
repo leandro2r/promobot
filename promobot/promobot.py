@@ -24,6 +24,7 @@ class Promobot():
 
     def __init__(self, **kwargs):
         self.config.update({
+            'env': kwargs.get('env'),
             'proxies': kwargs.get('proxies'),
             'telegram': kwargs.get('telegram'),
             'src': kwargs.get('urls'),
@@ -128,20 +129,21 @@ class Promobot():
         if level == 'ERROR':
             time.sleep(10)
         elif level != 'INFO' and level != 'DEBUG':
-            try:
-                notify2.init('alert')
-                n = notify2.Notification(
-                    level,
-                    msg,
-                )
-                n.show()
-            except (exceptions.DBusException) as e:
-                self.alert(
-                    'ERROR',
-                    'Error on alert: {}'.format(
-                        e
+            if self.config['env'].get('notify'):
+                try:
+                    notify2.init('alert')
+                    n = notify2.Notification(
+                        level,
+                        msg,
                     )
-                )
+                    n.show()
+                except (exceptions.DBusException) as e:
+                    self.alert(
+                        'ERROR',
+                        'Error on alert: {}'.format(
+                            e
+                        )
+                    )
 
     def add_thread(self, kw, add, title, desc, url):
         if title:

@@ -22,6 +22,7 @@ def main():
     data.add_keywords()
 
     promobot = Promobot(
+        env=config.get('env'),
         proxies=config.get('proxies'),
         telegram=config.get('telegram'),
         urls=config.get('urls'),

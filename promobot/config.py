@@ -7,19 +7,16 @@ from datetime import datetime
 
 class Config():
     data = {
-        'db': {},
         'proxies': {
             'http': '',
             'https': ''
-        },
-        'telegram': {},
-        'urls': [],
+        }
     }
 
     def __init__(self):
         self.set_proxy()
 
-        self.data['urls'].extend([
+        self.data['urls'] = [
             {
                 'url': 'http://www.hardmob.com.br/forums/407-Promocoes'
                        '?s=&pp=50&daysprune=1&sort=dateline&order=desc',
@@ -43,9 +40,23 @@ class Config():
                     'class': 'cept-tt thread-link linkPlain thread-title--card'
                 }
             }
-        ])
+        ]
 
-        self.data['db'].update({
+        self.data['telegram'] = {
+            'token': os.environ.get(
+                'TELEGRAM_TOKEN',
+                ''
+            ),
+            'chat_passwd': os.environ.get('TELEGRAM_CHAT_PASSWD', '')
+        }
+
+        self.data['telegram'].update({
+            'url': 'https://api.telegram.org/bot{}/sendMessage'.format(
+                self.data['telegram']['token']
+            )
+        })
+
+        self.data['db'] = {
             'host': os.environ.get('DB_HOST', 'localhost:27017'),
             'user': os.environ.get('MONGO_INITDB_ROOT_USERNAME'),
             'passwd': os.environ.get('MONGO_INITDB_ROOT_PASSWORD'),
@@ -53,21 +64,11 @@ class Config():
                 'MONGO_INITDB_DATABASE',
                 'promobot'
             ),
-        })
+        }
 
-        self.data['telegram'].update({
-            'token': os.environ.get(
-                'TELEGRAM_TOKEN',
-                ''
-            ),
-            'chat_passwd': os.environ.get('TELEGRAM_CHAT_PASSWD', '')
-        })
-
-        self.data['telegram'].update({
-            'url': 'https://api.telegram.org/bot{}/sendMessage'.format(
-                self.data['telegram']['token']
-            )
-        })
+        self.data['env'] = {
+            'notify': os.environ.get('ENV_NOTIFY', False)
+        }
 
     def set_proxy(self):
         ip = ''
