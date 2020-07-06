@@ -39,7 +39,18 @@ class Config():
                     'tag': 'a',
                     'class': 'cept-tt thread-link linkPlain thread-title--card'
                 }
-            }
+            },
+            {
+                'url': 'https://gatry.com',
+                'topic': {
+                    'tag': 'div',
+                    'class': 'informacoes'
+                },
+                'thread': {
+                    'tag': 'a',
+                    'target': '_blank'
+                }
+            },
         ]
 
         self.data['telegram'] = {

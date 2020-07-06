@@ -189,6 +189,22 @@ class Monitor():
         d['url'] = t_title.get('href').lower()
         return d
 
+    def gatry(self, each, t_title):
+        d = {}
+        d['title'] = t_title.find(text=True)
+        d['desc'] = each.find(
+            'p',
+            {
+                'class': 'preco comentario clear'
+            }
+        )
+        d['url'] = t_title.get('href').lower()
+
+        if d['desc']:
+            d['desc'] = d['desc'].get_text()
+
+        return d
+
     def hardmob(self, each, t_title, url):
         d = {}
         d['title'] = t_title.find(text=True)
@@ -270,6 +286,8 @@ class Monitor():
                         t = self.hardmob(each, t_title, src['url'])
                     elif 'pelando' in src['url']:
                         t = self.pelando(each, t_title)
+                    elif 'gatry' in src['url']:
+                        t = self.gatry(each, t_title)
 
                     self.add_thread(kw, add, t['title'], t['desc'], t['url'])
 
