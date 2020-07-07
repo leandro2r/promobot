@@ -27,7 +27,6 @@ class Monitor():
             'env': kwargs.get('env'),
             'proxies': kwargs.get('proxies'),
             'telegram': kwargs.get('telegram'),
-            'src': kwargs.get('urls'),
         })
 
         self.config['telegram'].update({
@@ -262,7 +261,7 @@ class Monitor():
 
         return topic
 
-    def find_thread(self, src):
+    def main(self, src):
         topic = self.get_topic(src)
 
         for kw in self.data.keys():
@@ -291,13 +290,10 @@ class Monitor():
 
                     self.add_thread(kw, add, t['title'], t['desc'], t['url'])
 
-    def main(self):
-        for i in self.config['src']:
-            self.find_thread(i)
-
         self.alert(
             'DEBUG',
-            'Data\n{}\n(Response at {})'.format(
+            'Data from {}\n{}\n(Response at {})'.format(
+                src.get('url'),
                 dumps(self.data, indent=2, ensure_ascii=False),
                 datetime.now().strftime('%H:%M:%S'),
             )

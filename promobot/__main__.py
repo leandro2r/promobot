@@ -10,6 +10,7 @@ else:
     from promobot.monitor import Monitor
 
 import argparse
+import threading
 import time
 
 
@@ -17,14 +18,6 @@ def create_parser():
     parser = argparse.ArgumentParser(
         description='Promobot monitor keywords found in BR '
                     'promotion sites managed by telegram chatbot.'
-    )
-
-    parser.add_argument(
-        '-m', '--module',
-        required=False,
-        help='Module of BR promotion site. Default: all',
-        type=str,
-        default='all',
     )
 
     parser.add_argument(
@@ -37,23 +30,14 @@ def create_parser():
     return parser
 
 
-def main(module):
-    config = Config().data
-
-    data = Data(
-        config.get('db')
-    )
-
-    data.add_keywords()
-
-    monitor = Monitor(
-        env=config.get('env'),
-        proxies=config.get('proxies'),
-        telegram=config.get('telegram'),
-        urls=config.get('urls'),
-    )
-
+def run(config, data, src):
     while True:
+        monitor = Monitor(
+            env=config.get('env'),
+            proxies=config.get('proxies'),
+            telegram=config.get('telegram'),
+        )
+
         chats = data.list_chats()
         keywords = data.list_keywords()
 
@@ -64,8 +48,38 @@ def main(module):
             keywords
         )
 
-        monitor.main()
+        monitor.main(src)
         time.sleep(10)
+
+
+def main():
+    proc = []
+
+    config = Config().data
+
+    data = Data(
+        config.get('db')
+    )
+
+    data.add_keywords()
+
+    for i in range(len(config.get('urls'))):
+        src = config.get('urls')[i]
+        m = threading.Thread(
+            target=run,
+            args=(
+                config,
+                data,
+                src,
+            )
+        )
+        proc.append(m)
+
+    for p in proc:
+        p.start()
+
+    for p in proc:
+        p.join()
 
 
 def manage():
@@ -74,7 +88,7 @@ def manage():
     if args.bot:
         bot.main()
     else:
-        main(args.module)
+        main()
 
 
 if __name__ == '__main__':
