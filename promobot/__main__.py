@@ -60,7 +60,7 @@ def main():
         config.get('db')
     )
 
-    data.add_keywords()
+    data.add_keywords(initial=True)
 
     for i in range(len(config.get('urls'))):
         src = config.get('urls')[i]

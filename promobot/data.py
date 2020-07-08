@@ -86,15 +86,17 @@ class Data():
 
         return chat_ids
 
-    def add_keywords(self, keywords=[]):
+    def add_keywords(self, keywords=[], **kwargs):
         d = []
         col = self.db['keyword']
 
-        if not keywords:
+        if kwargs.get('initial'):
             initial = os.environ.get(
                 'INITIAL_KEYWORDS'
             )
-            keywords = initial.split(';')
+            keywords = list(
+                filter(None, initial.split(';'))
+            )
 
         for v in keywords:
             d.append({
