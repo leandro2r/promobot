@@ -5,7 +5,6 @@ Promobot Setup
 """
 
 from setuptools import find_packages, setup
-from setuptools.command.install import install
 
 dev_requirements = [
     'flake8',

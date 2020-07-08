@@ -33,7 +33,6 @@ class Monitor():
         socket.setdefaulttimeout(self.timeout)
 
     def manage_chats(self, chats):
-        result = []
         config = self.config.get('telegram')
         add = list(
             set(chats) - set(config.get('chat_id'))
@@ -263,7 +262,13 @@ class Monitor():
                     elif 'gatry' in src['url']:
                         t = self.gatry(each, t_title)
 
-                    self.add_thread(kw, add, t['title'], t['desc'], t['url'])
+                    self.add_thread(
+                        kw,
+                        add,
+                        t['title'],
+                        t['desc'],
+                        t['url']
+                    )
 
         self.alert(
             'DEBUG',

@@ -1,3 +1,7 @@
+import argparse
+import threading
+import time
+
 if __package__ is None or __package__ == '':
     import bot
     from config import Config
@@ -8,10 +12,6 @@ else:
     from promobot.config import Config
     from promobot.data import Data
     from promobot.monitor import Monitor
-
-import argparse
-import threading
-import time
 
 
 def create_parser():

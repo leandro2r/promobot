@@ -19,7 +19,7 @@ class Data():
 
         col.update_one(
             d,
-            { '$setOnInsert': d },
+            {'$setOnInsert': d},
             upsert=True,
         )
 
@@ -51,7 +51,7 @@ class Data():
 
         col.update_one(
             d,
-            { '$setOnInsert': d },
+            {'$setOnInsert': d},
             upsert=True,
         )
 

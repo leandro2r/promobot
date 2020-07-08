@@ -1,13 +1,13 @@
+import logging
+import telebot
+from datetime import datetime
+
 if __package__ is None or __package__ == '':
     from config import Config
     from data import Data
 else:
     from promobot.config import Config
     from promobot.data import Data
-
-import logging
-import telebot
-from datetime import datetime
 
 
 logger = telebot.logger
