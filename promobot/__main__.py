@@ -31,12 +31,12 @@ def create_parser():
 
 
 def run(config, data, src):
-    while True:
-        monitor = Monitor(
-            proxies=config.get('proxies'),
-            telegram=config.get('telegram'),
-        )
+    monitor = Monitor(
+        proxies=config.get('proxies'),
+        telegram=config.get('telegram'),
+    )
 
+    while True:
         chats = data.list_chats()
         keywords = data.list_keywords()
 
