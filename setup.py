@@ -18,9 +18,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'notify2<0.4',
         'bs4<0.1',
-        'dbus-python<1.3',
         'pymongo<3.11',
         'pyTelegramBotAPI<3.8',
     ],

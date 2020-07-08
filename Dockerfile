@@ -7,7 +7,6 @@ ENV DISPLAY=:0
 ENV TELEGRAM_TOKEN=
 ENV TELEGRAM_CHAT_PASSWD=
 ENV INITIAL_KEYWORDS=
-ENV ENV_NOTIFY=
 ENV DB_HOST=
 ENV MONGO_INITDB_ROOT_USERNAME=
 ENV MONGO_INITDB_ROOT_PASSWORD=
@@ -20,13 +19,6 @@ COPY . .
 RUN apk --no-cache add ca-certificates &&\
     apk update && apk add \
     tzdata \
-    # gcc \
-    # g++ \
-    # make \
-    # glib-dev \
-    # libnotify-dev \
-    # dbus-x11 \
-    # py3-dbus-dev \
     &&\
     pip install -U pip setuptools &&\
     ./setup.py install &&\

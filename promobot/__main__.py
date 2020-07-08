@@ -33,7 +33,6 @@ def create_parser():
 def run(config, data, src):
     while True:
         monitor = Monitor(
-            env=config.get('env'),
             proxies=config.get('proxies'),
             telegram=config.get('telegram'),
         )

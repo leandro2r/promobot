@@ -77,10 +77,6 @@ class Config():
             ),
         }
 
-        self.data['env'] = {
-            'notify': os.environ.get('ENV_NOTIFY', False)
-        }
-
     def set_proxy(self):
         ip = ''
         ips = []

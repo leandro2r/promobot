@@ -13,7 +13,6 @@ $ pip install -r requirements.txt
 TELEGRAM_TOKEN=<telegram-token>
 TELEGRAM_CHAT_PASSWD=<chat-password>
 INITIAL_KEYWORDS=<keyword1>;<keyword2>
-ENV_NOTIFY=true|false
 ```
 
 If your environment has proxy configuration, there are more environment variables such as
