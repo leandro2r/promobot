@@ -82,45 +82,38 @@ class Monitor():
                 )
             )
 
-    def alert(self, level='', msg=''):
-        if isinstance(msg, dict):
-            if self.config['telegram'].get('token'):
-                for chat_id in self.config['telegram'].get('chat_id'):
-                    try:
-                        text = urllib.parse.urlencode({
-                            'chat_id': chat_id,
-                            'parse_mode': 'Markdown',
-                            'text': 'Keyword: [{}]({})'.format(
-                                level,
-                                msg['url']
-                            ),
-                        }).encode()
+    def send_telegram(self, text, anchor):
+        for chat_id in self.config['telegram'].get('chat_id'):
+            try:
+                text = urllib.parse.urlencode({
+                    'chat_id': chat_id,
+                    'parse_mode': 'Markdown',
+                    'text': 'Keyword: [{}]({})'.format(
+                        text,
+                        anchor,
+                    ),
+                }).encode()
 
-                        urllib.request.urlopen(
-                            self.config['telegram']['url'],
-                            text,
-                        )
-                    except (urllib.error.HTTPError, IncompleteRead, OSError) as e:
-                        self.alert(
-                            'ERROR',
-                            'Error on publishing data on telegram: {}'.format(
-                                e
-                            )
-                        )
-
-            level = msg['title']
-            msg = '{}\n---\n{}'.format(
-                msg['desc'],
-                msg['url'],
-            )
-        else:
-            print(
-                '{} - {} - {}'.format(
-                    datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
-                    level,
-                    msg,
+                urllib.request.urlopen(
+                    self.config['telegram']['url'],
+                    text,
                 )
+            except (urllib.error.HTTPError, IncompleteRead, OSError) as e:
+                self.alert(
+                    'ERROR',
+                    'Error on publishing data on telegram: {}'.format(
+                        e
+                    )
+                )
+
+    def alert(self, level, msg):
+        print(
+            '{} - {} - {}'.format(
+                datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
+                level,
+                msg,
             )
+        )
 
         if level == 'ERROR':
             time.sleep(10)
@@ -143,16 +136,18 @@ class Monitor():
                         break
 
             if add:
-                self.data[kw].append({
+                d = {
                     'title': title,
                     'desc': desc,
                     'url': re.sub(r'(\?)(?!.*\1).*$', '', url),
                     'datetime': datetime.now().strftime('%d-%m-%Y %H:%M')
-                })
+                }
 
-                self.alert(
+                self.data[kw].append(d)
+
+                self.send_telegram(
                     kw,
-                    self.data[kw][-1],
+                    d.get('url'),
                 )
 
     def pelando(self, each, t_title):
