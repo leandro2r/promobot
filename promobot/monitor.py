@@ -81,14 +81,16 @@ class Monitor():
                 )
             )
 
-    def send_telegram(self, text, anchor):
-        for chat_id in self.config['telegram'].get('chat_id'):
+    def send_telegram(self, title, anchor):
+        subs = self.config['telegram'].get('chat_id')
+
+        for chat_id in subs:
             try:
                 text = urllib.parse.urlencode({
                     'chat_id': chat_id,
                     'parse_mode': 'Markdown',
                     'text': 'Keyword: [{}]({})'.format(
-                        text,
+                        title,
                         anchor,
                     ),
                 }).encode()

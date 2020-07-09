@@ -62,14 +62,15 @@ def main():
 
     data.add_keywords(initial=True)
 
-    for i in range(len(config.get('urls'))):
-        src = config.get('urls')[i]
+    src = config.get('urls')
+
+    for i in range(len(src)):
         m = threading.Thread(
             target=run,
             args=(
                 config,
                 data,
-                src,
+                src[i],
             )
         )
         proc.append(m)
