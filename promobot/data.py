@@ -98,15 +98,16 @@ class Data():
                 filter(None, initial.split(';'))
             )
 
-        for v in keywords:
-            d.append({
-                'keyword': v,
-            })
+        if keywords:
+            for v in keywords:
+                d.append({
+                    'keyword': v,
+                })
 
-        col.insert_many(
-            d,
-            ordered=False,
-        )
+            col.insert_many(
+                d,
+                ordered=False,
+            )
 
     def del_keywords(self, keywords):
         col = self.db['keyword']
