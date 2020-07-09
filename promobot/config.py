@@ -41,6 +41,39 @@ class Config():
                 }
             },
             {
+                'url': 'https://www.pelando.com.br/recentes?page=2',
+                'topic': {
+                    'tag': 'article',
+                    'class': ''
+                },
+                'thread': {
+                    'tag': 'a',
+                    'class': 'cept-tt thread-link linkPlain thread-title--card'
+                }
+            },
+            {
+                'url': 'https://www.pelando.com.br/quente',
+                'topic': {
+                    'tag': 'article',
+                    'class': ''
+                },
+                'thread': {
+                    'tag': 'a',
+                    'class': 'cept-tt thread-link linkPlain thread-title--card'
+                }
+            },
+            {
+                'url': 'https://www.pelando.com.br/quente?page=2',
+                'topic': {
+                    'tag': 'article',
+                    'class': ''
+                },
+                'thread': {
+                    'tag': 'a',
+                    'class': 'cept-tt thread-link linkPlain thread-title--card'
+                }
+            },
+            {
                 'url': 'https://gatry.com',
                 'topic': {
                     'tag': 'div',
