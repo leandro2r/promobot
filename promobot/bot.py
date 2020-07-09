@@ -62,10 +62,11 @@ def handle_commands(message):
                 })
                 data.add_intruder(d)
 
-    bot.reply_to(
-        message,
-        msg
-    )
+    if message:
+        bot.reply_to(
+            message,
+            msg
+        )
 
 
 @bot.message_handler(commands=['add', 'del', 'list'])
@@ -91,10 +92,11 @@ def handle_keywords(message):
                     items
                 )
 
-        bot.reply_to(
-            message,
-            msg
-        )
+        if message:
+            bot.reply_to(
+                message,
+                msg
+            )
 
 
 def main():
