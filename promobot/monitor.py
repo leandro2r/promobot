@@ -80,7 +80,7 @@ class Monitor():
                 )
             )
 
-    def send_telegram(self, title, anchor):
+    def report(self, title, anchor):
         subs = self.config['telegram'].get('chat_id')
 
         for chat_id in subs:
@@ -118,92 +118,78 @@ class Monitor():
         if level == 'ERROR':
             time.sleep(10)
 
-    def add_thread(self, kw, add, title, desc, url):
-        if title:
-            title = re.sub(r'\n|\t', '', title)
+    def lookup(self, kw, d, add):
+        src = [
+            d.get('url'),
+            d.get('desc'),
+        ]
 
-        if desc:
-            desc = re.sub(r'\n|\t', '', desc)
-
-        for text in [url, desc]:
+        for text in src:
             if re.match(
                     r'.*{}.*'.format(kw),
                     str(text),
                     re.IGNORECASE,
             ):
                 for v in self.data.get(kw):
-                    if v.get('url') in url:
+                    if v.get('url') in d.get('url'):
                         add = False
                         break
 
                 if add:
-                    d = {
-                        'title': title,
-                        'desc': desc,
+                    d.update({
                         'url': re.sub(
                             r'(\?)(?!.*\1).*$',
                             '',
-                            url
+                            d.get('url')
                         ),
                         'datetime': datetime.now().strftime(
                             '%d-%m-%Y %H:%M'
                         )
-                    }
+                    })
 
-                    self.data[kw].append(d)
+                    self.data[kw].append(
+                        d
+                    )
 
-                    self.send_telegram(
+                    self.report(
                         kw,
                         d.get('url'),
                     )
 
                 break
 
-    def pelando(self, each, t_title):
-        d = {}
-        d['title'] = t_title.find(text=True)
-        d['desc'] = each.find(
-            'span',
-            {
-                'class': 'cept-merchant-name text--b '
-                         'text--color-brandPrimary link'
-            }
-        )
-        d['url'] = t_title.get('href').lower()
+    def mount(self, src, each, t_title):
+        desc = each.get('title')
+        title = t_title.find(text=True)
+        url = t_title.get('href')
 
-        if d['desc']:
-            d['desc'] = d['desc'].get_text()
+        if src.get('desc'):
+            desc = each.find(
+                src['desc'].get('tag'),
+                {
+                    'class': src['desc'].get('class'),
+                }
+            )
 
-        return d
+            if desc:
+                desc = desc.get_text()
+            else:
+                desc = ''
 
-    def gatry(self, each, t_title):
-        d = {}
-        d['title'] = t_title.find(text=True)
-        d['desc'] = each.find(
-            'p',
-            {
-                'class': 'preco comentario clear'
-            }
-        )
-        d['url'] = t_title.get('href').lower()
-
-        if d['desc']:
-            d['desc'] = d['desc'].get_text()
-
-        return d
-
-    def hardmob(self, each, t_title, url):
-        d = {}
-        d['title'] = t_title.find(text=True)
-        d['desc'] = each.get('title')
-        d['url'] = '{}/{}'.format(
-            re.search(
-                r'.*://[^/]+',
+        if 'http' not in url:
+            url = '{}/{}'.format(
+                re.search(
+                    r'.*://[^/]+',
+                    src.get('url'),
+                ).group(),
                 url,
-            ).group(),
-            t_title.get('href').lower(),
-        )
-        return d
+            )
+
+        return {
+            'title': re.sub(r'\n|\t', '', title),
+            'desc': re.sub(r'\n|\t', '', desc),
+            'url': url,
+        }
 
     def get_topic(self, src):
         content = ''
@@ -267,21 +253,16 @@ class Monitor():
                     )
 
                 if t_title:
-                    t = {}
+                    d = self.mount(
+                        src,
+                        each,
+                        t_title
+                    )
 
-                    if 'hardmob' in src['url']:
-                        t = self.hardmob(each, t_title, src['url'])
-                    elif 'pelando' in src['url']:
-                        t = self.pelando(each, t_title)
-                    elif 'gatry' in src['url']:
-                        t = self.gatry(each, t_title)
-
-                    self.add_thread(
+                    self.lookup(
                         kw,
+                        d,
                         add,
-                        t['title'],
-                        t['desc'],
-                        t['url']
                     )
 
         self.alert(

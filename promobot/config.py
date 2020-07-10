@@ -38,6 +38,11 @@ class Config():
                 'thread': {
                     'tag': 'a',
                     'class': 'cept-tt thread-link linkPlain thread-title--card'
+                },
+                'desc': {
+                    'tag': 'span',
+                    'class': 'cept-merchant-name text--b '
+                             'text--color-brandPrimary link'
                 }
             },
             {
@@ -49,6 +54,11 @@ class Config():
                 'thread': {
                     'tag': 'a',
                     'class': 'cept-tt thread-link linkPlain thread-title--card'
+                },
+                'desc': {
+                    'tag': 'span',
+                    'class': 'cept-merchant-name text--b '
+                             'text--color-brandPrimary link'
                 }
             },
             {
@@ -60,6 +70,11 @@ class Config():
                 'thread': {
                     'tag': 'a',
                     'class': 'cept-tt thread-link linkPlain thread-title--card'
+                },
+                'desc': {
+                    'tag': 'span',
+                    'class': 'cept-merchant-name text--b '
+                             'text--color-brandPrimary link'
                 }
             },
             {
@@ -71,6 +86,11 @@ class Config():
                 'thread': {
                     'tag': 'a',
                     'class': 'cept-tt thread-link linkPlain thread-title--card'
+                },
+                'desc': {
+                    'tag': 'span',
+                    'class': 'cept-merchant-name text--b '
+                             'text--color-brandPrimary link'
                 }
             },
             {
@@ -82,6 +102,10 @@ class Config():
                 'thread': {
                     'tag': 'a',
                     'target': '_blank'
+                },
+                'desc': {
+                    'tag': 'p',
+                    'class': 'preco comentario clear'
                 }
             },
         ]
