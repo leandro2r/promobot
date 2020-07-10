@@ -72,10 +72,9 @@ class Monitor():
             result = remove
 
         if result:
-            print(
-                '{} - {} - {} keywords: {}'.format(
-                    datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
-                    'INFO',
+            self.alert(
+                'INFO',
+                '{} keywords: {}'.format(
                     action,
                     result,
                 )
@@ -126,42 +125,55 @@ class Monitor():
         if desc:
             desc = re.sub(r'\n|\t', '', desc)
 
-        if re.match(
-                r'.*{}.*'.format(kw),
-                url
-           ):
-            for p in list(self.data.values()):
-                for v in p:
-                    if v['url'] in url:
+        for text in [url, desc]:
+            if re.match(
+                    r'.*{}.*'.format(kw),
+                    str(text),
+                    re.IGNORECASE,
+            ):
+                for v in self.data.get(kw):
+                    if v.get('url') in url:
                         add = False
                         break
 
-            if add:
-                d = {
-                    'title': title,
-                    'desc': desc,
-                    'url': re.sub(r'(\?)(?!.*\1).*$', '', url),
-                    'datetime': datetime.now().strftime('%d-%m-%Y %H:%M')
-                }
+                if add:
+                    d = {
+                        'title': title,
+                        'desc': desc,
+                        'url': re.sub(
+                            r'(\?)(?!.*\1).*$',
+                            '',
+                            url
+                        ),
+                        'datetime': datetime.now().strftime(
+                            '%d-%m-%Y %H:%M'
+                        )
+                    }
 
-                self.data[kw].append(d)
+                    self.data[kw].append(d)
 
-                self.send_telegram(
-                    kw,
-                    d.get('url'),
-                )
+                    self.send_telegram(
+                        kw,
+                        d.get('url'),
+                    )
+
+                break
 
     def pelando(self, each, t_title):
         d = {}
         d['title'] = t_title.find(text=True)
         d['desc'] = each.find(
-            'div',
+            'span',
             {
-                'class': 'cept-description-container overflow--wrap-break '
-                         'width--all-12  size--all-s size--fromW3-m'
+                'class': 'cept-merchant-name text--b '
+                         'text--color-brandPrimary link'
             }
         )
         d['url'] = t_title.get('href').lower()
+
+        if d['desc']:
+            d['desc'] = d['desc'].get_text()
+
         return d
 
     def gatry(self, each, t_title):
