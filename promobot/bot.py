@@ -25,7 +25,7 @@ data = Data(
 
 @bot.message_handler(commands=['start', 'stop', 'who', 'forall'])
 def handle_commands(message):
-    msg = 'This message costs me R$0,31.'
+    msg = 'This message costed me R$0,31.'
     cmd = message.text.split()[0]
     args = message.text.split()[1:]
 

@@ -101,7 +101,7 @@ class Data():
         if keywords:
             for v in keywords:
                 d.append({
-                    'keyword': v,
+                    'keyword': v.lower(),
                 })
 
             col.insert_many(

@@ -58,11 +58,11 @@ class Monitor():
 
         for kw in add:
             self.data.update({
-                kw.lower(): []
+                kw: []
             })
 
         for kw in remove:
-            self.data.pop(kw.lower())
+            self.data.pop(kw)
 
         if add:
             action = 'Adding'
@@ -81,14 +81,14 @@ class Monitor():
             )
 
     def report(self, title, anchor):
-        subs = self.config['telegram'].get('chat_id')
+        subs = self.config['telegram'].get('chat_id', [])
 
         for chat_id in subs:
             try:
                 text = urllib.parse.urlencode({
                     'chat_id': chat_id,
                     'parse_mode': 'Markdown',
-                    'text': 'Keyword: [{}]({})'.format(
+                    'text': 'Keyword: **[{}]({})**'.format(
                         title,
                         anchor,
                     ),
@@ -176,6 +176,14 @@ class Monitor():
             else:
                 desc = ''
 
+        if not isinstance(title, str):
+            title = re.search(
+                r'[^/]+$',
+                url
+            ).group().replace('-', ' ')
+
+            title = title.title()
+
         if 'http' not in url:
             url = '{}/{}'.format(
                 re.search(
@@ -191,7 +199,7 @@ class Monitor():
             'url': url,
         }
 
-    def get_topic(self, src):
+    def get_promo(self, src):
         content = ''
         topic = []
 
@@ -236,12 +244,12 @@ class Monitor():
         return topic
 
     def main(self, src):
-        topic = self.get_topic(src)
+        promo = self.get_promo(src)
 
         for kw in self.data.keys():
             add = True
 
-            for each in topic:
+            for each in promo:
                 if src['thread'].get('class'):
                     t_title = each.find(
                         src['thread']['tag'],
@@ -267,9 +275,14 @@ class Monitor():
 
         self.alert(
             'DEBUG',
-            'Data from {}\n{}\n(Response at {})'.format(
-                src.get('url'),
+            '\n{}'.format(
                 dumps(self.data, indent=2, ensure_ascii=False),
-                datetime.now().strftime('%H:%M:%S'),
+            )
+        )
+
+        self.alert(
+            'INFO',
+            'Last lookup from {}'.format(
+                src.get('url'),
             )
         )

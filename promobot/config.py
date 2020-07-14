@@ -101,7 +101,7 @@ class Config():
                 },
                 'thread': {
                     'tag': 'a',
-                    'target': '_blank'
+                    'class': 'mais hidden-xs'
                 },
                 'desc': {
                     'tag': 'p',
