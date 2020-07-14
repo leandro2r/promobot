@@ -23,7 +23,7 @@ data = Data(
 )
 
 
-@bot.message_handler(commands=['start', 'stop', 'who'])
+@bot.message_handler(commands=['start', 'stop', 'who', 'forall'])
 def handle_commands(message):
     msg = 'This message costs me R$0,31.'
     cmd = message.text.split()[0]
@@ -47,13 +47,20 @@ def handle_commands(message):
                 elif 'stop' in cmd:
                     msg = 'You will no longer receive the reports!'
                     data.del_chat(d)
-                else:
+                elif 'who' in cmd:
                     who = '\n'.join(
                         str(i) for i in data.list_users(all=True)
                     )
                     msg = 'Users:\n{}'.format(
                         who,
                     )
+                else:
+                    msg = 'Message has been sent for all chats!'
+                    for id in data.list_chats():
+                        bot.send_message(
+                            id,
+                            text="Hey all, I'm under maintenance..."
+                        )
             else:
                 d.update({
                     'date': datetime.utcfromtimestamp(
