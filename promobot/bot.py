@@ -69,11 +69,13 @@ def handle_commands(message):
                 })
                 data.add_intruder(d)
 
-    if message:
+    try:
         bot.reply_to(
             message,
             msg
         )
+    except Exception:
+        pass
 
 
 @bot.message_handler(commands=['add', 'del', 'list'])
@@ -99,11 +101,13 @@ def handle_keywords(message):
                     items
                 )
 
-        if message:
+        try:
             bot.reply_to(
                 message,
                 msg
             )
+        except Exception:
+            pass
 
 
 def main():
