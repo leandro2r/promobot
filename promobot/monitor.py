@@ -1,5 +1,6 @@
 import re
 import socket
+import threading
 import time
 import urllib.request
 from bs4 import BeautifulSoup
@@ -243,7 +244,7 @@ class Monitor():
 
         return topic
 
-    def main(self, src):
+    def monitor(self, src):
         promo = self.get_promo(src)
 
         for kw in self.data.keys():
@@ -286,3 +287,37 @@ class Monitor():
                 src.get('url'),
             )
         )
+
+    def runner(self, data, url):
+        while True:
+            chats = data.list_chats()
+            keywords = data.list_keywords()
+
+            self.manage_chats(
+                chats
+            )
+            self.manage_keywords(
+                keywords
+            )
+
+            self.monitor(url)
+            time.sleep(10)
+
+    def main(self, data, urls):
+        proc = []
+
+        for i in range(len(urls)):
+            m = threading.Thread(
+                target=self.runner,
+                args=(
+                    data,
+                    urls[i],
+                )
+            )
+            proc.append(m)
+
+        for p in proc:
+            p.start()
+
+        for p in proc:
+            p.join()
