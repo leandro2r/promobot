@@ -26,7 +26,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'promobot=promobot.__main__:manage',
+            'promobot=promobot.__main__:main',
         ],
     },
     platforms='any',
