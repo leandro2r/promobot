@@ -60,7 +60,7 @@ class Data():
 
         if d:
             col.delete_many({
-                'id':  d.get('id')
+                'id': d.get('id')
             })
             return True
 
