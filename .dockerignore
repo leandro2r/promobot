@@ -6,6 +6,7 @@ __pycache__
 .vscode
 .DS_Store
 .gitignore
+.github
 README.md
 env.*
 tmp

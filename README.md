@@ -47,3 +47,11 @@ HTTP_PROXY=<http-proxy>
 HTTPS_PROXY=<https-proxy>
 AUTH_PROXY=<user>:<passwd>
 ```
+
+### Docker image
+
+The image is hosted by Docker Hub [promobot docker hub](https://hub.docker.com/r/leandro2r/promobot)
+
+```shell
+$ docker pull leandro2r/promobot:latest
+```

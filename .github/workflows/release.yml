@@ -1,0 +1,28 @@
+name: Docker image build
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'promobot/**'
+      - 'setup.py'
+      - 'Dockerfile'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Build the Docker image
+      run: docker build --pull -t leandro2r/promobot:latest .
+
+    - name: Push the Docker images
+      run: |
+        docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWD }} docker.io
+        docker push leandro2r/promobot:latest
+
+    - name: Remove the Docker images
+      run: docker rmi leandro2r/promobot:latest
