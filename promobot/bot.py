@@ -59,7 +59,7 @@ def handle_commands(message):
                     msg = 'Message has been sent for all chats!'
 
                     if len(args) > 1:
-                        forall = args[1]
+                        forall = ' '.join(args[1:])
 
                     for id in data.list_chats():
                         bot.send_message(
