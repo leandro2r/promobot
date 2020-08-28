@@ -327,7 +327,7 @@ class Monitor():
 
             runtime += delay
 
-            if runtime >= reset*3600/2:
+            if runtime >= reset * 3600 / 2:
                 self.reset_old(reset)
                 runtime = 0
                 break
