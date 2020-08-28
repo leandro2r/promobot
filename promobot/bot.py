@@ -55,11 +55,18 @@ def handle_commands(message):
                         who,
                     )
                 else:
+                    forall = 'I\'m under maintenance...'
                     msg = 'Message has been sent for all chats!'
+
+                    if len(args) > 1:
+                        forall = args[1]
+
                     for id in data.list_chats():
                         bot.send_message(
                             id,
-                            text="Hey all, I'm under maintenance..."
+                            text='Hey all, {}'.format(
+                                forall
+                            )
                         )
             else:
                 d.update({
