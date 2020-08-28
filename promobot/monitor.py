@@ -306,8 +306,8 @@ class Monitor():
                     break
 
     def runner(self, data, url):
-        delay = 10
-        reset = 24
+        delay = int(os.environ.get('DELAY', 10))
+        reset = int(os.environ.get('RESET_TIME', 24))
         runtime = 0
 
         while True:
