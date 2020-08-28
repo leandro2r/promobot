@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   monitor: &promobot
-    build: .
+    # build: .
     image: leandro2r/promobot
     restart: always
     logging:
@@ -11,16 +11,22 @@ services:
         max-file: "5"
         max-size: "10m"
     environment:
-      - TELEGRAM_TOKEN=
-      - TELEGRAM_CHAT_PASSWD=
-      - INITIAL_KEYWORDS=
       - DB_HOST=mongodb
       - MONGO_INITDB_ROOT_USERNAME=promobot
       - MONGO_INITDB_ROOT_PASSWORD=juliusrock
       - MONGO_INITDB_DATABASE=promobot
+      - TELEGRAM_TOKEN=
+      - TELEGRAM_CHAT_PASSWD=
+      - INITIAL_KEYWORDS=
+      - MUTED=false
+    # volumes:
+    #   - .:/home/monitor
+    # entrypoint: ""
+    # command: "tail -f /dev/null"
 
   bot:
     <<: *promobot
+    entrypoint: "promobot"
     command: "--bot"
 
   mongodb:

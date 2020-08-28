@@ -1,10 +1,11 @@
+import os
 import re
 import socket
 import threading
 import time
 import urllib.request
 from bs4 import BeautifulSoup
-from datetime import datetime
+from datetime import datetime, timedelta
 from http.client import IncompleteRead
 from json import dumps
 
@@ -83,6 +84,9 @@ class Monitor():
 
     def report(self, title, anchor):
         subs = self.config['telegram'].get('chat_id', [])
+
+        if os.environ.get('MUTED', 'false').lower() == "true":
+            subs = []
 
         for chat_id in subs:
             try:
@@ -288,7 +292,24 @@ class Monitor():
             )
         )
 
+    def reset_old(self, hours):
+        for k, v in self.data.items():
+            for i in range(len(v)):
+                list_v = self.data[k]
+                old = (
+                    datetime.now() - timedelta(hours=hours)
+                ).strftime('%d-%m-%Y %H:%M')
+
+                if list_v[i]['datetime'] <= old:
+                    del list_v[i:len(v)]
+                    self.alert('INFO', 'Reseting old values')
+                    break
+
     def runner(self, data, url):
+        delay = 10
+        reset = 24
+        runtime = 0
+
         while True:
             chats = data.list_chats()
             keywords = data.list_keywords()
@@ -301,7 +322,15 @@ class Monitor():
             )
 
             self.monitor(url)
-            time.sleep(10)
+
+            time.sleep(delay)
+
+            runtime += delay
+
+            if runtime >= reset*3600/2:
+                self.reset_old(reset)
+                runtime = 0
+                break
 
     def main(self, data, urls):
         proc = []

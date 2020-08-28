@@ -38,6 +38,7 @@ Environment variables:
 TELEGRAM_TOKEN=<telegram-token>
 TELEGRAM_CHAT_PASSWD=<chat-password>
 INITIAL_KEYWORDS=<keyword1>;<keyword2>
+MUTED=false
 ```
 
 If your environment has proxy configuration, there are more environment variables such as
