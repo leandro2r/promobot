@@ -40,6 +40,7 @@ services:
         max-file: "5"
         max-size: "10m"
     environment:
+      - TZ=America/Sao_Paulo
       - MONGO_INITDB_ROOT_USERNAME=promobot
       - MONGO_INITDB_ROOT_PASSWORD=juliusrock
       - MONGO_INITDB_DATABASE=promobot

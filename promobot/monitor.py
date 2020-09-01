@@ -330,7 +330,6 @@ class Monitor():
             if runtime >= reset * 3600 / 2:
                 self.reset_old(reset)
                 runtime = 0
-                break
 
     def main(self, data, urls):
         proc = []
