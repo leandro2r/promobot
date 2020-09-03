@@ -1,5 +1,4 @@
 import re
-import socket
 import threading
 import time
 import urllib.request
@@ -82,7 +81,7 @@ class Monitor():
     def report(self, title, anchor):
         subs = self.config['telegram'].get('chat_id', [])
 
-        if os.environ.get('MUTED', 'false').lower() == "true":
+        if self.config['monitor']['muted']:
             subs = []
 
         for chat_id in subs:
@@ -297,8 +296,7 @@ class Monitor():
                     datetime.now() - timedelta(hours=hours)
                 ).strftime('%d-%m-%Y %H:%M')
 
-                if (list_v[i]['datetime'] <= old and
-                   len(v) - i > 0):
+                if (list_v[i]['datetime'] <= old and len(v) - i > 0):
                     self.alert(
                         'INFO',
                         'Reseting {} {} older than {}'.format(

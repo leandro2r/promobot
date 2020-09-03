@@ -18,6 +18,7 @@ class Config():
 
         self.data['monitor'] = {
             'delay': int(os.environ.get('DELAY', 10)),
+            'muted': eval(os.environ.get('MUTED', 'false').title()),
             'reset': int(os.environ.get('RESET_TIME', 24)),
         }
 
