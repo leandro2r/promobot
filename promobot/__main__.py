@@ -41,6 +41,7 @@ def main():
         )
 
         monitor = Monitor(
+            monitor=config.get('monitor'),
             proxies=config.get('proxies'),
             telegram=config.get('telegram'),
         )

@@ -16,6 +16,11 @@ class Config():
     def __init__(self):
         self.set_proxy()
 
+        self.data['monitor'] = {
+            'delay': int(os.environ.get('DELAY', 10)),
+            'reset': int(os.environ.get('RESET_TIME', 24)),
+        }
+
         self.data['urls'] = [
             {
                 'url': 'http://www.hardmob.com.br/forums/407-Promocoes'

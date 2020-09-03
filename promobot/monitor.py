@@ -1,4 +1,3 @@
-import os
 import re
 import socket
 import threading
@@ -11,7 +10,6 @@ from json import dumps
 
 
 class Monitor():
-    timeout = 10
     config = {}
     data = {}
     header = {
@@ -24,6 +22,7 @@ class Monitor():
 
     def __init__(self, **kwargs):
         self.config.update({
+            'monitor': kwargs.get('monitor'),
             'proxies': kwargs.get('proxies'),
             'telegram': kwargs.get('telegram'),
         })
@@ -31,8 +30,6 @@ class Monitor():
         self.config['telegram'].update({
             'chat_id': []
         })
-
-        socket.setdefaulttimeout(self.timeout)
 
     def manage_chats(self, chats):
         config = self.config.get('telegram')
@@ -102,6 +99,7 @@ class Monitor():
                 urllib.request.urlopen(
                     self.config['telegram']['url'],
                     text,
+                    timeout=self.config['monitor']['timeout'],
                 )
             except (urllib.error.HTTPError, IncompleteRead, OSError) as e:
                 self.alert(
@@ -121,7 +119,7 @@ class Monitor():
         )
 
         if level == 'ERROR':
-            time.sleep(10)
+            time.sleep(self.config['monitor']['timeout'])
 
     def lookup(self, kw, d, add):
         src = [
@@ -217,34 +215,33 @@ class Monitor():
 
                 content = urllib.request.urlopen(
                     req,
+                    timeout=self.config['monitor']['timeout'],
                 ).read()
-            except (urllib.error.HTTPError, IncompleteRead, OSError) as e:
-                content = ''
 
+                if content:
+                    soup = BeautifulSoup(content, 'html.parser')
+
+                    if src['topic'].get('class'):
+                        topic = soup.findAll(
+                            src['topic']['tag'],
+                            {'class': src['topic']['class']}
+                        )
+                    else:
+                        topic = soup.findAll(
+                            src['topic']['tag']
+                        )
+
+                    if len(topic) == 0:
+                        self.alert(
+                            'ERROR', 'Error on searching topics'
+                        )
+            except (urllib.error.HTTPError, IncompleteRead, OSError) as e:
                 self.alert(
                     'ERROR',
                     'Error on getting data: {}'.format(
                         e,
                     )
                 )
-
-            if content:
-                soup = BeautifulSoup(content, 'html.parser')
-
-                if src['topic'].get('class'):
-                    topic = soup.findAll(
-                        src['topic']['tag'],
-                        {'class': src['topic']['class']}
-                    )
-                else:
-                    topic = soup.findAll(
-                        src['topic']['tag']
-                    )
-
-                if len(topic) == 0:
-                    self.alert(
-                        'ERROR', 'Error on searching topics'
-                    )
 
         return topic
 
@@ -300,15 +297,23 @@ class Monitor():
                     datetime.now() - timedelta(hours=hours)
                 ).strftime('%d-%m-%Y %H:%M')
 
-                if list_v[i]['datetime'] <= old:
+                if (list_v[i]['datetime'] <= old and
+                   len(v) - i > 0):
+                    self.alert(
+                        'INFO',
+                        'Reseting {} {} older than {}'.format(
+                            len(v) - i,
+                            k,
+                            list_v[i]['datetime'],
+                        )
+                    )
                     del list_v[i:len(v)]
-                    self.alert('INFO', 'Reseting old values')
                     break
 
     def runner(self, data, url):
-        delay = int(os.environ.get('DELAY', 10))
-        reset = int(os.environ.get('RESET_TIME', 24))
         runtime = 0
+        delay = self.config['monitor']['delay']
+        reset = self.config['monitor']['reset']
 
         while True:
             chats = data.list_chats()
