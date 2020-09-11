@@ -299,14 +299,13 @@ class Monitor():
                 if (list_v[i]['datetime'] <= old and len(v) - i > 0):
                     self.alert(
                         'INFO',
-                        'Reseting {} {} older than {}'.format(
-                            len(v) - i,
+                        'Reseting {} {} value from {}'.format(
+                            i,
                             k,
                             list_v[i]['datetime'],
                         )
                     )
-                    del list_v[i:len(v)]
-                    break
+                    del list_v[i]
 
     def runner(self, data, url):
         runtime = 0
