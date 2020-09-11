@@ -119,7 +119,6 @@ def handle_keywords(message):
         bot.reply_to(
             message,
             msg,
-            parse_mode='Markdown',
         )
     except Exception:
         pass
@@ -143,10 +142,10 @@ def manage_docker(info):
 
         runtime = datetime.utcnow() - started_at
 
-        msg += '*{}:* {} {}\n'.format(
-            p.name.split('_')[1].title(),
+        msg += '{} {} ({})\n'.format(
             p.status.title(),
             runtime,
+            p.name.split('_')[1].title(),
         )
 
     return msg
