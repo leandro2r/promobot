@@ -5,6 +5,8 @@ services:
     # build: .
     image: leandro2r/promobot
     restart: always
+    depends_on:
+      - mongodb
     logging:
       driver: "json-file"
       options:
@@ -28,6 +30,9 @@ services:
 
   bot:
     <<: *promobot
+    volumes:
+      # - .:/home/monitor
+      - /var/run/docker.sock:/var/run/docker.sock
     entrypoint: "promobot"
     command: "--bot"
 

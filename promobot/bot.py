@@ -1,3 +1,4 @@
+import docker
 import logging
 import telebot
 from datetime import datetime
@@ -12,6 +13,7 @@ else:
 
 logger = telebot.logger
 telebot.logger.setLevel(logging.INFO)
+msg = 'This message costed me R$0,31.'
 
 config = Config().data
 bot = telebot.TeleBot(
@@ -23,9 +25,8 @@ data = Data(
 )
 
 
-@bot.message_handler(commands=['start', 'stop', 'who', 'forall'])
+@bot.message_handler(commands=['start', 'stop', 'forall'])
 def handle_commands(message):
-    msg = 'This message costed me R$0,31.'
     cmd = message.text.split()[0]
     args = message.text.split()[1:]
 
@@ -47,13 +48,6 @@ def handle_commands(message):
                 elif 'stop' in cmd:
                     msg = 'You will no longer receive the reports!'
                     data.del_chat(d)
-                elif 'who' in cmd:
-                    who = '\n'.join(
-                        str(i) for i in data.list_users(all=True)
-                    )
-                    msg = 'Users:\n{}'.format(
-                        who,
-                    )
                 else:
                     forall = 'I\'m under maintenance...'
                     msg = 'Message has been sent for all chats!'
@@ -85,36 +79,77 @@ def handle_commands(message):
         pass
 
 
-@bot.message_handler(commands=['add', 'del', 'list'])
+@bot.message_handler(commands=['add', 'del', 'list', 'who', 'docker'])
 def handle_keywords(message):
-    msg = 'This message costs me R$0,31.'
     cmd = message.text.split()[0]
     args = message.text.split()[1:]
 
     if message.chat.type == 'private':
         if data.find_chat(message.chat.id):
-            msg = 'Empty keyword list.'
+            if 'docker' in cmd:
+                info = 'status'
+                if len(args) > 0:
+                    info = args[0]
 
-            if len(args) > 0:
-                if 'add' in cmd:
-                    data.add_keywords(args)
-                elif '/del' in cmd:
-                    data.del_keywords(args)
-
-            items = data.list_keywords()
-
-            if items:
-                msg = '\n'.join(
-                    items
+                msg = manage_docker(info)
+            elif 'who' in cmd:
+                who = '\n'.join(
+                    str(i) for i in data.list_users(all=True)
                 )
+                msg = 'Users:\n{}'.format(
+                    who,
+                )
+            else:
+                msg = 'Empty keyword list.'
 
-        try:
-            bot.reply_to(
-                message,
-                msg
-            )
-        except Exception:
-            pass
+                if len(args) > 0:
+                    if 'add' in cmd:
+                        data.add_keywords(args)
+                    elif '/del' in cmd:
+                        data.del_keywords(args)
+
+                items = data.list_keywords()
+
+                if items:
+                    msg = '\n'.join(
+                        items
+                    )
+
+    try:
+        bot.reply_to(
+            message,
+            msg,
+            parse_mode='Markdown',
+        )
+    except Exception:
+        pass
+
+
+def manage_docker(info):
+    msg = ''
+    client = docker.from_env()
+
+    ps = client.containers.list(
+        filters={'name': 'promobot'}
+    )
+
+    for p in ps:
+        state = p.attrs.get('State')
+
+        started_at = datetime.strptime(
+            state.get('StartedAt')[0:26],
+            '%Y-%m-%dT%H:%M:%S.%f'
+        )
+
+        runtime = datetime.utcnow() - started_at
+
+        msg += '*{}:* {} {}\n'.format(
+            p.name.split('_')[1].title(),
+            p.status.title(),
+            runtime,
+        )
+
+    return msg
 
 
 def main():
