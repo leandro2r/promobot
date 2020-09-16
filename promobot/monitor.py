@@ -296,7 +296,7 @@ class Monitor():
                     datetime.now() - timedelta(hours=hours)
                 ).strftime('%d-%m-%Y %H:%M')
 
-                if (list_v[i]['datetime'] <= old and len(v) - i > 0):
+                if (list_v[i]['datetime'] <= old and i < len(v)):
                     self.alert(
                         'INFO',
                         'Reseting {} {} value from {}'.format(
