@@ -296,16 +296,17 @@ class Monitor():
                     datetime.now() - timedelta(hours=hours)
                 ).strftime('%d-%m-%Y %H:%M')
 
-                if (list_v[i]['datetime'] <= old and i < len(v)):
-                    self.alert(
-                        'INFO',
-                        'Reseting {} {} value from {}'.format(
-                            i,
-                            k,
-                            list_v[i]['datetime'],
+                if i < len(v):
+                    if list_v[i]['datetime'] <= old:
+                        self.alert(
+                            'INFO',
+                            'Reseting {} index {} value from {}'.format(
+                                i,
+                                k,
+                                list_v[i]['datetime'],
+                            )
                         )
-                    )
-                    del list_v[i]
+                        del list_v[i]
 
     def runner(self, data, url):
         runtime = 0
