@@ -152,7 +152,10 @@ def manage_docker(info):
 
 
 def main():
-    bot.polling()
+    try:
+        bot.infinity_polling(True)
+    except Exception as err:
+        time.sleep(10)
 
     while True:
         pass
