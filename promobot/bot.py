@@ -1,6 +1,7 @@
 import docker
 import logging
 import telebot
+import time
 from datetime import datetime
 
 if __package__ is None or __package__ == '':
@@ -154,7 +155,7 @@ def manage_docker(info):
 def main():
     try:
         bot.infinity_polling(True)
-    except Exception as err:
+    except Exception:
         time.sleep(10)
 
     while True:
