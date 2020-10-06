@@ -14,6 +14,33 @@ class Data():
 
         self.db = conn[client]
 
+    def add_config(self, envs):
+        d = []
+        col = self.db['config']
+
+        print(envs)
+
+        if any('delay' or 'reset' in s for s in envs):
+            d = dict(s.split('=') for s in envs)
+
+            col.update_many(
+                {},
+                {"$set": d},
+                upsert=True,
+            )
+
+    def list_config(self):
+        col = self.db['config']
+
+        configs = list(
+            col.find(
+                {},
+                {'_id': False}
+            )
+        )
+
+        return configs
+
     def add_intruder(self, d={}):
         col = self.db['intruder']
 

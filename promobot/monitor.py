@@ -30,6 +30,18 @@ class Monitor():
             'chat_id': []
         })
 
+    def manage_config(self, configs):
+        for d in configs:
+            if d.get('delay'):
+                self.config['monitor'].update({
+                    'delay': int(d.get('delay'))
+                })
+
+            if d.get('reset'):
+                self.config['monitor'].update({
+                    'reset': int(d.get('reset'))
+                })
+
     def manage_chats(self, chats):
         config = self.config.get('telegram')
         add = list(
@@ -310,13 +322,15 @@ class Monitor():
 
     def runner(self, data, url):
         runtime = 0
-        delay = self.config['monitor']['delay']
-        reset = self.config['monitor']['reset']
 
         while True:
+            config = data.list_config()
             chats = data.list_chats()
             keywords = data.list_keywords()
 
+            self.manage_config(
+                config
+            )
             self.manage_chats(
                 chats
             )
@@ -326,8 +340,10 @@ class Monitor():
 
             self.monitor(url)
 
-            time.sleep(delay)
+            delay = self.config['monitor']['delay']
+            reset = self.config['monitor']['reset']
 
+            time.sleep(delay)
             runtime += delay
 
             if runtime >= reset * 3600 / 2:
