@@ -44,7 +44,6 @@ class Config():
                 },
                 'thread': {
                     'tag': 'a',
-                    'class': 'cept-tt thread-link linkPlain thread-title--card'
                 },
                 'desc': {
                     'tag': 'span',
@@ -60,7 +59,6 @@ class Config():
                 },
                 'thread': {
                     'tag': 'a',
-                    'class': 'cept-tt thread-link linkPlain thread-title--card'
                 },
                 'desc': {
                     'tag': 'span',
@@ -76,7 +74,6 @@ class Config():
                 },
                 'thread': {
                     'tag': 'a',
-                    'class': 'cept-tt thread-link linkPlain thread-title--card'
                 },
                 'desc': {
                     'tag': 'span',
@@ -92,7 +89,6 @@ class Config():
                 },
                 'thread': {
                     'tag': 'a',
-                    'class': 'cept-tt thread-link linkPlain thread-title--card'
                 },
                 'desc': {
                     'tag': 'span',
