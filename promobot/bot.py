@@ -80,14 +80,26 @@ def handle_commands(message):
         pass
 
 
-@bot.message_handler(commands=['add', 'del', 'list', 'who', 'docker'])
+@bot.message_handler(commands=[
+    'add', 'del', 'list', 'who', 'docker', 'config'
+])
 def handle_keywords(message):
     cmd = message.text.split()[0]
     args = message.text.split()[1:]
 
     if message.chat.type == 'private':
         if data.find_chat(message.chat.id):
-            if 'docker' in cmd:
+            if 'config' in cmd:
+                if len(args) > 0:
+                    data.add_config(args)
+
+                msg = 'Configs:\n'
+                for d in data.list_config():
+                    for k, v in d.items():
+                        msg += '{}={}\n'.format(
+                            k, v
+                        )
+            elif 'docker' in cmd:
                 info = 'status'
                 if len(args) > 0:
                     info = args[0]
