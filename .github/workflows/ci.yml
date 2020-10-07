@@ -8,6 +8,7 @@ on:
       - 'promobot/**'
       - 'setup.py'
       - 'Dockerfile'
+      - '.github/workflows/**'
 
 jobs:
   test:
@@ -48,7 +49,7 @@ jobs:
       run: |
         docker buildx build \
           -t leandro2r/promobot:latest \
-          --platform linux/amd64, linux/arm/v7 \
+          --platform linux/amd64,linux/arm/v7 \
           --pull .
 
     - name: Push the Docker images
