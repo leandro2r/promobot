@@ -55,6 +55,3 @@ jobs:
           -t leandro2r/promobot:latest \
           --platform linux/amd64,linux/arm/v7 \
           --pull --push .
-
-    - name: Remove the Docker images
-      run: docker rmi leandro2r/promobot:latest
