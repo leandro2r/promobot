@@ -1,0 +1,60 @@
+name: Promobot CI
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'promobot/**'
+      - 'setup.py'
+      - 'Dockerfile'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install .[dev]
+
+    - name: Lint with flake8
+      run: |
+        flake8 . --count --ignore=E402 --show-source --statistics
+        flake8 . --count --ignore=E402 --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      id: buildx
+      uses: crazy-max/ghaction-docker-buildx@v3
+      with:
+        buildx-version: latest
+        qemu-version: latest
+
+    - name: Build and push the Docker image
+      run: |
+        docker buildx build \
+          -t leandro2r/promobot:latest \
+          --platform linux/amd64, linux/arm/v7 \
+          --pull .
+
+    - name: Push the Docker images
+      run: |
+        docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWD }} docker.io
+        docker push leandro2r/promobot:latest
+
+    - name: Remove the Docker images
+      run: docker rmi leandro2r/promobot:latest
