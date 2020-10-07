@@ -45,17 +45,16 @@ jobs:
         buildx-version: latest
         qemu-version: latest
 
+    - name: Login on dockerhub
+      run: |
+        docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWD }} docker.io
+
     - name: Build and push the Docker image
       run: |
         docker buildx build \
           -t leandro2r/promobot:latest \
           --platform linux/amd64,linux/arm/v7 \
-          --pull .
-
-    - name: Push the Docker images
-      run: |
-        docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWD }} docker.io
-        docker push leandro2r/promobot:latest
+          --pull --push .
 
     - name: Remove the Docker images
       run: docker rmi leandro2r/promobot:latest
