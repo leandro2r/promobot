@@ -26,6 +26,30 @@ data = Data(
 )
 
 
+@bot.message_handler(commands=['help'])
+def handle_help(message):
+    support = [
+        'add', 'del', 'list', 'who', 'docker', 'config'
+    ]
+
+    if message.chat.type == 'private':
+        if data.find_chat(message.chat.id):
+            msg = (
+                'Welcome! You can chat with me using one '
+                'of the following commands below: {}'.format(
+                    '\n'.join(support)
+                )
+            )
+
+    try:
+        bot.reply_to(
+            message,
+            msg
+        )
+    except Exception:
+        pass
+
+
 @bot.message_handler(commands=['start', 'stop', 'forall'])
 def handle_commands(message):
     cmd = message.text.split()[0]
