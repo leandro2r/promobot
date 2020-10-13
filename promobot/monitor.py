@@ -317,7 +317,7 @@ class Monitor():
                                     'Reseting {}º {} '
                                     'value from {}'
                                 ).format(
-                                    i+1,
+                                    i + 1,
                                     k,
                                     list_v[i]['datetime'],
                                 )
