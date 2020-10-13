@@ -35,9 +35,9 @@ def handle_help(message):
     if message.chat.type == 'private':
         if data.find_chat(message.chat.id):
             msg = (
-                'Welcome! You can chat with me using one '
-                'of the following commands below: {}'.format(
-                    '\n'.join(support)
+                'You can chat with me using one of the '
+                'following commands below: {}'.format(
+                    '\n/'.join(support)
                 )
             )
 
