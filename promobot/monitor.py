@@ -309,16 +309,22 @@ class Monitor():
                 ).strftime('%d-%m-%Y %H:%M')
 
                 if i < len(v):
-                    if list_v[i]['datetime'] <= old:
-                        self.alert(
-                            'INFO',
-                            'Reseting {} index {} value from {}'.format(
-                                i,
-                                k,
-                                list_v[i]['datetime'],
+                    try:
+                        if list_v[i]['datetime'] <= old:
+                            self.alert(
+                                'INFO',
+                                (
+                                    'Reseting {}º {} '
+                                    'value from {}'
+                                ).format(
+                                    i+1,
+                                    k,
+                                    list_v[i]['datetime'],
+                                )
                             )
-                        )
-                        del list_v[i]
+                            del list_v[i]
+                    except IndexError:
+                        pass
 
     def runner(self, data, url):
         runtime = 0
