@@ -173,9 +173,9 @@ class Monitor():
                 break
 
     def mount(self, src, each, t_title):
-        desc = each.get('title')
+        desc = each.get('title', '')
         title = t_title.find(text=True)
-        url = t_title.get('href')
+        url = t_title.get('href', '')
 
         if src.get('desc'):
             desc = each.find(
@@ -199,12 +199,14 @@ class Monitor():
             title = title.title()
 
         if 'http' not in url:
+            domain = re.search(
+                r'.*://[^/]+',
+                src.get('url'),
+            ).group()
+
             url = '{}/{}'.format(
-                re.search(
-                    r'.*://[^/]+',
-                    src.get('url'),
-                ).group(),
-                url,
+                domain,
+                re.sub(r'^/', '', url),
             )
 
         return {

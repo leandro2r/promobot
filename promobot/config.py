@@ -25,7 +25,7 @@ class Config():
 
         self.data['urls'] = [
             {
-                'url': 'http://www.hardmob.com.br/forums/407-Promocoes'
+                'url': 'https://www.hardmob.com.br/forums/407-Promocoes'
                        '?s=&pp=50&daysprune=1&sort=dateline&order=desc',
                 'topic': {
                     'tag': 'div',
@@ -109,6 +109,17 @@ class Config():
                 'desc': {
                     'tag': 'p',
                     'class': 'preco comentario clear'
+                }
+            },
+            {
+                'url': 'https://adrenaline.com.br/forum/forums/for-sale.221',
+                'topic': {
+                    'tag': 'div',
+                    'class': 'structItem-title'
+                },
+                'thread': {
+                    'tag': 'a',
+                    'preview-tooltip': 'data-xf-init'
                 }
             },
         ]
