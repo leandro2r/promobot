@@ -21,20 +21,20 @@ services:
       - TELEGRAM_CHAT_PASSWD=
       - INITIAL_KEYWORDS=
       - DELAY=10
-      - MUTED=false
+      - MUTED=true
       - RESET_TIME=24
-    # volumes:
-    #   - .:/home/monitor
-    # entrypoint: ""
-    # command: "tail -f /dev/null"
+    volumes:
+      - .:/home/promobot
+    entrypoint: ""
+    command: "tail -f /dev/null"
 
   bot:
     <<: *promobot
     volumes:
-      # - .:/home/monitor
+      - .:/home/promobot
       - /var/run/docker.sock:/var/run/docker.sock
-    entrypoint: "promobot"
-    command: "--bot"
+    # entrypoint: "promobot"
+    # command: "--bot"
 
   mongodb:
     image: mongo:latest
