@@ -122,6 +122,76 @@ class Config():
                     'preview-tooltip': 'data-xf-init'
                 }
             },
+            {
+                'url': 'https://www.ofertaesperta.com?page=1',
+                'topic': {
+                    'tag': 'div',
+                    'class': 'common-card'
+                },
+                'thread': {
+                    'tag': 'a',
+                },
+                'desc': {
+                    'tag': 'div',
+                    'class': 'store-icon'
+                }
+            },
+            {
+                'url': 'https://www.ofertaesperta.com?page=2',
+                'topic': {
+                    'tag': 'div',
+                    'class': 'common-card'
+                },
+                'thread': {
+                    'tag': 'a',
+                },
+                'desc': {
+                    'tag': 'div',
+                    'class': 'store-icon'
+                }
+            },
+            {
+                'url': 'https://www.ofertaesperta.com/destaques',
+                'topic': {
+                    'tag': 'div',
+                    'class': 'common-card'
+                },
+                'thread': {
+                    'tag': 'a',
+                },
+                'desc': {
+                    'tag': 'div',
+                    'class': 'store-icon'
+                }
+            },
+            {
+                'url': 'https://www.ofertaesperta.com/destaques?page=2',
+                'topic': {
+                    'tag': 'div',
+                    'class': 'common-card'
+                },
+                'thread': {
+                    'tag': 'a',
+                },
+                'desc': {
+                    'tag': 'div',
+                    'class': 'store-icon'
+                }
+            },
+            {
+                'url': 'https://www.ofertaesperta.com/mais-curtidas',
+                'topic': {
+                    'tag': 'div',
+                    'class': 'common-card'
+                },
+                'thread': {
+                    'tag': 'a',
+                },
+                'desc': {
+                    'tag': 'div',
+                    'class': 'store-icon'
+                }
+            },
         ]
 
         self.data['telegram'] = {
