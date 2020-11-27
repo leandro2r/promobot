@@ -185,9 +185,15 @@ class Monitor():
                 }
             )
 
-            if desc:
-                desc = desc.get_text()
-            else:
+            try:
+                if desc.get_text():
+                    desc = desc.get_text()
+                else:
+                    desc = desc.find().get(
+                        'title',
+                        desc
+                    )
+            except Exception:
                 desc = ''
 
         if not isinstance(title, str):
@@ -222,7 +228,7 @@ class Monitor():
         while len(topic) == 0:
             try:
                 req = urllib.request.Request(
-                    url=src['url'],
+                    url=src.get('url'),
                     headers=self.header
                 )
 
@@ -251,7 +257,8 @@ class Monitor():
             except (urllib.error.HTTPError, IncompleteRead, OSError) as e:
                 self.alert(
                     'ERROR',
-                    'Error on getting data: {}'.format(
+                    'Error on getting {} data: {}'.format(
+                        src.get('url'),
                         e,
                     )
                 )
