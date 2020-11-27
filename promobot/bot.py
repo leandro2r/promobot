@@ -36,7 +36,7 @@ def handle_help(message):
         if data.find_chat(message.chat.id):
             msg = (
                 'You can chat with me using one of the '
-                'following commands below: {}'.format(
+                'following commands below: /{}'.format(
                     '\n/'.join(support)
                 )
             )
@@ -190,6 +190,6 @@ def manage_docker(info):
 
 def main():
     try:
-        bot.infinity_polling(none_stop=True)
+        bot.polling(none_stop=True)
     except Exception:
         time.sleep(20)
