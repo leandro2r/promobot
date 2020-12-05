@@ -197,16 +197,20 @@ class Monitor():
                 desc = ''
 
         if not isinstance(title, str):
-            title = re.search(
+            content = re.search(
                 r'[^/]+$',
                 url
-            ).group().replace('-', ' ')
+            ).group()
 
-            title = title.title()
+            title = re.sub(
+                '-+',
+                ' ',
+                content
+            ).title()
 
         if 'http' not in url:
             domain = re.search(
-                r'.*://[^/]+',
+                r'.*://[^/?]+',
                 src.get('url'),
             ).group()
 
@@ -216,9 +220,9 @@ class Monitor():
             )
 
         return {
-            'title': re.sub(r'\n|\t', '', title),
-            'desc': re.sub(r'\n|\t', '', desc),
-            'url': url,
+            'title': re.sub(r'\n|\t', '', str(title)),
+            'desc': re.sub(r'\n|\t', '', str(desc)),
+            'url': str(url),
         }
 
     def get_promo(self, src):
