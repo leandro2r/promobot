@@ -1,5 +1,6 @@
 import docker
 import logging
+import re
 import telebot
 import time
 from datetime import datetime
@@ -14,7 +15,6 @@ else:
 
 logger = telebot.logger
 telebot.logger.setLevel(logging.INFO)
-msg = 'This message costed me R$0,31.'
 
 config = Config().data
 bot = telebot.TeleBot(
@@ -26,11 +26,9 @@ data = Data(
 )
 
 
-@bot.message_handler(commands=['help'])
-def handle_help(message):
-    support = [
-        'add', 'del', 'list', 'who', 'docker', 'config'
-    ]
+def handle_help(message, **kwargs):
+    msg = ''
+    support = kwargs.get('support')
 
     if message.chat.type == 'private':
         if data.find_chat(message.chat.id):
@@ -41,18 +39,12 @@ def handle_help(message):
                 )
             )
 
-    try:
-        bot.reply_to(
-            message,
-            msg
-        )
-    except Exception:
-        pass
+    return msg
 
 
-@bot.message_handler(commands=['start', 'stop', 'forall'])
-def handle_commands(message):
-    cmd = message.text.split()[0]
+def handle_intro(message, **kwargs):
+    msg = ''
+    cmd = kwargs.get('cmd')
     args = message.text.split()[1:]
 
     if message.chat.type == 'private':
@@ -95,20 +87,12 @@ def handle_commands(message):
                 })
                 data.add_intruder(d)
 
-    try:
-        bot.reply_to(
-            message,
-            msg
-        )
-    except Exception:
-        pass
+    return msg
 
 
-@bot.message_handler(commands=[
-    'add', 'del', 'list', 'who', 'docker', 'config'
-])
-def handle_keywords(message):
-    cmd = message.text.split()[0]
+def handle_mgmt(message, **kwargs):
+    msg = ''
+    cmd = kwargs.get('cmd')
     args = message.text.split()[1:]
 
     if message.chat.type == 'private':
@@ -142,7 +126,7 @@ def handle_keywords(message):
                 if len(args) > 0:
                     if 'add' in cmd:
                         data.add_keywords(args)
-                    elif '/del' in cmd:
+                    elif 'del' in cmd:
                         data.del_keywords(args)
 
                 items = data.list_keywords()
@@ -152,13 +136,7 @@ def handle_keywords(message):
                         items
                     )
 
-    try:
-        bot.reply_to(
-            message,
-            msg,
-        )
-    except Exception:
-        pass
+    return msg
 
 
 def manage_docker(info):
@@ -186,6 +164,55 @@ def manage_docker(info):
         )
 
     return msg
+
+
+@bot.message_handler(func=lambda message: True)
+def bot_reply(message):
+    cmd = message.text.split()[0]
+
+    if cmd:
+        cmd = re.sub('[^a-z]+', '', cmd.lower())
+
+    d = {
+        'mgmt': [
+            'add', 'del', 'list', 'who', 'docker', 'config'
+        ],
+        'help': [
+            'help'
+        ],
+        'intro': [
+            'start', 'stop', 'forall'
+        ],
+    }
+
+    for opt in d.keys():
+        if cmd in d.get(opt):
+            if opt == 'mgmt':
+                res = handle_mgmt(
+                    message,
+                    cmd=cmd,
+                )
+            elif opt == 'help':
+                res = handle_help(
+                    message,
+                    support=d.get('mgmt'),
+                )
+            elif opt == 'intro':
+                res = handle_intro(
+                    message,
+                    cmd=cmd,
+                )
+
+            if not res:
+                res = 'This message costed me R$0,31.'
+
+            try:
+                bot.reply_to(
+                    message,
+                    res
+                )
+            except Exception:
+                pass
 
 
 def main():
