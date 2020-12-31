@@ -192,6 +192,36 @@ class Config():
                     'class': 'store-icon'
                 }
             },
+            {
+                'url': 'https://www.promobit.com.br/page/1-1',
+                'topic': {
+                    'tag': 'div',
+                    'class': 'pr-tl-card'
+                },
+                'thread': {
+                    'tag': 'a',
+                    'class': 'access_url'
+                },
+                'desc': {
+                    'tag': 'div',
+                    'class': 'where'
+                }
+            },
+            {
+                'url': 'https://www.promobit.com.br/page/2-2',
+                'topic': {
+                    'tag': 'div',
+                    'class': 'pr-tl-card'
+                },
+                'thread': {
+                    'tag': 'a',
+                    'class': 'access_url'
+                },
+                'desc': {
+                    'tag': 'div',
+                    'class': 'where'
+                }
+            },
         ]
 
         self.data['telegram'] = {
