@@ -151,48 +151,6 @@ class Config():
                 }
             },
             {
-                'url': 'https://www.ofertaesperta.com/destaques',
-                'topic': {
-                    'tag': 'div',
-                    'class': 'common-card'
-                },
-                'thread': {
-                    'tag': 'a',
-                },
-                'desc': {
-                    'tag': 'div',
-                    'class': 'store-icon'
-                }
-            },
-            {
-                'url': 'https://www.ofertaesperta.com/destaques?page=2',
-                'topic': {
-                    'tag': 'div',
-                    'class': 'common-card'
-                },
-                'thread': {
-                    'tag': 'a',
-                },
-                'desc': {
-                    'tag': 'div',
-                    'class': 'store-icon'
-                }
-            },
-            {
-                'url': 'https://www.ofertaesperta.com/mais-curtidas',
-                'topic': {
-                    'tag': 'div',
-                    'class': 'common-card'
-                },
-                'thread': {
-                    'tag': 'a',
-                },
-                'desc': {
-                    'tag': 'div',
-                    'class': 'store-icon'
-                }
-            },
-            {
                 'url': 'https://www.promobit.com.br/page/1-1',
                 'topic': {
                     'tag': 'div',
