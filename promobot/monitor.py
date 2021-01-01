@@ -256,12 +256,16 @@ class Monitor():
 
                     if len(topic) == 0:
                         self.alert(
-                            'ERROR', 'Error on searching topics'
+                            'ERROR',
+                            'Error on searching topics in {}: {}'.format(
+                                src.get('url'),
+                                soup[:10]
+                            )
                         )
             except (urllib.error.HTTPError, IncompleteRead, OSError) as e:
                 self.alert(
                     'ERROR',
-                    'Error on getting {} data: {}'.format(
+                    'Error on getting data from {}: {}'.format(
                         src.get('url'),
                         e,
                     )
