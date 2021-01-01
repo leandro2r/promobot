@@ -1,0 +1,22 @@
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: admin-user
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "nodes"]
+    verbs: ["get", "watch", "list"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: rbac
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: promobot
+roleRef:
+  kind: ClusterRole
+  name: admin-user
+  apiGroup: rbac.authorization.k8s.io
