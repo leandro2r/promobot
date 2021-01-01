@@ -4,7 +4,7 @@ import re
 import telebot
 import time
 from datetime import datetime
-from kubernetes import client, config
+from kubernetes import client, config as conf
 
 if __package__ is None or __package__ == '':
     from config import Config
@@ -148,15 +148,15 @@ def handle_mgmt(message, **kwargs):
 
 def manage_k8s(info):
     msg = ''
-    config.load_incluster_config()
+    conf.load_incluster_config()
 
-    configuration = client.Configuration().get_default_copy()
-    configuration.host = 'https://{}:{}'.format(
+    k8s_config = client.Configuration().get_default_copy()
+    k8s_config.host = 'https://{}:{}'.format(
         os.environ.get('KUBERNETES_SERVICE_HOST'),
         os.environ.get('KUBERNETES_PORT_443_TCP_PORT'),
     )
 
-    v1 = client.CoreV1Api(client.ApiClient(configuration))
+    v1 = client.CoreV1Api(client.ApiClient(k8s_config))
     ret = v1.list_namespaced_pod(
         watch=False,
         namespace='promobot',
