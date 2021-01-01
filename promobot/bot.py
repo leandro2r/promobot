@@ -1,9 +1,10 @@
-import docker
 import logging
+import os
 import re
 import telebot
 import time
 from datetime import datetime
+from kubernetes import client, config
 
 if __package__ is None or __package__ == '':
     from config import Config
@@ -112,7 +113,7 @@ def handle_mgmt(message, **kwargs):
                 if len(args) > 0:
                     info = args[0]
 
-                msg = manage_docker(info)
+                msg = manage_k8s(info)
             elif 'who' in cmd:
                 who = '\n'.join(
                     str(i) for i in data.list_users(all=True)
@@ -145,29 +146,40 @@ def handle_mgmt(message, **kwargs):
     return msg
 
 
-def manage_docker(info):
+def manage_k8s(info):
     msg = ''
-    client = docker.from_env()
+    config.load_incluster_config()
 
-    ps = client.containers.list(
-        filters={'name': 'promobot'}
+    configuration = client.Configuration().get_default_copy()
+    configuration.host = 'https://{}:{}'.format(
+        os.environ.get('KUBERNETES_SERVICE_HOST'),
+        os.environ.get('KUBERNETES_PORT_443_TCP_PORT'),
     )
 
-    for p in ps:
-        state = p.attrs.get('State')
+    v1 = client.CoreV1Api(client.ApiClient(configuration))
+    ret = v1.list_namespaced_pod(
+        watch=False,
+        namespace='promobot',
+    )
 
-        started_at = datetime.strptime(
-            state.get('StartedAt')[0:26],
-            '%Y-%m-%dT%H:%M:%S.%f'
-        )
+    for i in ret.items:
+        for status in i.status.container_statuses:
+            state = 'Running'
+            if not status.state.running:
+                state = 'Not running'
 
-        runtime = datetime.utcnow() - started_at
+            started_at = datetime.strptime(
+                str(status.state.running.started_at),
+                '%Y-%m-%d %H:%M:%S+00:00'
+            )
 
-        msg += '{} {} ({})\n'.format(
-            p.status.title(),
-            runtime,
-            p.name.split('_')[1].title(),
-        )
+            runtime = datetime.utcnow() - started_at
+
+            msg += '{} {} ({})\n'.format(
+                state,
+                runtime,
+                status.name.title(),
+            )
 
     return msg
 
@@ -181,7 +193,7 @@ def bot_reply(message):
 
     d = {
         'mgmt': [
-            'add', 'del', 'list', 'who', 'docker', 'config', 'url'
+            'add', 'del', 'list', 'who', 'k8s', 'config', 'url'
         ],
         'help': [
             'help'
