@@ -20,6 +20,7 @@ setup(
         'bs4<0.1',
         'pymongo<3.11',
         'pyTelegramBotAPI<3.8',
+        'requests<2.26',
         'kubernetes<12.1',
     ],
     extras_require={
