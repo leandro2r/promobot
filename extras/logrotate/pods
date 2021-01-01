@@ -1,0 +1,8 @@
+/var/log/pods/**/*.log {
+    daily
+    missingok
+    rotate 5
+    maxage 3
+    notifempty
+    maxsize 10M
+}

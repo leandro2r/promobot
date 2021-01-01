@@ -59,17 +59,9 @@ spec:
                 name: promobot-cfg
             - secretRef:
                 name: promobot-sct
-          volumeMounts:
-            - name: dockersock
-              mountPath: /var/run/docker.sock
           args: ["--bot"]
 
         - name: monitor
           image: leandro2r/promobot:latest
           imagePullPolicy: Always
           envFrom: *env
-
-      volumes:
-        - name: dockersock
-          hostPath:
-            path: /var/run/docker.sock
