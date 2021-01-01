@@ -1,5 +1,4 @@
 import logging
-import os
 import re
 import telebot
 import time
@@ -150,13 +149,7 @@ def manage_k8s(info):
     msg = ''
     conf.load_incluster_config()
 
-    k8s_config = client.Configuration().get_default_copy()
-    k8s_config.host = 'https://{}:{}'.format(
-        os.environ.get('KUBERNETES_SERVICE_HOST'),
-        os.environ.get('KUBERNETES_PORT_443_TCP_PORT'),
-    )
-
-    v1 = client.CoreV1Api(client.ApiClient(k8s_config))
+    v1 = client.CoreV1Api()
     ret = v1.list_namespaced_pod(
         watch=False,
         namespace='promobot',
