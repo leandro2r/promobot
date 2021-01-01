@@ -107,12 +107,12 @@ def handle_mgmt(message, **kwargs):
                         msg += '{}={}\n'.format(
                             k, v
                         )
-            elif 'k8s' in cmd:
+            elif 'kube' in cmd:
                 info = 'status'
                 if len(args) > 0:
                     info = args[0]
 
-                msg = manage_k8s(info)
+                msg = manage_kube(info)
             elif 'who' in cmd:
                 who = '\n'.join(
                     str(i) for i in data.list_users(all=True)
@@ -145,7 +145,7 @@ def handle_mgmt(message, **kwargs):
     return msg
 
 
-def manage_k8s(info):
+def manage_kube(info):
     msg = ''
     conf.load_incluster_config()
 
@@ -186,7 +186,7 @@ def bot_reply(message):
 
     d = {
         'mgmt': [
-            'add', 'del', 'list', 'who', 'k8s', 'config', 'url'
+            'add', 'del', 'list', 'who', 'kube', 'config', 'url'
         ],
         'help': [
             'help'

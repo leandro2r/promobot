@@ -23,6 +23,8 @@ release:
 
 deploy:
 	@echo -e "Restarting pods"
+	@kubectl apply -f extras/k3s/deployment.yml
+	@kubectl apply -f extras/k3s/secrets.yml | true
 	@kubectl scale --replicas=0 deploy $(SVC) -n $(SVC)
 	@kubectl scale --replicas=1 deploy $(SVC) -n $(SVC)
 
