@@ -107,7 +107,7 @@ def handle_mgmt(message, **kwargs):
                         msg += '{}={}\n'.format(
                             k, v
                         )
-            elif 'docker' in cmd:
+            elif 'k8s' in cmd:
                 info = 'status'
                 if len(args) > 0:
                     info = args[0]
