@@ -1,0 +1,186 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: rpi
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: monitor-cfg
+  namespace: rpi
+data:
+  TZ: America/Sao_Paulo
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: monitor-conf-cfg
+  namespace: rpi
+data:
+  data.conf: |
+    #web.friends.1.name=Raspberry Pi
+    #web.friends.1.link=http://192.168.0.123/
+    #web.friends.2.name=Shuttle
+    #web.friends.2.link=http://192.168.0.2/
+    #web.friends.3.name=Netbook
+    #web.friends.3.link=http://192.168.0.38/
+
+    web.page.icon='img/logo.png'
+    web.page.menutitle='RPi-Monitor  <sub>(raspberrypi)</sub>'
+    web.page.pagetitle='RPi-Monitor (raspberrypi)'
+
+    web.status.1.name=Raspberry Pi
+    #web.status.2.name=Home
+    web.statistics.1.name=Raspberry Pi
+    #web.statistics.2.name=page 2
+
+    #web.addons.1.name=Addons
+    #web.addons.1.addons=about
+    #web.addons.1.name=Shellinabox
+    #web.addons.1.addons=shellinabox
+
+    #web.addons.2.name=Addons example
+    #web.addons.2.addons=example
+    #web.addons.2.showTitle=0
+
+    web.addons.1.name=cAdvisor
+    web.addons.1.showTitle=0
+    web.addons.1.addons=custom
+    web.addons.1.url=http://rpi.local:8000/
+
+    #web.addons.4.name=Custom addons
+    #web.addons.4.addons=custom
+    #web.addons.4.showTitle=0
+    #web.addons.4.url=/addons/custom/custominfo.html
+
+    #web.addons.5.name=Top3
+    #web.addons.5.addons=top3
+
+    #include=/etc/rpimonitor/template/example.justgage.conf
+    #include=/etc/rpimonitor/template/example.badge_and_label.conf
+    #include=/etc/rpimonitor/template/example.progressbar.conf
+    #include=/etc/rpimonitor/template/example.visibility.conf
+    #include=/etc/rpimonitor/template/example.alert.conf
+    #include=/etc/rpimonitor/template/example.interval.conf
+
+    include=/etc/rpimonitor/template/version.conf
+    include=/etc/rpimonitor/template/uptime.conf
+    include=/etc/rpimonitor/template/wlan.conf
+    include=/etc/rpimonitor/template/network.conf
+    include=/etc/rpimonitor/template/cpu.conf
+    include=/etc/rpimonitor/template/memory.conf
+    include=/etc/rpimonitor/template/swap.conf
+    include=/etc/rpimonitor/template/temperature.conf
+    include=/etc/rpimonitor/template/sdcard.conf
+
+    #include=/etc/rpimonitor/template/printer.conf
+    #include=/etc/rpimonitor/template/storage.conf
+    #include=/etc/rpimonitor/template/services.conf
+    #include=/etc/rpimonitor/template/wlan.conf
+    #include=/etc/rpimonitor/template/dht11.conf
+    #include=/etc/rpimonitor/template/entropy.conf
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: monitor
+  namespace: rpi
+  labels:
+    app: monitor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: monitor
+  template:
+    metadata:
+      labels:
+        name: monitor
+    spec:
+      containers:
+        - name: monitor
+          image: michaelmiklis/rpi-monitor:latest
+          imagePullPolicy: Always
+          securityContext:
+            privileged: true
+          envFrom:
+            - configMapRef:
+                name: monitor-cfg
+          ports:
+            - containerPort: 8888
+          volumeMounts:
+            - name: vc
+              mountPath: /opt/vc
+              readOnly: true
+            - name: boot
+              mountPath: /boot
+              readOnly: true
+            - name: sys
+              mountPath: /dockerhost/sys
+              readOnly: true
+            - name: etc
+              mountPath: /dockerhost/etc
+              readOnly: true
+            - name: proc
+              mountPath: /dockerhost/proc
+              readOnly: true
+            - name: usr
+              mountPath: /dockerhost/usr/lib
+              readOnly: true
+            - name: vchiq
+              mountPath: /dev/vchiq
+              readOnly: true
+            - name: vcsm
+              mountPath: /dev/vcsm
+              readOnly: true
+            - name: data-conf
+              mountPath: /etc/rpimonitor/data.conf
+              subPath: data.conf
+      volumes:
+        - name: vc
+          hostPath:
+            path: /opt/vc
+        - name: boot
+          hostPath:
+            path: /boot
+        - name: sys
+          hostPath:
+            path: /sys
+        - name: etc
+          hostPath:
+            path: /etc
+        - name: proc
+          hostPath:
+            path: /proc
+        - name: usr
+          hostPath:
+            path: /usr/lib
+        - name: vchiq
+          hostPath:
+            path: /dev/vchiq
+        - name: vcsm
+          hostPath:
+            path: /dev/vcsm
+        - name: data-conf
+          configMap:
+            name: monitor-conf-cfg
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: monitor-web
+  namespace: rpi
+  labels:
+    app: monitor
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8080
+      targetPort: 8888
+  selector:
+    name: monitor

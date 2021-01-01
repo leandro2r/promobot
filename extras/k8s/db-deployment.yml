@@ -1,0 +1,132 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: promobot
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-sct
+  namespace: promobot
+  labels:
+    app: db
+type: Opaque
+stringData:
+  MONGO_INITDB_ROOT_USERNAME: promobot
+  MONGO_INITDB_ROOT_PASSWORD: juliusrock
+  MONGO_INITDB_DATABASE: promobot
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-cfg
+  namespace: promobot
+data:
+  TZ: America/Sao_Paulo
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-firstrun-cfg
+  namespace: promobot
+data:
+  first_run.sh: |
+    #!/bin/bash
+    eval mongo <<EOF
+    use admin
+    db.createUser({ user: "$MONGO_INITDB_ROOT_USERNAME", pwd: "$MONGO_INITDB_ROOT_PASSWORD", roles: [ { role: "userAdminAnyDatabase", db: "admin" } ] })
+    quit()
+    EOF
+
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: db-pv
+  namespace: promobot
+  labels:
+    type: local
+spec:
+  storageClassName: standard
+  capacity:
+    storage: 100M
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  hostPath:
+    path: "/data"
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: db-pvc
+  namespace: promobot
+  labels:
+    app: db
+spec:
+  storageClassName: standard
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100M
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db
+  namespace: promobot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: db
+  template:
+    metadata:
+      labels:
+        name: db
+    spec:
+      containers:
+        - name: db
+          image: leandro2r/promobot:mongodb3-rpi
+          envFrom:
+            - configMapRef:
+                name: db-cfg
+            - secretRef:
+                name: db-sct
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - mountPath: /data/db
+              name: db-volume-mount
+            - name: first-run
+              mountPath: /root/first_run.sh
+              # mountPath: /docker-entrypoint.sh
+              subPath: first_run.sh
+      volumes:
+        - name: db-volume-mount
+          persistentVolumeClaim:
+            claimName: db-pvc
+        - name: first-run
+          configMap:
+            name: db-firstrun-cfg
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+  namespace: promobot
+  labels:
+    app: db
+spec:
+  type: ClusterIP
+  ports:
+  - port: 27017
+  selector:
+    name: db

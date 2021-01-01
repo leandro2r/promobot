@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: promobot
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: promobot-sct
+  namespace: promobot
+  labels:
+    app: promobot
+type: Opaque
+stringData:
+  MONGO_INITDB_ROOT_USERNAME: promobot
+  MONGO_INITDB_ROOT_PASSWORD: juliusrock
+  MONGO_INITDB_DATABASE: promobot
+  TELEGRAM_CHAT_PASSWD: ""
+  TELEGRAM_TOKEN: ""
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: promobot-cfg
+  namespace: promobot
+data:
+  DB_HOST: db
+  INITIAL_KEYWORDS: ""
+  DELAY: "10"
+  MUTED: "false"
+  RESET_TIME: "24"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: promobot
+  namespace: promobot
+  labels:
+    app: promobot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: promobot
+  template:
+    metadata:
+      labels:
+        name: promobot
+    spec:
+      containers:
+        - name: bot
+          image: leandro2r/promobot:latest
+          imagePullPolicy: Always
+          envFrom: &env
+            - configMapRef:
+                name: promobot-cfg
+            - secretRef:
+                name: promobot-sct
+          volumeMounts:
+            - name: dockersock
+              mountPath: /var/run/docker.sock
+          args: ["--bot"]
+
+        - name: monitor
+          image: leandro2r/promobot:latest
+          imagePullPolicy: Always
+          envFrom: *env
+
+      volumes:
+        - name: dockersock
+          hostPath:
+            path: /var/run/docker.sock
