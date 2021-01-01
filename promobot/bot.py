@@ -120,6 +120,12 @@ def handle_mgmt(message, **kwargs):
                 msg = 'Users:\n{}'.format(
                     who,
                 )
+            elif 'url' in cmd:
+                msg = 'URLs:\n'
+                for d in config.get('urls'):
+                    msg += '{}\n'.format(
+                        d.get('url')
+                    )
             else:
                 msg = 'Empty keyword list.'
 
@@ -175,7 +181,7 @@ def bot_reply(message):
 
     d = {
         'mgmt': [
-            'add', 'del', 'list', 'who', 'docker', 'config'
+            'add', 'del', 'list', 'who', 'docker', 'config', 'url'
         ],
         'help': [
             'help'
