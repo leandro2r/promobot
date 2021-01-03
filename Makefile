@@ -7,13 +7,14 @@ clean:
 	@echo -e "Cleaning files..."
 	@rm -rf *.egg-info build dist
 
-config:
-	@echo -e "Configuring on kubernetes..."
-	@kubectl apply -f extras/k3s
-
-install: config
+install: deploy
 	@echo -e "Installing files..."
 	@cp -f extras/logrotate/pods /etc/logrotate.d/
+
+update:
+	@echo -e "Updating pods..."
+	@kubectl set image deploy/$(SVC) -n $(NAMESPACE) *=$(IMG) --all
+	@kubectl set image deploy/$(SVC) -n $(NAMESPACE) *=$(IMG):latest --all
 
 build:
 	@echo -e "Building docker image..."
@@ -26,9 +27,9 @@ release:
 	@docker push $(IMG):$(VERSION)
 	@docker push $(IMG):latest
 
-deploy: config
+deploy: config update
 	@echo -e "Deploying on kubernetes..."
-	@kubectl set image deploy/$(SVC) -n $(NAMESPACE) *=$(IMG):latest --all
+	@kubectl apply -f extras/k3s
 
 all: clean build release deploy
 	@echo -e "Done!"
