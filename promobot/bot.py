@@ -168,10 +168,18 @@ def manage_kube(info):
 
             runtime = datetime.utcnow() - started_at
 
-            msg += '{} {} ({})\n'.format(
+            log = v1.read_namespaced_pod_log(
+                name=i.metadata.name,
+                namespace=i.metadata.namespace,
+                container=status.name,
+                tail_lines=1,
+            )
+
+            msg += '{} {} ({}):\n{}\n'.format(
                 state,
                 runtime,
                 status.name.title(),
+                log[:71],
             )
 
     return msg
