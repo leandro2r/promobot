@@ -167,7 +167,13 @@ def handle_mgmt(message, **kwargs):
 
 def manage_kube(info):
     msg = ''
-    conf.load_incluster_config()
+
+    try:
+        conf.load_incluster_config()
+    except conf.config_exception.ConfigException:
+        conf.load_kube_config()
+
+    print('aqui')
 
     v1 = client.CoreV1Api()
     ret = v1.list_namespaced_pod(
@@ -249,7 +255,7 @@ def bot_reply(message):
                 bot.reply_to(
                     message,
                     res,
-                    parse_mode= 'Markdown',
+                    parse_mode='Markdown',
                 )
             except Exception:
                 pass

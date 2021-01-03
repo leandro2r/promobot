@@ -30,9 +30,10 @@ services:
 
   bot:
     <<: *promobot
+    # network_mode: "host"
     volumes:
       - .:/home/promobot
-      - /var/run/docker.sock:/var/run/docker.sock
+      - ${HOME}/.kube/config:/root/.kube/config:ro
     # entrypoint: "promobot"
     # command: "--bot"
 
