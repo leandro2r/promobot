@@ -48,13 +48,20 @@ def handle_intro(message, **kwargs):
     args = message.text.split()[1:]
 
     if message.chat.type == 'private':
+        username = ''
+        if message.chat.username:
+            username = '@{}'.format(
+                message.chat.username,
+            )
+
         d = {
             'id': message.chat.id,
             'user': '{} {} ({})'.format(
                 message.chat.first_name,
                 message.chat.last_name,
-                message.chat.username,
-            )
+                username,
+            ),
+            'username': username,
         }
 
         if len(args) > 0:
@@ -114,7 +121,12 @@ def handle_mgmt(message, **kwargs):
                             k, v
                         )
 
-                msg = 'Configs:\n```{}```'.format(
+                if 'delay' not in res:
+                    res += 'delay=<default>\n'
+                if 'reset' not in res:
+                    res += 'reset=<default>\n'
+
+                msg = 'Configs:\n```\n{}```'.format(
                     res,
                 )
             elif 'who' in cmd:
@@ -122,7 +134,7 @@ def handle_mgmt(message, **kwargs):
                     str(i) for i in data.list_users(all=True)
                 )
 
-                msg = 'Users:\n```{}```'.format(
+                msg = 'Users:\n{}'.format(
                     res,
                 )
             elif 'url' in cmd:
@@ -131,7 +143,7 @@ def handle_mgmt(message, **kwargs):
                         d.get('url')
                     )
 
-                msg = 'URLs:\n```{}```'.format(
+                msg = 'URLs:\n```\n{}```'.format(
                     res,
                 )
             else:
@@ -146,7 +158,7 @@ def handle_mgmt(message, **kwargs):
                 items = data.list_keywords()
 
                 if items:
-                    msg = 'List:\n```{}```'.format(
+                    msg = 'Keywords:\n```\n{}```'.format(
                         '\n'.join(items),
                     )
 
@@ -183,7 +195,7 @@ def manage_kube(info):
                 tail_lines=1,
             )
 
-            msg += '{} {} ({}) ```{}```\n\n'.format(
+            msg += '{} {} ({}) ```\n{}```\n\n'.format(
                 state,
                 runtime,
                 status.name.title(),
@@ -236,7 +248,8 @@ def bot_reply(message):
             try:
                 bot.reply_to(
                     message,
-                    res
+                    res,
+                    parse_mode= 'Markdown',
                 )
             except Exception:
                 pass
