@@ -158,7 +158,7 @@ def handle_mgmt(message, **kwargs):
                 items = data.list_keywords()
 
                 if items:
-                    msg = 'Keywords:\n```\n{}```'.format(
+                    msg = '```\n{}```'.format(
                         '\n'.join(items),
                     )
 
@@ -172,8 +172,6 @@ def manage_kube(info):
         conf.load_incluster_config()
     except conf.config_exception.ConfigException:
         conf.load_kube_config()
-
-    print('aqui')
 
     v1 = client.CoreV1Api()
     ret = v1.list_namespaced_pod(
@@ -198,14 +196,14 @@ def manage_kube(info):
                 name=i.metadata.name,
                 namespace=i.metadata.namespace,
                 container=status.name,
-                tail_lines=1,
+                tail_lines=2,
             )
 
             msg += '{} {} ({}) ```\n{}```\n\n'.format(
                 state,
                 runtime,
                 status.name.title(),
-                log[:71],
+                log,
             )
 
     return msg
