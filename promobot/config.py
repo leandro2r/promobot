@@ -25,7 +25,7 @@ class Config():
 
         self.data['urls'] = [
             {
-                'url': 'https://www.hardmob.com.br/forums/407-Promocoes'
+                'url': 'https://hardmob.com.br/forums/407-Promocoes'
                        '?s=&pp=50&daysprune=1&sort=dateline&order=desc',
                 'topic': {
                     'tag': 'div',
@@ -37,7 +37,7 @@ class Config():
                 }
             },
             {
-                'url': 'https://www.pelando.com.br/recentes',
+                'url': 'https://pelando.com.br/recentes',
                 'topic': {
                     'tag': 'article',
                     'class': ''
@@ -52,7 +52,7 @@ class Config():
                 }
             },
             {
-                'url': 'https://www.pelando.com.br/recentes?page=2',
+                'url': 'https://pelando.com.br/recentes?page=2',
                 'topic': {
                     'tag': 'article',
                     'class': ''
@@ -67,7 +67,7 @@ class Config():
                 }
             },
             {
-                'url': 'https://www.pelando.com.br/quente',
+                'url': 'https://pelando.com.br/quente',
                 'topic': {
                     'tag': 'article',
                     'class': ''
@@ -82,7 +82,7 @@ class Config():
                 }
             },
             {
-                'url': 'https://www.pelando.com.br/quente?page=2',
+                'url': 'https://pelando.com.br/quente?page=2',
                 'topic': {
                     'tag': 'article',
                     'class': ''
@@ -123,7 +123,7 @@ class Config():
                 }
             },
             {
-                'url': 'https://www.ofertaesperta.com?page=1',
+                'url': 'https://ofertaesperta.com?page=1',
                 'topic': {
                     'tag': 'div',
                     'class': 'common-card'
@@ -137,7 +137,7 @@ class Config():
                 }
             },
             {
-                'url': 'https://www.ofertaesperta.com?page=2',
+                'url': 'https://ofertaesperta.com?page=2',
                 'topic': {
                     'tag': 'div',
                     'class': 'common-card'
@@ -151,7 +151,7 @@ class Config():
                 }
             },
             {
-                'url': 'https://www.promobit.com.br/page/1-1',
+                'url': 'https://promobit.com.br/page/1-1',
                 'topic': {
                     'tag': 'div',
                     'class': 'pr-tl-card'
@@ -166,7 +166,7 @@ class Config():
                 }
             },
             {
-                'url': 'https://www.promobit.com.br/page/2-2',
+                'url': 'https://promobit.com.br/page/2-2',
                 'topic': {
                     'tag': 'div',
                     'class': 'pr-tl-card'

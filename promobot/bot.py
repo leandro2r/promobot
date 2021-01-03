@@ -92,40 +92,48 @@ def handle_intro(message, **kwargs):
 
 def handle_mgmt(message, **kwargs):
     msg = ''
+    res = ''
     cmd = kwargs.get('cmd')
     args = message.text.split()[1:]
 
     if message.chat.type == 'private':
         if data.find_chat(message.chat.id):
-            if 'config' in cmd:
-                if len(args) > 0:
-                    data.add_config(args)
-
-                msg = 'Configs:\n'
-                for d in data.list_config():
-                    for k, v in d.items():
-                        msg += '{}={}\n'.format(
-                            k, v
-                        )
-            elif 'kube' in cmd:
+            if 'kube' in cmd:
                 info = 'status'
                 if len(args) > 0:
                     info = args[0]
 
                 msg = manage_kube(info)
+            elif 'config' in cmd:
+                if len(args) > 0:
+                    data.add_config(args)
+
+                for d in data.list_config():
+                    for k, v in d.items():
+                        res += '{}={}\n'.format(
+                            k, v
+                        )
+
+                msg = 'Configs:\n```{}```'.format(
+                    res,
+                )
             elif 'who' in cmd:
-                who = '\n'.join(
+                res = '\n'.join(
                     str(i) for i in data.list_users(all=True)
                 )
-                msg = 'Users:\n{}'.format(
-                    who,
+
+                msg = 'Users:\n```{}```'.format(
+                    res,
                 )
             elif 'url' in cmd:
-                msg = 'URLs:\n'
                 for d in config.get('urls'):
-                    msg += '{}\n'.format(
+                    res += '{}\n'.format(
                         d.get('url')
                     )
+
+                msg = 'URLs:\n```{}```'.format(
+                    res,
+                )
             else:
                 msg = 'Empty keyword list.'
 
@@ -138,8 +146,8 @@ def handle_mgmt(message, **kwargs):
                 items = data.list_keywords()
 
                 if items:
-                    msg = '\n'.join(
-                        items
+                    msg = 'List:\n```{}```'.format(
+                        '\n'.join(items),
                     )
 
     return msg
@@ -175,7 +183,7 @@ def manage_kube(info):
                 tail_lines=1,
             )
 
-            msg += '{} {} ({}):\n{}\n'.format(
+            msg += '{} {} ({}) ```{}```\n\n'.format(
                 state,
                 runtime,
                 status.name.title(),
