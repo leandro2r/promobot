@@ -4,7 +4,7 @@ metadata:
   name: admin-user
 rules:
   - apiGroups: [""]
-    resources: ["pods", "nodes"]
+    resources: ["*"]
     verbs: ["get", "watch", "list"]
 
 ---
