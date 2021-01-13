@@ -25,7 +25,7 @@ class Config():
 
         self.data['urls'] = [
             {
-                'url': 'https://hardmob.com.br/forums/407-Promocoes'
+                'url': 'https://www.hardmob.com.br/forums/407-Promocoes'
                        '?s=&pp=50&daysprune=1&sort=dateline&order=desc',
                 'topic': {
                     'tag': 'div',
@@ -37,7 +37,7 @@ class Config():
                 }
             },
             {
-                'url': 'https://pelando.com.br/recentes',
+                'url': 'https://www.pelando.com.br/recentes',
                 'topic': {
                     'tag': 'article',
                     'class': ''
@@ -52,7 +52,7 @@ class Config():
                 }
             },
             {
-                'url': 'https://pelando.com.br/recentes?page=2',
+                'url': 'https://www.pelando.com.br/recentes?page=2',
                 'topic': {
                     'tag': 'article',
                     'class': ''
@@ -67,7 +67,7 @@ class Config():
                 }
             },
             {
-                'url': 'https://pelando.com.br/quente',
+                'url': 'https://www.pelando.com.br/quente',
                 'topic': {
                     'tag': 'article',
                     'class': ''
@@ -82,7 +82,7 @@ class Config():
                 }
             },
             {
-                'url': 'https://pelando.com.br/quente?page=2',
+                'url': 'https://www.pelando.com.br/quente?page=2',
                 'topic': {
                     'tag': 'article',
                     'class': ''
@@ -97,7 +97,7 @@ class Config():
                 }
             },
             {
-                'url': 'https://gatry.com',
+                'url': 'https://www.gatry.com',
                 'topic': {
                     'tag': 'div',
                     'class': 'informacoes'
@@ -112,7 +112,8 @@ class Config():
                 }
             },
             {
-                'url': 'https://adrenaline.com.br/forum/forums/for-sale.221',
+                'url': 'https://www.adrenaline.com.br/forum/'
+                       'forums/for-sale.221',
                 'topic': {
                     'tag': 'div',
                     'class': 'structItem-title'
@@ -151,7 +152,7 @@ class Config():
                 }
             },
             {
-                'url': 'https://promobit.com.br/page/1-1',
+                'url': 'https://www.promobit.com.br',
                 'topic': {
                     'tag': 'div',
                     'class': 'pr-tl-card'
@@ -166,7 +167,8 @@ class Config():
                 }
             },
             {
-                'url': 'https://promobit.com.br/page/2-2',
+                'url': 'https://www.promobit.com.br/promocoes/'
+                       'melhores-ofertas',
                 'topic': {
                     'tag': 'div',
                     'class': 'pr-tl-card'
@@ -191,7 +193,7 @@ class Config():
         }
 
         self.data['telegram'].update({
-            'url': 'https://api.telegram.org/bot{}/sendMessage'.format(
+            'url': 'https://www.api.telegram.org/bot{}/sendMessage'.format(
                 self.data['telegram']['token']
             )
         })
