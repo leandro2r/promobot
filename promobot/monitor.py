@@ -128,7 +128,7 @@ class Monitor():
     def alert(self, level, msg):
         print(
             '{} - {} - {}'.format(
-                datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
+                datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                 level,
                 msg,
             )

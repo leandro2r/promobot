@@ -198,7 +198,7 @@ def manage_kube(info):
                 name=i.metadata.name,
                 namespace=i.metadata.namespace,
                 container=status.name,
-                tail_lines=2,
+                tail_lines=3,
             )
 
             msg += '{} {} ({}) ```\n{}```\n\n'.format(
