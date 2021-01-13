@@ -126,13 +126,14 @@ class Monitor():
                 )
 
     def alert(self, level, msg):
-        print(
-            '{} - {} - {}'.format(
-                datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                level,
-                msg,
+        if level != 'DEBUG' or self.config['monitor']['muted']:
+            print(
+                '{} - {} - {}'.format(
+                    datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                    level,
+                    msg,
+                )
             )
-        )
 
         if level == 'ERROR':
             time.sleep(self.config['monitor']['timeout'])
