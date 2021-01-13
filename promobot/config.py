@@ -123,7 +123,7 @@ class Config():
                 }
             },
             {
-                'url': 'https://ofertaesperta.com?page=1',
+                'url': 'https://www.ofertaesperta.com?page=1',
                 'topic': {
                     'tag': 'div',
                     'class': 'common-card'
@@ -137,7 +137,7 @@ class Config():
                 }
             },
             {
-                'url': 'https://ofertaesperta.com?page=2',
+                'url': 'https://www.ofertaesperta.com?page=2',
                 'topic': {
                     'tag': 'div',
                     'class': 'common-card'
