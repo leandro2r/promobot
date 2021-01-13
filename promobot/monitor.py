@@ -265,7 +265,7 @@ class Monitor():
                             'ERROR',
                             'Error on searching topics in {}: {}'.format(
                                 src.get('url'),
-                                soup[:10]
+                                str(soup)[:10]
                             )
                         )
             except (urllib.error.HTTPError, IncompleteRead, OSError) as e:
