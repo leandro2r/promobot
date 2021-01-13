@@ -23,6 +23,7 @@ services:
       - DELAY=10
       - MUTED=true
       - RESET_TIME=24
+      - TIMEOUT=10
     volumes:
       - .:/home/promobot
     entrypoint: ""

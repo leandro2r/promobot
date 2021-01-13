@@ -125,6 +125,8 @@ def handle_mgmt(message, **kwargs):
                     res += 'delay=<default>\n'
                 if 'reset' not in res:
                     res += 'reset=<default>\n'
+                if 'timeout' not in res:
+                    res += 'timeout=<default>\n'
 
                 msg = 'Configs:\n```\n{}```'.format(
                     res,

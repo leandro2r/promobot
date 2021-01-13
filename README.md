@@ -41,6 +41,7 @@ INITIAL_KEYWORDS=<keyword1>;<keyword2>
 DELAY=10
 MUTED=false
 RESET_TIME=24
+TIMEOUT=10
 ```
 
 If your environment has proxy configuration, there are more environment variables such as

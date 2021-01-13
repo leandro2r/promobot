@@ -42,6 +42,11 @@ class Monitor():
                     'reset': int(d.get('reset'))
                 })
 
+            if d.get('timeout'):
+                self.config['monitor'].update({
+                    'timeout': int(d.get('timeout'))
+                })
+
     def manage_chats(self, chats):
         config = self.config.get('telegram')
         add = list(

@@ -18,7 +18,7 @@ class Data():
         d = []
         col = self.db['config']
 
-        if any('delay' or 'reset' in s for s in envs):
+        if any('delay' or 'reset' or 'timeout' in s for s in envs):
             d = dict(s.split('=') for s in envs)
 
             col.update_many(

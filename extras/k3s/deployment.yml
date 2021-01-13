@@ -31,6 +31,7 @@ data:
   DELAY: "10"
   MUTED: "false"
   RESET_TIME: "24"
+  TIMEOUT: "10"
 
 ---
 apiVersion: apps/v1
