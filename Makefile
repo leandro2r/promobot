@@ -13,8 +13,8 @@ install: deploy
 
 update:
 	@echo -e "Updating pods..."
-	@kubectl set image deploy/$(SVC) -n $(NAMESPACE) *=$(IMG) --all
-	@kubectl set image deploy/$(SVC) -n $(NAMESPACE) *=$(IMG):latest --all
+	@kubectl scale --replicas=0 deploy $(SVC) -n $(NAMESPACE)
+	@kubectl scale --replicas=1 deploy $(SVC) -n $(NAMESPACE)
 
 build:
 	@echo -e "Building docker image..."
@@ -27,7 +27,7 @@ release:
 	@docker push $(IMG):$(VERSION)
 	@docker push $(IMG):latest
 
-deploy: config update
+deploy: update
 	@echo -e "Deploying on kubernetes..."
 	@kubectl apply -f extras/k3s
 
