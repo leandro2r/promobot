@@ -193,7 +193,7 @@ class Config():
         }
 
         self.data['telegram'].update({
-            'url': 'https://www.api.telegram.org/bot{}/sendMessage'.format(
+            'url': 'https://api.telegram.org/bot{}/sendMessage'.format(
                 self.data['telegram']['token']
             )
         })
