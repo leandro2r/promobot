@@ -169,44 +169,67 @@ def handle_mgmt(message, **kwargs):
 
 def manage_kube(info):
     msg = ''
+    name = 'promobot'
 
     try:
         conf.load_incluster_config()
     except conf.config_exception.ConfigException:
         conf.load_kube_config()
 
-    v1 = client.CoreV1Api()
-    ret = v1.list_namespaced_pod(
-        watch=False,
-        namespace='promobot',
-    )
+    if info == 'reload':
+        v1 = client.AppsV1Api()
 
-    for i in ret.items:
-        for status in i.status.container_statuses:
-            state = 'Running'
-            if not status.state.running:
-                state = 'Not running'
-
-            started_at = datetime.strptime(
-                str(status.state.running.started_at),
-                '%Y-%m-%d %H:%M:%S+00:00'
+        for i in [0, 1]:
+            deploy = v1.patch_namespaced_deployment_scale(
+                name=name,
+                namespace=name,
+                body={"spec": {"replicas": i}},
             )
 
-            runtime = datetime.utcnow() - started_at
+            if deploy.status.replicas == i:
+                status = 'Done'
+            else:
+                status = 'Failed'
 
-            log = v1.read_namespaced_pod_log(
-                name=i.metadata.name,
-                namespace=i.metadata.namespace,
-                container=status.name,
-                tail_lines=3,
+            msg += '```\nScaling replica to {}: {}```\n'.format(
+                i,
+                status,
             )
 
-            msg += '{} {} ({})\n```\n{}```\n\n'.format(
-                state,
-                runtime,
-                status.name.title(),
-                log,
-            )
+    else:
+        v1 = client.CoreV1Api()
+
+        pod = v1.list_namespaced_pod(
+            watch=False,
+            namespace=name,
+        )
+
+        for i in pod.items:
+            for status in i.status.container_statuses:
+                state = 'Running'
+                if not status.state.running:
+                    state = 'Not running'
+
+                started_at = datetime.strptime(
+                    str(status.state.running.started_at),
+                    '%Y-%m-%d %H:%M:%S+00:00'
+                )
+
+                runtime = datetime.utcnow() - started_at
+
+                log = v1.read_namespaced_pod_log(
+                    name=i.metadata.name,
+                    namespace=i.metadata.namespace,
+                    container=status.name,
+                    tail_lines=3,
+                )
+
+                msg += '{} {} ({})\n```\n{}```\n\n'.format(
+                    state,
+                    runtime,
+                    status.name.title(),
+                    log,
+                )
 
     return msg
 
