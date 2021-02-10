@@ -179,22 +179,20 @@ def manage_kube(info):
     if info == 'reload':
         v1 = client.AppsV1Api()
 
-        for i in [0, 1]:
-            deploy = v1.patch_namespaced_deployment_scale(
+        for i in range(2):
+            v1.patch_namespaced_deployment_scale(
                 name=name,
                 namespace=name,
                 body={"spec": {"replicas": i}},
             )
 
-            if deploy.status.replicas == i:
-                status = 'Done'
-            else:
-                status = 'Failed'
-
-            msg += '```\nScaling replica to {}: {}```\n'.format(
+            msg += 'Scaling replica to {}...\n'.format(
                 i,
-                status,
             )
+
+        msg = '```\n{}```'.format(
+            msg,
+        )
 
     else:
         v1 = client.CoreV1Api()
