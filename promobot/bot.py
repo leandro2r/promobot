@@ -201,7 +201,7 @@ def manage_kube(info):
                 tail_lines=3,
             )
 
-            msg += '{} {} ({}) ```\n\n{}```\n\n'.format(
+            msg += '{} {} ({})\n```\n{}```\n\n'.format(
                 state,
                 runtime,
                 status.name.title(),
