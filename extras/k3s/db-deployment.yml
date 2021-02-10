@@ -35,11 +35,13 @@ metadata:
 data:
   first_run.sh: |
     #!/bin/bash
+    if [ `mongo --quiet --eval "db.system.users.find({user:'$MONGO_INITDB_ROOT_USERNAME'}).count()" admin` -eq 0 ]; then
     eval mongo <<EOF
     use admin
-    db.createUser({ user: "$MONGO_INITDB_ROOT_USERNAME", pwd: "$MONGO_INITDB_ROOT_PASSWORD", roles: [ { role: "userAdminAnyDatabase", db: "admin" } ] })
+    db.createUser({user: "$MONGO_INITDB_ROOT_USERNAME", pwd: "$MONGO_INITDB_ROOT_PASSWORD", roles: [{role: "userAdminAnyDatabase", db: "admin"}]})
     quit()
     EOF
+    fi
 
 ---
 kind: PersistentVolume
@@ -77,11 +79,12 @@ spec:
 
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: db
   namespace: promobot
 spec:
+  serviceName: db
   replicas: 1
   selector:
     matchLabels:
@@ -91,6 +94,18 @@ spec:
       labels:
         name: db
     spec:
+      initContainers:
+        - name: init-db
+          image: leandro2r/promobot:mongodb3-rpi
+          command:
+            - bash
+            - /root/first_run.sh
+          volumeMounts:
+            - mountPath: /data/db
+              name: db-volume-mount
+            - name: first-run
+              mountPath: /root/first_run.sh
+              subPath: first_run.sh
       containers:
         - name: db
           image: leandro2r/promobot:mongodb3-rpi
@@ -104,10 +119,6 @@ spec:
           volumeMounts:
             - mountPath: /data/db
               name: db-volume-mount
-            - name: first-run
-              mountPath: /root/first_run.sh
-              # mountPath: /docker-entrypoint.sh
-              subPath: first_run.sh
       volumes:
         - name: db-volume-mount
           persistentVolumeClaim:
@@ -127,6 +138,6 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: 27017
+    - port: 27017
   selector:
     name: db
