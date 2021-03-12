@@ -140,7 +140,7 @@ class Monitor():
 
     def lookup(self, kw, d, add):
         src = [
-            d.get('url'),
+            d.get('url', '').replace('-', ' '),
             d.get('desc'),
         ]
 
