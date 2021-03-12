@@ -173,14 +173,37 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: monitor-web
+  name: monitor
   namespace: rpi
   labels:
     app: monitor
 spec:
   type: LoadBalancer
   ports:
-    - port: 8080
+    - port: 80
       targetPort: 8888
   selector:
     name: monitor
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: monitor
+  namespace: default
+  labels:
+    app: monitor
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    # kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: monitor
+                port:
+                  number: 80
