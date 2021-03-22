@@ -249,8 +249,8 @@ class Monitor():
 
                 if content:
                     soup = BeautifulSoup(
-                        content, 
-                        'html.parser', 
+                        content,
+                        'html.parser',
                         from_encoding='iso-8859-1'
                     )
 
