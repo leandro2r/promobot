@@ -248,7 +248,7 @@ class Monitor():
                 ).read()
 
                 if content:
-                    soup = BeautifulSoup(content, 'html.parser')
+                    soup = BeautifulSoup(content, 'html.parser', from_encoding='iso-8859-1')
 
                     if src['topic'].get('class'):
                         topic = soup.findAll(
