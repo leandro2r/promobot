@@ -112,7 +112,7 @@ class Config():
                 }
             },
             {
-                'url': 'https://www.adrenaline.com.br/forum/'
+                'url': 'https://forum.adrenaline.com.br/'
                        'forums/for-sale.221',
                 'topic': {
                     'tag': 'div',
