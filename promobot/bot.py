@@ -222,9 +222,10 @@ def manage_kube(info):
                     tail_lines=3,
                 )
 
-                msg += '{} {} ({})\n```\n{}```\n\n'.format(
+                msg += '{} {} - {} restarts ({})\n```\n{}```\n\n'.format(
                     state,
                     runtime,
+                    status.restart_count,
                     status.name.title(),
                     log,
                 )
