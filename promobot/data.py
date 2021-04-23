@@ -150,17 +150,10 @@ class Data():
         return False
 
     def list_keywords(self):
-        num = 0
-        keywords = []
         col = self.db['keyword']
 
-        for i in col.distinct('keyword'):
-            num += 1
-            keywords.append(
-                '{}) {}'.format(
-                    num,
-                    i,
-                )
-            )
+        keywords = list(
+            col.distinct('keyword')
+        )
 
         return keywords

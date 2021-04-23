@@ -160,6 +160,12 @@ def handle_mgmt(message, **kwargs):
                 items = data.list_keywords()
 
                 if items:
+                    for i in range(len(items)):
+                        items[i] = '{}) {}'.format(
+                            i + 1,
+                            items[i],
+                        )
+
                     msg = '```\n{}```'.format(
                         '\n'.join(items),
                     )
