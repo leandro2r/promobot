@@ -161,7 +161,7 @@ def handle_mgmt(message, **kwargs):
 
                 if items:
                     for i in range(len(items)):
-                        items[i] = '{}) {}'.format(
+                        items[i] = '{:02d}) {}'.format(
                             i + 1,
                             items[i],
                         )
