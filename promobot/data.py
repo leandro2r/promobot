@@ -112,7 +112,7 @@ class Data():
         return chat_ids
 
     def add_keywords(self, keywords=[], **kwargs):
-        d = []
+        d = {}
         col = self.db['keyword']
 
         if kwargs.get('initial'):
@@ -125,36 +125,42 @@ class Data():
 
         if keywords:
             for v in keywords:
-                d.append({
-                    'keyword': v,
-                })
+                d['keyword'] = v
 
-            col.insert_many(
-                d,
-                ordered=False,
-            )
+                col.update_one(
+                    d,
+                    {"$set": d},
+                    upsert=True,
+                )
 
     def del_keywords(self, keywords):
         col = self.db['keyword']
+        lis = col.distinct('keyword')
 
-        if keywords:
-            col.delete_many({
-                'keyword': {
-                    '$in': keywords
-                }
+        for i in keywords:
+            index = int(i) - 1
+
+            col.remove({
+                'keyword': lis[index]
             })
 
+        if keywords:
             return True
 
         return False
 
     def list_keywords(self):
+        num = 0
+        keywords = []
         col = self.db['keyword']
 
-        keywords = list(
-            col.distinct(
-                'keyword'
+        for i in col.distinct('keyword'):
+            num += 1
+            keywords.append(
+                '{}) {}'.format(
+                    num,
+                    i,
+                )
             )
-        )
 
         return keywords

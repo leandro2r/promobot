@@ -26,6 +26,7 @@ RUN apk --no-cache add ca-certificates &&\
     &&\
     pip install -U pip setuptools &&\
     ./setup.py install &&\
-    rm -rf /opt/promobot/*
+    rm -rf /opt/promobot/* &&\
+    mkdir -p /opt/promobot
 
 ENTRYPOINT [ "promobot" ]
