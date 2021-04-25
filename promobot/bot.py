@@ -34,7 +34,7 @@ def handle_help(message, **kwargs):
         if data.find_chat(message.chat.id):
             msg = (
                 'You can chat with me using one of the '
-                'following commands below: /{}'.format(
+                'following commands below:\n/{}'.format(
                     '\n/'.join(support)
                 )
             )
