@@ -5,6 +5,8 @@ dist
 __pycache__
 .vscode
 .DS_Store
+.dockerignore
+.git
 .gitignore
 .github
 README.md
