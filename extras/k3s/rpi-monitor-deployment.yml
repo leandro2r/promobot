@@ -190,20 +190,17 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: monitor
-  namespace: default
+  namespace: rpi
   labels:
     app: monitor
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    # kubernetes.io/ingress.class: traefik
 spec:
   rules:
     - http:
         paths:
-          - path: /
-            pathType: Prefix
-            backend:
+          - backend:
               service:
                 name: monitor
                 port:
                   number: 80
+            path: /
+            pathType: ImplementationSpecific
