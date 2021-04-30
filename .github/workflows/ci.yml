@@ -8,6 +8,7 @@ on:
       - 'promobot/**'
       - 'setup.py'
       - 'Dockerfile'
+      - '.dockerignore'
       - '.github/workflows/**'
 
 jobs:
