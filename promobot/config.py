@@ -28,13 +28,12 @@ class Config():
                 'url': 'https://www.hardmob.com.br/forums/407-Promocoes'
                        '?s=&pp=50&daysprune=1&sort=dateline&order=desc',
                 'topic': {
-                    'tag': 'div',
-                    'class': 'threadinfo'
+                    'tag': 'h2',
                 },
                 'thread': {
                     'tag': 'a',
-                    'class': 'title'
-                }
+                    'class': ''
+                },
             },
             {
                 'url': 'https://www.pelando.com.br/recentes',
