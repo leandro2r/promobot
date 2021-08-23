@@ -39,61 +39,57 @@ class Config():
             {
                 'url': 'https://www.pelando.com.br/recentes',
                 'topic': {
-                    'tag': 'article',
-                    'class': ''
+                    'tag': 'div',
+                    'class': 'sc-1t2mqdt-9 jmQjPk'
                 },
                 'thread': {
                     'tag': 'a',
                 },
                 'desc': {
-                    'tag': 'span',
-                    'class': 'cept-merchant-name text--b '
-                             'text--color-brandPrimary link'
+                    'tag': 'a',
+                    'class': 'sc-1t2mqdt-10 oueGS'
                 }
             },
             {
                 'url': 'https://www.pelando.com.br/recentes?page=2',
                 'topic': {
-                    'tag': 'article',
-                    'class': ''
+                    'tag': 'div',
+                    'class': 'sc-1t2mqdt-9 jmQjPk'
                 },
                 'thread': {
                     'tag': 'a',
                 },
                 'desc': {
-                    'tag': 'span',
-                    'class': 'cept-merchant-name text--b '
-                             'text--color-brandPrimary link'
+                    'tag': 'a',
+                    'class': 'sc-1t2mqdt-10 oueGS'
                 }
             },
             {
                 'url': 'https://www.pelando.com.br/quente',
                 'topic': {
-                    'tag': 'article',
-                    'class': ''
+                    'tag': 'div',
+                    'class': 'sc-1t2mqdt-9 jmQjPk'
                 },
                 'thread': {
                     'tag': 'a',
                 },
                 'desc': {
-                    'tag': 'span',
-                    'class': 'cept-merchant-name text--b '
-                             'text--color-brandPrimary link'
+                    'tag': 'a',
+                    'class': 'sc-1t2mqdt-10 oueGS'
                 }
             },
             {
                 'url': 'https://www.pelando.com.br/quente?page=2',
                 'topic': {
-                    'tag': 'article',
-                    'class': ''
+                    'tag': 'div',
+                    'class': 'sc-1t2mqdt-9 jmQjPk'
                 },
                 'thread': {
                     'tag': 'a',
                 },
                 'desc': {
-                    'tag': 'span',
-                    'class': 'cept-merchant-name text--b '
-                             'text--color-brandPrimary link'
+                    'tag': 'a',
+                    'class': 'sc-1t2mqdt-10 oueGS'
                 }
             },
             {
