@@ -51,35 +51,7 @@ class Config():
                 }
             },
             {
-                'url': 'https://www.pelando.com.br/recentes?page=2',
-                'topic': {
-                    'tag': 'div',
-                    'class': 'sc-1t2mqdt-9 jmQjPk'
-                },
-                'thread': {
-                    'tag': 'a',
-                },
-                'desc': {
-                    'tag': 'a',
-                    'class': 'sc-1t2mqdt-10 oueGS'
-                }
-            },
-            {
                 'url': 'https://www.pelando.com.br/quente',
-                'topic': {
-                    'tag': 'div',
-                    'class': 'sc-1t2mqdt-9 jmQjPk'
-                },
-                'thread': {
-                    'tag': 'a',
-                },
-                'desc': {
-                    'tag': 'a',
-                    'class': 'sc-1t2mqdt-10 oueGS'
-                }
-            },
-            {
-                'url': 'https://www.pelando.com.br/quente?page=2',
                 'topic': {
                     'tag': 'div',
                     'class': 'sc-1t2mqdt-9 jmQjPk'
