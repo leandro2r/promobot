@@ -225,10 +225,14 @@ class Monitor():
                 re.sub(r'^/', '', url),
             )
 
+        desc = re.sub(r'\n|\t|"', '', str(desc))
+        title = re.sub(r'\n|\t|"', '', str(title))
+        url = re.sub(r'\n|\t|"', '', str(url))
+
         return {
-            'title': re.sub(r'\n|\t', '', str(title)),
-            'desc': re.sub(r'\n|\t', '', str(desc)),
-            'url': str(url),
+            'title': title,
+            'desc': desc,
+            'url': url,
         }
 
     def get_promo(self, src):
