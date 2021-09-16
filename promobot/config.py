@@ -106,21 +106,7 @@ class Config():
             #     }
             # },
             {
-                'url': 'https://www.ofertaesperta.com?page=1',
-                'topic': {
-                    'tag': 'div',
-                    'class': 'common-card'
-                },
-                'thread': {
-                    'tag': 'a',
-                },
-                'desc': {
-                    'tag': 'div',
-                    'class': 'store-icon'
-                }
-            },
-            {
-                'url': 'https://www.ofertaesperta.com?page=2',
+                'url': 'https://www.ofertaesperta.com',
                 'topic': {
                     'tag': 'div',
                     'class': 'common-card'

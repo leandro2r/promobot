@@ -12,6 +12,7 @@ services:
       options:
         max-file: "5"
         max-size: "10m"
+    shm_size: 2g
     environment:
       - DB_HOST=mongodb
       - MONGO_INITDB_ROOT_USERNAME=promobot
@@ -25,7 +26,7 @@ services:
       - RESET_TIME=24
       - TIMEOUT=10
     volumes:
-      - .:/home/promobot
+      - .:/opt/promobot
     entrypoint: ""
     command: "tail -f /dev/null"
 

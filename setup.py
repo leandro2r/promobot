@@ -22,6 +22,7 @@ setup(
         'pyTelegramBotAPI<3.8',
         'requests<2.26',
         'kubernetes<12.1',
+        'selenium<3.142',
     ],
     extras_require={
         'dev': dev_requirements
