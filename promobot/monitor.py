@@ -239,7 +239,11 @@ class Monitor():
 
         desc = re.sub(r'\n|\t|"', '', str(desc))
         title = re.sub(r'\n|\t|"', '', str(title))
-        url = re.sub(r'\n|\t|"', '', str(url))
+        url = re.sub(
+            r'\n|\t|"|(|)',
+            '',
+            str(url)
+        )
 
         return {
             'title': title,
@@ -249,34 +253,30 @@ class Monitor():
 
     def get_promo(self, src):
         content = ''
+        delay = self.config['monitor'].get('delay') * 2
+        timeout = self.config['monitor'].get('timeout')
         topic = []
-
-        driver = webdriver.Chrome(
-            options=self.options,
-            service_log_path=os.path.devnull,
-        )
-
-        driver.set_script_timeout(
-            self.config['monitor'].get('timeout')
-        )
-        driver.set_page_load_timeout(
-            -1
-        )
 
         while len(topic) == 0:
             try:
-                if src.get('tool') == 'selenium':
+                if src.get('tool', '').lower() == 'selenium':
+                    driver = webdriver.Chrome(
+                        options=self.options,
+                        service_log_path=os.path.devnull,
+                    )
+
+                    driver.set_script_timeout(timeout)
+                    driver.set_page_load_timeout(-1)
+
                     driver.get(
                         src.get('url')
                     )
+
                     driver.execute_script(
                         'window.scrollTo(0, document.body.scrollHeight);'
                     )
-                    time.sleep(5)
 
                     content = driver.page_source
-
-                    driver.quit()
                 else:
                     req = urllib.request.Request(
                         url=src.get('url'),
@@ -285,7 +285,7 @@ class Monitor():
 
                     content = urllib.request.urlopen(
                         req,
-                        timeout=self.config['monitor']['timeout'],
+                        timeout=timeout,
                     ).read()
 
                 if content:
@@ -312,10 +312,12 @@ class Monitor():
                                 str(soup)
                             )
                         )
+
             except (
                 urllib.error.HTTPError,
                 WebDriverException,
                 MaxRetryError,
+                ConnectionError,
                 IncompleteRead,
                 OSError
             ) as e:
@@ -327,7 +329,11 @@ class Monitor():
                     )
                 )
 
+            if src.get('tool', '').lower() == 'selenium':
                 driver.quit()
+
+            if len(topic) == 0:
+                time.sleep(delay)
 
         return topic
 

@@ -1,4 +1,6 @@
-FROM python:3.8-alpine
+FROM ubuntu:bionic
+
+ARG DEBIAN_FRONTEND=noninteractive
 
 ENV TZ=America/Sao_Paulo
 ENV PYTHONUNBUFFERED=1
@@ -18,14 +20,20 @@ ENV RESET_TIME=24
 
 WORKDIR /opt/promobot
 
+ADD https://bootstrap.pypa.io/get-pip.py .
+
 COPY . .
 
-RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" > /etc/apk/repositories &&\
-    echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories &&\
-    apk update && apk add --no-cache \
+RUN apt update && apt install -y software-properties-common &&\
+    add-apt-repository ppa:deadsnakes/ppa &&\
+    apt install -y \
     tzdata \
+    python3.8 \
+    python3.8-distutils \
     chromium-chromedriver \
     &&\
+    ln -sf python3.8 /usr/bin/python &&\
+    python get-pip.py &&\
     pip install -U pip setuptools &&\
     ./setup.py install &&\
     rm -rf /opt/promobot/* &&\

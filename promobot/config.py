@@ -17,10 +17,10 @@ class Config():
         self.set_proxy()
 
         self.data['monitor'] = {
-            'delay': int(os.environ.get('DELAY', 10)),
+            'delay': int(os.environ.get('DELAY', 40)),
             'muted': eval(os.environ.get('MUTED', 'false').title()),
             'reset': int(os.environ.get('RESET_TIME', 24)),
-            'timeout': int(os.environ.get('TIMEOUT', 10)),
+            'timeout': int(os.environ.get('TIMEOUT', 30)),
         }
 
         self.data['urls'] = [
