@@ -1,5 +1,7 @@
 # PromoBot
 
+Promobot is a web scraper made using the python libraries Requests and Selenium together with BeautifulSoup. This solution monitors the main Brazilian promotion sites by searching keywords occurrences and reporting to a Telegram channel.
+
 ### Requirements
 
 - Docker>=19.03.5
@@ -17,18 +19,24 @@ $ ./setup.py install
 
 ## How to
 
+### Install
+
+```shell
+$ make install
+```
+
 ### Run
+
+#### Docker
+```shell
+$ docker-compose up -d
+```
 
 #### Local
 ```shell
 $ promobot --help
 $ promobot
 $ promobot --bot
-```
-
-#### Docker
-```shell
-$ docker-compose up -d
 ```
 
 ### Configure
