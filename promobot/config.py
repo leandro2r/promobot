@@ -38,6 +38,7 @@ class Config():
             },
             {
                 'url': 'https://www.pelando.com.br/recentes',
+                'tool': 'selenium',
                 'topic': {
                     'tag': 'div',
                     'class': 'sc-1t2mqdt-9 jmQjPk'
@@ -52,6 +53,7 @@ class Config():
             },
             {
                 'url': 'https://www.pelando.com.br',
+                'tool': 'selenium',
                 'topic': {
                     'tag': 'div',
                     'class': 'sc-1t2mqdt-9 jmQjPk'
@@ -66,6 +68,7 @@ class Config():
             },
             {
                 'url': 'https://www.pelando.com.br/mais-quentes',
+                'tool': 'selenium',
                 'topic': {
                     'tag': 'div',
                     'class': 'sc-1t2mqdt-9 jmQjPk'
@@ -107,6 +110,7 @@ class Config():
             # },
             {
                 'url': 'https://www.ofertaesperta.com',
+                'tool': 'selenium',
                 'topic': {
                     'tag': 'div',
                     'class': 'common-card'

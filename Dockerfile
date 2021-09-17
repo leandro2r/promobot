@@ -18,21 +18,14 @@ ENV RESET_TIME=24
 
 WORKDIR /opt/promobot
 
-ADD https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-arm7hf.tar.gz .
-ADD https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.30-r0/glibc-2.30-r0.apk .
-ADD https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.30-r0/glibc-bin-2.30-r0.apk .
-
 COPY . .
 
-RUN apk --no-cache add ca-certificates &&\
-    wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub &&\
-    apk update && apk add \
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" > /etc/apk/repositories &&\
+    echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories &&\
+    apk update && apk add --no-cache \
     tzdata \
-    glibc-2.30-r0.apk \
-    glibc-bin-2.30-r0.apk \
-    firefox-esr \
+    chromium-chromedriver \
     &&\
-    tar -zxf geckodriver-v0.23.0-arm7hf.tar.gz -C /usr/bin &&\
     pip install -U pip setuptools &&\
     ./setup.py install &&\
     rm -rf /opt/promobot/* &&\

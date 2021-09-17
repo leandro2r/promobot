@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from http.client import IncompleteRead
 from json import dumps
 from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import WebDriverException
 from urllib3.exceptions import MaxRetryError
 
@@ -16,12 +16,20 @@ from urllib3.exceptions import MaxRetryError
 class Monitor():
     config = {}
     data = {}
+    header = {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) '
+                      'AppleWebKit/537.36 (KHTML, like Gecko) '
+                      'Chrome/35.0.1916.47 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,'
+                  'application/xml;q=0.9,*/*;q=0.8'
+    }
     options = Options()
 
     def __init__(self, **kwargs):
         self.options.add_argument('--headless')
         self.options.add_argument('--no-sandbox')
         self.options.add_argument('--disable-dev-shm-usage')
+        self.options.add_argument('--disable-gpu')
         self.options.add_argument('--safe-mode')
 
         self.config.update({
@@ -243,9 +251,8 @@ class Monitor():
         content = ''
         topic = []
 
-        driver = webdriver.Firefox(
+        driver = webdriver.Chrome(
             options=self.options,
-            executable_path='/usr/bin/geckodriver',
             service_log_path=os.path.devnull,
         )
 
@@ -258,17 +265,28 @@ class Monitor():
 
         while len(topic) == 0:
             try:
-                driver.get(
-                    src.get('url')
-                )
-                driver.execute_script(
-                    'window.scrollTo(0, document.body.scrollHeight);'
-                )
-                time.sleep(5)
+                if src.get('tool') == 'selenium':
+                    driver.get(
+                        src.get('url')
+                    )
+                    driver.execute_script(
+                        'window.scrollTo(0, document.body.scrollHeight);'
+                    )
+                    time.sleep(5)
 
-                content = driver.page_source
+                    content = driver.page_source
 
-                driver.quit()
+                    driver.quit()
+                else:
+                    req = urllib.request.Request(
+                        url=src.get('url'),
+                        headers=self.header
+                    )
+
+                    content = urllib.request.urlopen(
+                        req,
+                        timeout=self.config['monitor']['timeout'],
+                    ).read()
 
                 if content:
                     soup = BeautifulSoup(
@@ -289,13 +307,17 @@ class Monitor():
                     if len(topic) == 0:
                         self.alert(
                             'ERROR',
-                            'Error on searching topics in {}: {}'.format(
+                            'Error on searching topics in {}: {:50.50}'.format(
                                 src.get('url'),
                                 str(soup)
                             )
                         )
             except (
-                WebDriverException, MaxRetryError, IncompleteRead, OSError
+                urllib.error.HTTPError,
+                WebDriverException,
+                MaxRetryError,
+                IncompleteRead,
+                OSError
             ) as e:
                 self.alert(
                     'ERROR',
