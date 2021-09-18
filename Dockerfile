@@ -24,9 +24,9 @@ ADD https://bootstrap.pypa.io/get-pip.py .
 
 COPY . .
 
-RUN apt update && apt install -y software-properties-common &&\
+RUN apt update && apt install -no-install-recommends -y software-properties-common &&\
     add-apt-repository ppa:deadsnakes/ppa &&\
-    apt install -y \
+    apt install -no-install-recommends -y \
     tzdata \
     python3.8 \
     python3.8-distutils \
@@ -36,7 +36,7 @@ RUN apt update && apt install -y software-properties-common &&\
     python get-pip.py &&\
     pip install -U pip setuptools &&\
     ./setup.py install &&\
-    rm -rf /opt/promobot/* &&\
+    rm -rf /opt/promobot/* /var/lib/apt/lists/* &&\
     mkdir -p /opt/promobot
 
 ENTRYPOINT [ "promobot" ]
