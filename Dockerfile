@@ -24,9 +24,9 @@ ADD https://bootstrap.pypa.io/get-pip.py .
 
 COPY . .
 
-RUN apt update && apt install -no-install-recommends -y software-properties-common &&\
+RUN apt update && apt install --no-install-recommends -y software-properties-common &&\
     add-apt-repository ppa:deadsnakes/ppa &&\
-    apt install -no-install-recommends -y \
+    apt install --no-install-recommends -y \
     tzdata \
     python3.8 \
     python3.8-distutils \
