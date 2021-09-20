@@ -240,7 +240,7 @@ class Monitor():
         desc = re.sub(r'\n|\t|"', '', str(desc))
         title = re.sub(r'\n|\t|"', '', str(title))
         url = re.sub(
-            r'\n|\t|"|(|)',
+            r'\n|\t|"|\(|\)',
             '',
             str(url)
         )
