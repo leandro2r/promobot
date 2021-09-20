@@ -61,8 +61,10 @@ spec:
             - secretRef:
                 name: promobot-sct
           args: ["--bot"]
-
         - name: monitor
           image: leandro2r/promobot:latest
           imagePullPolicy: Always
           envFrom: *env
+          resources:
+            limits:
+              cpu: 2300m
