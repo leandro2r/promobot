@@ -51,6 +51,10 @@ spec:
       labels:
         name: promobot
     spec:
+      volumes:
+        - name: dshm
+          emptyDir:
+            medium: Memory
       containers:
         - name: bot
           image: leandro2r/promobot:latest
@@ -67,4 +71,7 @@ spec:
           envFrom: *env
           resources:
             limits:
-              cpu: 2300m
+              cpu: 2100m
+          volumeMounts:
+            - mountPath: /dev/shm
+              name: dshm
