@@ -1,3 +1,8 @@
+if __package__ is None or __package__ == '':
+    from log import Log
+else:
+    from promobot.log import Log
+
 import os
 import re
 import threading
@@ -7,6 +12,7 @@ from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 from http.client import IncompleteRead
 from json import dumps
+from pymongo.errors import ServerSelectionTimeoutError
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import WebDriverException
@@ -26,6 +32,8 @@ class Monitor():
     options = Options()
 
     def __init__(self, **kwargs):
+        self.alert = Log().alert
+
         self.options.add_argument('--headless')
         self.options.add_argument('--no-sandbox')
         self.options.add_argument('--disable-dev-shm-usage')
@@ -136,19 +144,6 @@ class Monitor():
                         e
                     )
                 )
-
-    def alert(self, level, msg):
-        if level != 'DEBUG' or self.config['monitor']['muted']:
-            print(
-                '{} - {} - {}'.format(
-                    datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                    level,
-                    msg,
-                )
-            )
-
-        if level == 'ERROR':
-            time.sleep(self.config['monitor']['timeout'])
 
     def lookup(self, kw, d, add):
         src = [
@@ -411,9 +406,17 @@ class Monitor():
         runtime = 0
 
         while True:
-            config = data.list_config()
-            chats = data.list_chats()
-            keywords = data.list_keywords()
+            try:
+                config = data.list_config()
+                chats = data.list_chats()
+                keywords = data.list_keywords()
+            except ServerSelectionTimeoutError as e:
+                self.alert(
+                    'ERROR',
+                    'Error on listing data from database: {}'.format(
+                        e
+                    )
+                )
 
             self.manage_config(
                 config
