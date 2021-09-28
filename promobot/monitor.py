@@ -410,6 +410,18 @@ class Monitor():
                 config = data.list_config()
                 chats = data.list_chats()
                 keywords = data.list_keywords()
+
+                self.manage_config(
+                    config
+                )
+                self.manage_chats(
+                    chats
+                )
+                self.manage_keywords(
+                    keywords
+                )
+
+                self.monitor(url)
             except ServerSelectionTimeoutError as e:
                 self.alert(
                     'ERROR',
@@ -417,18 +429,6 @@ class Monitor():
                         e
                     )
                 )
-
-            self.manage_config(
-                config
-            )
-            self.manage_chats(
-                chats
-            )
-            self.manage_keywords(
-                keywords
-            )
-
-            self.monitor(url)
 
             delay = self.config['monitor']['delay']
             reset = self.config['monitor']['reset']
