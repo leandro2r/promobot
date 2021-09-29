@@ -405,6 +405,13 @@ class Monitor():
     def runner(self, data, url):
         runtime = 0
 
+        self.alert(
+            'INFO',
+            'Starting runner at {}'.format(
+                url.get('url'),
+            )
+        )
+
         while True:
             try:
                 config = data.list_config()
@@ -440,10 +447,22 @@ class Monitor():
                 self.reset_old(reset)
                 runtime = 0
 
-    def main(self, data, urls):
+    def main(self, data, sites):
         proc = []
+        urls = []
 
-        for i in range(len(urls)):
+        dft = [x for x in sites if x.get('tool')]
+        sel = [x for x in sites if not x.get('tool')]
+
+        for i, j in zip(dft, sel):
+            if i:
+                urls.append(i)
+            if j:
+                urls.append(j)
+
+        num_urls = len(urls)
+
+        for i in range(num_urls):
             m = threading.Thread(
                 target=self.runner,
                 args=(
@@ -455,6 +474,9 @@ class Monitor():
 
         for p in proc:
             p.start()
+            time.sleep(
+                self.config['monitor'].get('delay', 60) / num_urls
+            )
 
         for p in proc:
             p.join()
