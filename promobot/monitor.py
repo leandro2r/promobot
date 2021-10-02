@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 from http.client import IncompleteRead
 from json import dumps
-from pymongo.errors import ServerSelectionTimeoutError
+from pymongo.errors import ServerSelectionTimeoutError, AutoReconnect
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import WebDriverException
@@ -429,7 +429,7 @@ class Monitor():
                 )
 
                 self.monitor(url)
-            except ServerSelectionTimeoutError as e:
+            except (ServerSelectionTimeoutError, AutoReconnect) as e:
                 self.alert(
                     'ERROR',
                     'Error on listing data from database: {}'.format(
