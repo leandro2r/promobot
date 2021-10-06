@@ -8,6 +8,7 @@ from setuptools import find_packages, setup
 
 dev_requirements = [
     'flake8',
+    'pylint',
 ]
 
 setup(

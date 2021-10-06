@@ -4,11 +4,13 @@ if __package__ is None or __package__ == '':
     import bot
     from config import Config
     from data import Data
+    from log import Log
     from monitor import Monitor
 else:
-    import promobot.bot as bot
+    from promobot import bot
     from promobot.config import Config
     from promobot.data import Data
+    from promobot.log import Log
     from promobot.monitor import Monitor
 
 
@@ -21,7 +23,7 @@ def create_parser():
     parser.add_argument(
         '--bot',
         action="store_true",
-        help='Run bot module. Default: {}'.format(False),
+        help='Run bot module. Default: False}',
         default=False,
     )
 
@@ -36,6 +38,11 @@ def main():
     else:
         config = Config().data
 
+        log = Log(
+            muted=config['monitor'].get('muted'),
+            timeout=config['monitor'].get('timeout'),
+        )
+
         data = Data(
             config.get('db')
         )
@@ -44,9 +51,10 @@ def main():
             monitor=config.get('monitor'),
             proxies=config.get('proxies'),
             telegram=config.get('telegram'),
+            alert=log.alert,
         )
 
-        data.add_keywords(initial=True)
+        data.add_keywords([], initial=True)
 
         monitor.main(
             data,

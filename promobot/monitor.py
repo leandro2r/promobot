@@ -1,22 +1,79 @@
-if __package__ is None or __package__ == '':
-    from log import Log
-else:
-    from promobot.log import Log
-
 import os
 import re
 import threading
 import time
 import urllib.request
-from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 from http.client import IncompleteRead
 from json import dumps
+from bs4 import BeautifulSoup
 from pymongo.errors import ServerSelectionTimeoutError, AutoReconnect
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import WebDriverException
 from urllib3.exceptions import MaxRetryError
+
+
+def mount(src, each, t_title):
+    desc = each.get('title', '')
+    title = t_title.find(text=True)
+    url = t_title.get('href', '')
+
+    if src.get('desc'):
+        desc = each.find(
+            src['desc'].get('tag'),
+            {
+                'class': src['desc'].get('class'),
+            }
+        )
+
+        try:
+            if desc.get_text():
+                desc = desc.get_text()
+            else:
+                desc = desc.find().get(
+                    'title',
+                    desc
+                )
+        except Exception:
+            desc = ''
+
+    if not isinstance(title, str):
+        content = re.search(
+            r'[^/]+$',
+            url
+        ).group()
+
+        title = re.sub(
+            '-+',
+            ' ',
+            content
+        ).title()
+
+    if 'http' not in url:
+        domain = re.search(
+            r'.*://[^/?]+',
+            src.get('url'),
+        ).group()
+
+        url = '{}/{}'.format(
+            domain,
+            re.sub(r'^/', '', url),
+        )
+
+    desc = re.sub(r'\n|\t|"', '', str(desc))
+    title = re.sub(r'\n|\t|"', '', str(title))
+    url = re.sub(
+        r'\n|\t|"|\(|\)',
+        '',
+        str(url)
+    )
+
+    return {
+        'title': title,
+        'desc': desc,
+        'url': url,
+    }
 
 
 class Monitor():
@@ -32,7 +89,7 @@ class Monitor():
     options = Options()
 
     def __init__(self, **kwargs):
-        self.alert = Log().alert
+        self.alert = kwargs.get('alert')
 
         self.options.add_argument('--headless')
         self.options.add_argument('--no-sandbox')
@@ -50,20 +107,20 @@ class Monitor():
         })
 
     def manage_config(self, configs):
-        for d in configs:
-            if d.get('delay'):
+        for i in configs:
+            if i.get('delay'):
                 self.config['monitor'].update({
-                    'delay': int(d.get('delay'))
+                    'delay': int(i.get('delay'))
                 })
 
-            if d.get('reset'):
+            if i.get('reset'):
                 self.config['monitor'].update({
-                    'reset': int(d.get('reset'))
+                    'reset': int(i.get('reset'))
                 })
 
-            if d.get('timeout'):
+            if i.get('timeout'):
                 self.config['monitor'].update({
-                    'timeout': int(d.get('timeout'))
+                    'timeout': int(i.get('timeout'))
                 })
 
     def manage_chats(self, chats):
@@ -90,13 +147,13 @@ class Monitor():
             set(self.data.keys()) - set(keys)
         )
 
-        for kw in add:
+        for k in add:
             self.data.update({
-                kw: []
+                k: []
             })
 
-        for kw in remove:
-            self.data.pop(kw)
+        for k in remove:
+            self.data.pop(k)
 
         if add:
             action = 'Adding'
@@ -108,10 +165,7 @@ class Monitor():
         if result:
             self.alert(
                 'INFO',
-                '{} keywords: {}'.format(
-                    action,
-                    result,
-                )
+                f'{action} keywords: {result}'
             )
 
     def report(self, title, anchor):
@@ -136,132 +190,51 @@ class Monitor():
                     text,
                     timeout=self.config['monitor']['timeout'],
                 )
-            except (urllib.error.HTTPError, IncompleteRead, OSError) as e:
+            except (urllib.error.HTTPError, IncompleteRead, OSError) as error:
                 self.alert(
                     'ERROR',
-                    'Error on publishing data on telegram: {}'.format(
-                        e
-                    )
+                    f'Error on publishing data on telegram: {error}'
                 )
 
-    def lookup(self, kw, d, add):
+    def lookup(self, keyword, data, add):
         src = [
-            d.get('url', '').replace('-', ' '),
-            d.get('desc'),
+            data.get('url', '').replace('-', ' '),
+            data.get('desc'),
         ]
 
         for text in src:
             if re.match(
-                    r'.*{}.*'.format(kw),
+                    r'.*{}.*'.format(keyword),
                     str(text),
                     re.IGNORECASE,
             ):
-                for v in self.data.get(kw):
-                    if v.get('url') in d.get('url'):
+                for val in self.data.get(keyword):
+                    if val.get('url') in data.get('url'):
                         add = False
                         break
 
                 if add:
-                    d.update({
+                    data.update({
                         'url': re.sub(
                             r'(\?)(?!.*\1).*$',
                             '',
-                            d.get('url')
+                            data.get('url')
                         ),
                         'datetime': datetime.now().strftime(
                             '%d-%m-%Y %H:%M'
                         )
                     })
 
-                    self.data[kw].append(
-                        d
+                    self.data[keyword].append(
+                        data
                     )
 
                     self.report(
-                        kw,
-                        d.get('url'),
+                        keyword,
+                        data.get('url'),
                     )
 
                 break
-
-    def mount(self, src, each, t_title):
-        desc = each.get('title', '')
-        title = t_title.find(text=True)
-        url = t_title.get('href', '')
-
-        if src.get('desc'):
-            desc = each.find(
-                src['desc'].get('tag'),
-                {
-                    'class': src['desc'].get('class'),
-                }
-            )
-
-            try:
-                if desc.get_text():
-                    desc = desc.get_text()
-                else:
-                    desc = desc.find().get(
-                        'title',
-                        desc
-                    )
-            except Exception:
-                desc = ''
-
-        if not isinstance(title, str):
-            content = re.search(
-                r'[^/]+$',
-                url
-            ).group()
-
-            title = re.sub(
-                '-+',
-                ' ',
-                content
-            ).title()
-
-        if 'http' not in url:
-            domain = re.search(
-                r'.*://[^/?]+',
-                src.get('url'),
-            ).group()
-
-            url = '{}/{}'.format(
-                domain,
-                re.sub(r'^/', '', url),
-            )
-
-        desc = re.sub(r'\n|\t|"', '', str(desc))
-        title = re.sub(r'\n|\t|"', '', str(title))
-        url = re.sub(
-            r'\n|\t|"|\(|\)',
-            '',
-            str(url)
-        )
-
-        return {
-            'title': title,
-            'desc': desc,
-            'url': url,
-        }
-
-    def scroll_height(self, driver):
-        wait_time = 1
-        height = driver.execute_script(
-            'return document.body.scrollHeight'
-        )
-        limit = height * 2
-
-        while height <= limit:
-            driver.execute_script(
-                'window.scrollTo(0, document.body.scrollHeight);'
-            )
-            time.sleep(wait_time)
-            height = driver.execute_script(
-                'return document.body.scrollHeight'
-            )
-
-        return driver.page_source
 
     def get_promo(self, src):
         content = ''
@@ -284,7 +257,28 @@ class Monitor():
                         src.get('url')
                     )
 
-                    content = self.scroll_height(driver)
+                    height = driver.execute_script(
+                        'return document.body.scrollHeight'
+                    )
+                    limit = height * 1.5
+                    wait_time = 0
+
+                    while height <= limit:
+                        driver.execute_script(
+                            'window.scrollTo(0, document.body.scrollHeight);'
+                        )
+
+                        wait_time += 1
+                        time.sleep(wait_time)
+
+                        height = driver.execute_script(
+                            'return document.body.scrollHeight'
+                        )
+
+                        if wait_time > 5:
+                            break
+
+                    content = driver.page_source
                 else:
                     req = urllib.request.Request(
                         url=src.get('url'),
@@ -328,12 +322,12 @@ class Monitor():
                 ConnectionError,
                 IncompleteRead,
                 OSError
-            ) as e:
+            ) as error:
                 self.alert(
                     'ERROR',
                     'Error on getting data from {}: {}'.format(
                         src.get('url'),
-                        e,
+                        error,
                     )
                 )
 
@@ -348,7 +342,7 @@ class Monitor():
     def monitor(self, src):
         promo = self.get_promo(src)
 
-        for kw in self.data.keys():
+        for k in self.data:
             add = True
 
             for each in promo:
@@ -363,15 +357,15 @@ class Monitor():
                     )
 
                 if t_title:
-                    d = self.mount(
+                    data = mount(
                         src,
                         each,
                         t_title
                     )
 
                     self.lookup(
-                        kw,
-                        d,
+                        k,
+                        data,
                         add,
                     )
 
@@ -390,16 +384,15 @@ class Monitor():
         )
 
     def reset_old(self, hours):
-        for k, v in self.data.items():
-            for i in range(len(v)):
-                list_v = self.data[k]
+        for k, val in self.data.items():
+            for i in enumerate(val):
                 old = (
                     datetime.now() - timedelta(hours=hours)
                 ).strftime('%d-%m-%Y %H:%M')
 
-                if i < len(v):
+                if i < len(val):
                     try:
-                        if list_v[i]['datetime'] <= old:
+                        if val[i]['datetime'] <= old:
                             self.alert(
                                 'INFO',
                                 (
@@ -408,10 +401,10 @@ class Monitor():
                                 ).format(
                                     i + 1,
                                     k,
-                                    list_v[i]['datetime'],
+                                    val[i]['datetime'],
                                 )
                             )
-                            del list_v[i]
+                            del val[i]
                     except IndexError:
                         pass
 
@@ -442,12 +435,10 @@ class Monitor():
                 )
 
                 self.monitor(url)
-            except (ServerSelectionTimeoutError, AutoReconnect) as e:
+            except (ServerSelectionTimeoutError, AutoReconnect) as error:
                 self.alert(
                     'ERROR',
-                    'Error on listing data from database: {}'.format(
-                        e
-                    )
+                    f'Error on listing data from database: {error}'
                 )
 
             delay = self.config['monitor']['delay']
@@ -476,20 +467,20 @@ class Monitor():
         num_urls = len(urls)
 
         for i in range(num_urls):
-            m = threading.Thread(
+            module = threading.Thread(
                 target=self.runner,
                 args=(
                     data,
                     urls[i],
                 )
             )
-            proc.append(m)
+            proc.append(module)
 
-        for p in proc:
-            p.start()
+        for i in proc:
+            i.start()
             time.sleep(
                 self.config['monitor'].get('delay', 60) / num_urls
             )
 
-        for p in proc:
-            p.join()
+        for i in proc:
+            i.join()

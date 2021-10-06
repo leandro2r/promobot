@@ -2,7 +2,6 @@ import base64
 import os
 import random
 import re
-from datetime import datetime
 
 
 class Config():
@@ -164,10 +163,10 @@ class Config():
             'chat_passwd': os.environ.get('TELEGRAM_CHAT_PASSWD', '')
         }
 
+        telegram_token = self.data['telegram']['token']
+
         self.data['telegram'].update({
-            'url': 'https://api.telegram.org/bot{}/sendMessage'.format(
-                self.data['telegram']['token']
-            )
+            'url': f'https://api.telegram.org/bot{telegram_token}/sendMessage'
         })
 
         self.data['db'] = {
@@ -181,9 +180,12 @@ class Config():
         }
 
     def set_proxy(self):
-        ip = ''
+        ip_address = ''
         ips = []
         proxy_file = '/etc/environment'
+        url = base64.b64decode(
+            os.environ.get('AUTH_PROXY', '')
+        ).decode('utf-8').strip()
 
         proxy_enabled = eval(
             os.environ.get('PROXY_ENABLED', 'False').title()
@@ -199,30 +201,18 @@ class Config():
             return
 
         if ips:
-            ip = random.choice(ips)
+            ip_address = random.choice(ips)
 
         elif os.path.exists(proxy_file):
-            with open(proxy_file, 'r') as f:
-                get_proxy = re.search(r'http://\S+', f.read())
-                f.close()
+            with open(proxy_file, 'r', encoding='UTF-8') as file:
+                get_proxy = re.search(r'http://\S+', file.read())
+                file.close()
 
-                ip = get_proxy.group()
+                ip_address = get_proxy.group()
 
-        print(
-            '{} - {} - Setting proxy: {}'.format(
-                datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
-                'INFO',
-                ip,
-            )
-        )
-
-        ip_auth = ip.replace(
+        ip_auth = ip_address.replace(
             'http://',
-            'http://{}'.format(
-                base64.b64decode(
-                    os.environ.get('AUTH_PROXY', '')
-                ).decode('utf-8').strip()
-            )
+            f'http://{url}'
         )
 
         os.environ['HTTP_PROXY'] = ip_auth

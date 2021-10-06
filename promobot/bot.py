@@ -1,8 +1,8 @@
 import logging
 import re
-import telebot
 import time
 from datetime import datetime
+import telebot
 from kubernetes import client, config as conf
 
 if __package__ is None or __package__ == '':
@@ -21,7 +21,7 @@ bot = telebot.TeleBot(
     config['telegram'].get('token')
 )
 
-data = Data(
+database = Data(
     config.get('db')
 )
 
@@ -31,7 +31,7 @@ def handle_help(message, **kwargs):
     support = kwargs.get('support')
 
     if message.chat.type == 'private':
-        if data.find_chat(message.chat.id):
+        if database.find_chat(message.chat.id):
             msg = (
                 'You can chat with me using one of the '
                 'following commands below:\n/{}'.format(
@@ -50,16 +50,13 @@ def handle_intro(message, **kwargs):
     if message.chat.type == 'private':
         username = ''
         if message.chat.username:
-            username = '@{}'.format(
-                message.chat.username,
-            )
+            username = f'@{message.chat.username}'
 
-        d = {
+        data = {
             'id': message.chat.id,
-            'user': '{} {} ({})'.format(
-                message.chat.first_name,
-                message.chat.last_name,
-                username,
+            'user': (
+                f'{message.chat.first_name} {message.chat.last_name} '
+                f'({username})'
             ),
             'username': username,
         }
@@ -68,10 +65,10 @@ def handle_intro(message, **kwargs):
             if config['telegram'].get('chat_passwd') == args[0]:
                 if 'start' in cmd:
                     msg = 'Now you gonna receive all reports!'
-                    data.add_chat(d)
+                    database.add_chat(data)
                 elif 'stop' in cmd:
                     msg = 'You will no longer receive the reports!'
-                    data.del_chat(d)
+                    database.del_chat(data)
                 else:
                     forall = 'I\'m under maintenance...'
                     msg = 'Message has been sent for all chats!'
@@ -79,20 +76,18 @@ def handle_intro(message, **kwargs):
                     if len(args) > 1:
                         forall = ' '.join(args[1:])
 
-                    for id in data.list_chats():
+                    for chat_id in database.list_chats():
                         bot.send_message(
-                            id,
-                            text='Hey all, {}'.format(
-                                forall
-                            )
+                            chat_id,
+                            text=f'Hey all, {forall}'
                         )
             else:
-                d.update({
+                data.update({
                     'date': datetime.utcfromtimestamp(
                         message.date
                     ).strftime('%Y-%m-%dT%H:%M:%S.000Z'),
                 })
-                data.add_intruder(d)
+                database.add_intruder(data)
 
     return msg
 
@@ -104,7 +99,7 @@ def handle_mgmt(message, **kwargs):
     args = message.text.split()[1:]
 
     if message.chat.type == 'private':
-        if data.find_chat(message.chat.id):
+        if database.find_chat(message.chat.id):
             if 'kube' in cmd:
                 info = 'status'
                 if len(args) > 0:
@@ -113,13 +108,11 @@ def handle_mgmt(message, **kwargs):
                 msg = manage_kube(info)
             elif 'config' in cmd:
                 if len(args) > 0:
-                    data.add_config(args)
+                    database.add_config(args)
 
-                for d in data.list_config():
-                    for k, v in d.items():
-                        res += '{}={}\n'.format(
-                            k, v
-                        )
+                for data in database.list_config():
+                    for k, val in data.items():
+                        res += f'{k}={val}\n'
 
                 if 'delay' not in res:
                     res += 'delay=<default>\n'
@@ -128,39 +121,33 @@ def handle_mgmt(message, **kwargs):
                 if 'timeout' not in res:
                     res += 'timeout=<default>\n'
 
-                msg = 'Configs:\n```\n{}```'.format(
-                    res,
-                )
+                msg = f'Configs:\n```\n{res}```'
             elif 'who' in cmd:
                 res = '\n'.join(
-                    str(i) for i in data.list_users(all=True)
+                    str(i) for i in database.list_users(all=True)
                 )
 
-                msg = 'Users:\n{}'.format(
-                    res,
-                )
+                msg = f'Users:\n{res}'
             elif 'url' in cmd:
-                for d in config.get('urls'):
+                for k in config.get('urls'):
                     res += '{}\n'.format(
-                        d.get('url')
+                        k.get('url')
                     )
 
-                msg = 'URLs:\n```\n{}```'.format(
-                    res,
-                )
+                msg = f'URLs:\n```\n{res}```'
             else:
                 msg = 'Empty keyword list.'
 
                 if len(args) > 0:
                     if 'add' in cmd:
-                        data.add_keywords(args)
+                        database.add_keywords(args)
                     elif 'del' in cmd:
-                        data.del_keywords(args)
+                        database.del_keywords(args)
 
-                items = data.list_keywords()
+                items = database.list_keywords()
 
                 if items:
-                    for i in range(len(items)):
+                    for i in enumerate(items):
                         items[i] = '{:02d}) {}'.format(
                             i + 1,
                             items[i],
@@ -183,22 +170,18 @@ def manage_kube(info):
         conf.load_kube_config()
 
     if info == 'reload':
-        v1 = client.AppsV1Api()
+        v1_api = client.AppsV1Api()
 
         for i in range(2):
-            v1.patch_namespaced_deployment_scale(
+            v1_api.patch_namespaced_deployment_scale(
                 name=name,
                 namespace=name,
                 body={"spec": {"replicas": i}},
             )
 
-            msg += 'Scaling replica to {}...\n'.format(
-                i,
-            )
+            msg += 'Scaling replica to {i}...\n'
 
-        msg = '```\n{}```'.format(
-            msg,
-        )
+        msg = f'```\n{msg}```'
 
     else:
         try:
@@ -206,9 +189,9 @@ def manage_kube(info):
         except ValueError:
             tail_lines = 3
 
-        v1 = client.CoreV1Api()
+        v1_api = client.CoreV1Api()
 
-        pod = v1.list_namespaced_pod(
+        pod = v1_api.list_namespaced_pod(
             watch=False,
             namespace=name,
         )
@@ -226,7 +209,7 @@ def manage_kube(info):
 
                 runtime = datetime.utcnow() - started_at
 
-                log = v1.read_namespaced_pod_log(
+                log = v1_api.read_namespaced_pod_log(
                     name=i.metadata.name,
                     namespace=i.metadata.namespace,
                     container=status.name,
@@ -251,7 +234,7 @@ def bot_reply(message):
     if cmd:
         cmd = re.sub('[^a-z]+', '', cmd.lower())
 
-    d = {
+    data = {
         'mgmt': [
             'add', 'del', 'list', 'who', 'kube', 'config', 'url'
         ],
@@ -263,8 +246,8 @@ def bot_reply(message):
         ],
     }
 
-    for opt in d.keys():
-        if cmd in d.get(opt):
+    for opt in data:
+        if cmd in data.get(opt):
             if opt == 'mgmt':
                 res = handle_mgmt(
                     message,
@@ -273,7 +256,7 @@ def bot_reply(message):
             elif opt == 'help':
                 res = handle_help(
                     message,
-                    support=d.get('mgmt'),
+                    support=data.get('mgmt'),
                 )
             elif opt == 'intro':
                 res = handle_intro(
