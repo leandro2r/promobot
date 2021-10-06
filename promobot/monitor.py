@@ -245,6 +245,24 @@ class Monitor():
             'url': url,
         }
 
+    def scroll_height(self, driver):
+        wait_time = 1
+        height = driver.execute_script(
+            'return document.body.scrollHeight'
+        )
+        limit = height * 2
+
+        while height <= limit:
+            driver.execute_script(
+                'window.scrollTo(0, document.body.scrollHeight);'
+            )
+            time.sleep(wait_time)
+            height = driver.execute_script(
+                'return document.body.scrollHeight'
+            )
+
+        return driver.page_source
+
     def get_promo(self, src):
         content = ''
         delay = self.config['monitor'].get('delay') * 2
@@ -266,11 +284,7 @@ class Monitor():
                         src.get('url')
                     )
 
-                    driver.execute_script(
-                        'window.scrollTo(0, document.body.scrollHeight);'
-                    )
-
-                    content = driver.page_source
+                    content = self.scroll_height(driver)
                 else:
                     req = urllib.request.Request(
                         url=src.get('url'),
@@ -450,14 +464,14 @@ class Monitor():
         proc = []
         urls = []
 
-        dft = [x for x in sites if x.get('tool')]
-        sel = [x for x in sites if not x.get('tool')]
+        dft = [x for x in sites if not x.get('tool')]
+        sel = [x for x in sites if x.get('tool')]
 
-        for i, j in zip(dft, sel):
-            if i:
-                urls.append(i)
-            if j:
-                urls.append(j)
+        for i in range(max(len(dft), len(sel))):
+            if len(dft) > i:
+                urls.append(dft[i])
+            if len(sel) > i:
+                urls.append(sel[i])
 
         num_urls = len(urls)
 
