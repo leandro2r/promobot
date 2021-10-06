@@ -201,6 +201,11 @@ def manage_kube(info):
         )
 
     else:
+        try:
+            tail_lines = int(info)
+        except ValueError:
+            tail_lines = 3
+
         v1 = client.CoreV1Api()
 
         pod = v1.list_namespaced_pod(
@@ -225,7 +230,7 @@ def manage_kube(info):
                     name=i.metadata.name,
                     namespace=i.metadata.namespace,
                     container=status.name,
-                    tail_lines=3,
+                    tail_lines=tail_lines,
                 )
 
                 msg += '{} {} - {} restarts ({})\n```\n{}```\n\n'.format(
