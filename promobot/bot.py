@@ -147,7 +147,7 @@ def handle_mgmt(message, **kwargs):
                 items = database.list_keywords()
 
                 if items:
-                    for i in enumerate(items):
+                    for i in range(len(items)):
                         items[i] = '{:02d}) {}'.format(
                             i + 1,
                             items[i],
