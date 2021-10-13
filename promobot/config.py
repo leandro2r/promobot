@@ -124,33 +124,33 @@ class Config():
             },
             {
                 'url': 'https://www.promobit.com.br',
+                'tool': 'selenium',
                 'topic': {
                     'tag': 'div',
-                    'class': 'pr-tl-card'
+                    'class': 'e3v0xnz0 css-17t7jll e1ppb8bk0'
                 },
                 'thread': {
                     'tag': 'a',
-                    'class': 'access_url'
                 },
                 'desc': {
                     'tag': 'div',
-                    'class': 'where'
+                    'class': 'css-l9grs1 e1qw2zwd0'
                 }
             },
             {
                 'url': 'https://www.promobit.com.br/promocoes/'
                        'melhores-ofertas',
+                'tool': 'selenium',
                 'topic': {
                     'tag': 'div',
-                    'class': 'pr-tl-card'
+                    'class': 'e3v0xnz0 css-17t7jll e1ppb8bk0'
                 },
                 'thread': {
                     'tag': 'a',
-                    'class': 'access_url'
                 },
                 'desc': {
                     'tag': 'div',
-                    'class': 'where'
+                    'class': 'css-l9grs1 e1qw2zwd0'
                 }
             },
         ]
