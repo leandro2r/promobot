@@ -60,7 +60,7 @@ class Data():
         if kwargs.get('all', False):
             col.append(self.db_conn['intruder'])
 
-        for i in enumerate(col):
+        for i in range(len(col)):
             users.extend(
                 list(
                     col[i].distinct(

@@ -385,7 +385,7 @@ class Monitor():
 
     def reset_old(self, hours):
         for k, val in self.data.items():
-            for i in enumerate(val):
+            for i in range(len(val)):
                 old = (
                     datetime.now() - timedelta(hours=hours)
                 ).strftime('%d-%m-%Y %H:%M')
