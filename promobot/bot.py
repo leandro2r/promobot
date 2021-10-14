@@ -179,7 +179,7 @@ def manage_kube(info):
                 body={"spec": {"replicas": i}},
             )
 
-            msg += 'Scaling replica to {i}...\n'
+            msg += f'Scaling replica to {i}...\n'
 
         msg = f'```\n{msg}```'
 
