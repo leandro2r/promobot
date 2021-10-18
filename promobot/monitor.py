@@ -95,6 +95,13 @@ class Monitor():
         self.options.add_argument('--no-sandbox')
         self.options.add_argument('--disable-gpu')
         self.options.add_argument('--safe-mode')
+        self.options.add_argument('--disable-setuid-sandbox')
+        self.options.add_argument('--disable-crash-reporter')
+        self.options.add_argument('--disable-extensions')
+        self.options.add_argument('--disable-in-process-stack-traces')
+        self.options.add_argument('--disable-logging')
+        self.options.add_argument('--log-level=3')
+        self.options.add_argument('--output=/dev/null')
 
         self.config.update({
             'monitor': kwargs.get('monitor'),
