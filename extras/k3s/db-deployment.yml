@@ -119,6 +119,10 @@ spec:
           volumeMounts:
             - mountPath: /data/db
               name: db-volume-mount
+          resources:
+            limits:
+              cpu: 500m
+              memory: 500M
       volumes:
         - name: db-volume-mount
           persistentVolumeClaim:

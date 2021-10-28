@@ -28,10 +28,10 @@ metadata:
 data:
   DB_HOST: db
   INITIAL_KEYWORDS: ""
-  DELAY: "10"
+  DELAY: "60"
   MUTED: "false"
-  RESET_TIME: "24"
-  TIMEOUT: "10"
+  RESET_TIME: "2500"
+  TIMEOUT: "30"
 
 ---
 apiVersion: apps/v1
@@ -64,6 +64,10 @@ spec:
                 name: promobot-cfg
             - secretRef:
                 name: promobot-sct
+          resources:
+            limits:
+              cpu: 250m
+              memory: 250M
           args: ["--bot"]
         - name: monitor
           image: leandro2r/promobot:latest
@@ -71,7 +75,7 @@ spec:
           envFrom: *env
           resources:
             limits:
-              cpu: 2100m
+              cpu: 2000m
               memory: 2000M
           volumeMounts:
             - mountPath: /dev/shm
