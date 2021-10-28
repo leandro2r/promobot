@@ -3,7 +3,7 @@ name: Promobot CI
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - 'promobot/**'
       - 'setup.py'
