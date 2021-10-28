@@ -24,6 +24,7 @@ COPY . .
 
 RUN apt update && apt install --no-install-recommends -y software-properties-common &&\
     add-apt-repository ppa:deadsnakes/ppa &&\
+    apt purge -y python3.6 \
     apt install --no-install-recommends -y \
     tzdata \
     python3.8 \
