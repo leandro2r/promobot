@@ -36,11 +36,7 @@ data:
   first_run.sh: |
     #!/bin/bash
     if [ `mongo --quiet --eval "db.system.users.find({user:'$MONGO_INITDB_ROOT_USERNAME'}).count()" admin` -eq 0 ]; then
-    eval mongo <<EOF
-    use admin
-    db.createUser({user: "$MONGO_INITDB_ROOT_USERNAME", pwd: "$MONGO_INITDB_ROOT_PASSWORD", roles: [{role: "userAdminAnyDatabase", db: "admin"}]})
-    quit()
-    EOF
+      mongo --eval "db.getSiblingDB('admin').createUser({user: '$MONGO_INITDB_ROOT_USERNAME', pwd: '$MONGO_INITDB_ROOT_PASSWORD', roles: [{role: 'userAdminAnyDatabase', db: 'admin'}]})"
     fi
 
 ---
@@ -122,7 +118,7 @@ spec:
           resources:
             limits:
               cpu: 500m
-              memory: 500M
+              memory: 1024M
       volumes:
         - name: db-volume-mount
           persistentVolumeClaim:
