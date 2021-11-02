@@ -92,17 +92,35 @@ class Monitor():
         self.alert = kwargs.get('alert')
 
         self.options.add_argument('--headless')
-        self.options.add_argument('--no-sandbox')
-        self.options.add_argument('--disable-dev-shm-usage')
-        self.options.add_argument('--disable-gpu')
-        self.options.add_argument('--safe-mode')
-        self.options.add_argument('--disable-setuid-sandbox')
-        self.options.add_argument('--disable-crash-reporter')
-        self.options.add_argument('--disable-extensions')
-        self.options.add_argument('--disable-in-process-stack-traces')
-        self.options.add_argument('--disable-logging')
+        self.options.add_argument('--ignore-certificate-errors')
         self.options.add_argument('--log-level=3')
+        self.options.add_argument('--no-sandbox')
+        self.options.add_argument('--proxy-bypass-list=*')
+        self.options.add_argument('--proxy-server="direct://"')
+        self.options.add_argument('--safe-mode')
         self.options.add_argument('--output=/dev/null')
+        self.options.add_argument(
+            '--js-flags="--max_old_space_size=512 --max_semi_space_size=512"'
+        )
+        self.options.add_argument('blink-settings=imagesEnabled=false')
+
+        self.options.add_argument('--disable-crash-reporter')
+        self.options.add_argument('--disable-default-apps')
+        self.options.add_argument('--disable-dev-shm-usage')
+        self.options.add_argument('--disable-extensions')
+        self.options.add_argument('--disable-gpu')
+        self.options.add_argument('--disable-impl-side-painting')
+        self.options.add_argument('--disable-in-process-stack-traces')
+        self.options.add_argument('--disable-infobars')
+        self.options.add_argument('--disable-logging')
+        self.options.add_argument('--disable-popup-blocking')
+        self.options.add_argument('--disable-setuid-sandbox')
+
+        self.options.add_experimental_option('useAutomationExtension', False)
+        self.options.add_experimental_option(
+            'prefs',
+            {'profile.managed_default_content_settings.images': 2}
+        )
 
         self.config.update({
             'monitor': kwargs.get('monitor'),
@@ -350,7 +368,6 @@ class Monitor():
                             error,
                         )
                     )
-
 
             if len(topic) == 0:
                 time.sleep(delay)
