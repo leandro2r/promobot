@@ -418,30 +418,37 @@ class Monitor():
             )
         )
 
-    def reset_old(self, hours):
+    def clean_up(self, hours):
+        self.alert(
+            'INFO',
+            'Checking old values to be cleaned up'
+        )
+
         for k, val in self.data.items():
             for i in range(len(val)):
-                old = (
-                    datetime.now() - timedelta(hours=hours)
-                ).strftime('%d-%m-%Y %H:%M')
-
                 if i < len(val):
-                    try:
-                        if val[i]['datetime'] <= old:
-                            self.alert(
-                                'INFO',
-                                (
-                                    'Reseting {}º {} '
-                                    'value from {}'
-                                ).format(
-                                    i + 1,
-                                    k,
-                                    val[i]['datetime'],
-                                )
+                    cur = time.mktime(
+                        datetime.strptime(
+                            val[i]['datetime'], '%d-%m-%Y %H:%M'
+                        ).timetuple()
+                    )
+                    old = time.mktime(
+                        (datetime.now() - timedelta(hours=hours)).timetuple()
+                    )
+
+                    if cur <= old:
+                        self.alert(
+                            'INFO',
+                            (
+                                'Clean up {}º {} '
+                                'value from {}'
+                            ).format(
+                                i + 1,
+                                k,
+                                val[i]['datetime'],
                             )
-                            del val[i]
-                    except IndexError:
-                        pass
+                        )
+                        del val[i]
 
     def runner(self, data, url):
         runtime = 0
@@ -483,7 +490,7 @@ class Monitor():
             runtime += delay
 
             if runtime >= reset * 3600 / 2:
-                self.reset_old(reset)
+                self.clean_up(reset)
                 runtime = 0
 
     def main(self, data, sites):

@@ -30,7 +30,7 @@ data:
   INITIAL_KEYWORDS: ""
   DELAY: "60"
   MUTED: "false"
-  RESET_TIME: "2500"
+  RESET_TIME: "72"
   TIMEOUT: "30"
 
 ---
