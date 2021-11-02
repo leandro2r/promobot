@@ -340,7 +340,17 @@ class Monitor():
                 )
 
             if src.get('tool', '').lower() == 'selenium':
-                driver.quit()
+                try:
+                    driver.quit()
+                except UnboundLocalError as error:
+                    self.alert(
+                        'WARNING',
+                        'Failed to quit selenium driver from {}: {}'.format(
+                            src.get('url'),
+                            error,
+                        )
+                    )
+
 
             if len(topic) == 0:
                 time.sleep(delay)
