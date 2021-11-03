@@ -19,11 +19,11 @@ setup(
     zip_safe=False,
     install_requires=[
         'bs4<0.1',
-        'pymongo<3.11',
-        'pyTelegramBotAPI<3.8',
-        'requests<2.26',
-        'kubernetes<12.1',
-        'selenium<3.142',
+        'pymongo<3.13',
+        'pyTelegramBotAPI<4.2',
+        'requests<2.27',
+        'kubernetes<19.16',
+        'selenium<4',
     ],
     extras_require={
         'dev': dev_requirements
