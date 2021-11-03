@@ -294,7 +294,8 @@ class Monitor():
 
                         while height <= limit:
                             driver.execute_script(
-                                'window.scrollTo(0, document.body.scrollHeight);'
+                                'window.scrollTo(0, '
+                                'document.body.scrollHeight);'
                             )
 
                             wait_time += 1
