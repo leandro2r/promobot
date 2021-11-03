@@ -98,7 +98,6 @@ class Monitor():
         self.options.add_argument('--proxy-bypass-list=*')
         self.options.add_argument('--proxy-server="direct://"')
         self.options.add_argument('--safe-mode')
-        self.options.add_argument('--remote-debugging-port=9222')
         self.options.add_argument('--log-level=3')
         self.options.add_argument('--output=/dev/null')
         self.options.add_argument('--ignore-certificate-errors')
@@ -288,23 +287,25 @@ class Monitor():
                     height = driver.execute_script(
                         'return document.body.scrollHeight'
                     )
-                    limit = height * 1.5
-                    wait_time = 0
 
-                    while height <= limit:
-                        driver.execute_script(
-                            'window.scrollTo(0, document.body.scrollHeight);'
-                        )
+                    if height:
+                        limit = height * 1.5
+                        wait_time = 0
 
-                        wait_time += 1
-                        time.sleep(wait_time)
+                        while height <= limit:
+                            driver.execute_script(
+                                'window.scrollTo(0, document.body.scrollHeight);'
+                            )
 
-                        height = driver.execute_script(
-                            'return document.body.scrollHeight'
-                        )
+                            wait_time += 1
+                            time.sleep(wait_time)
 
-                        if wait_time > 5:
-                            break
+                            height = driver.execute_script(
+                                'return document.body.scrollHeight'
+                            )
+
+                            if wait_time > 5:
+                                break
 
                     content = driver.page_source
                 else:
