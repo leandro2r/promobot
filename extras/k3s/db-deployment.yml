@@ -46,6 +46,7 @@ metadata:
   name: db-pv
   namespace: promobot
   labels:
+    app: db
     type: local
 spec:
   storageClassName: standard

@@ -82,6 +82,40 @@ data:
     #include=/etc/rpimonitor/template/dht11.conf
     #include=/etc/rpimonitor/template/entropy.conf
 
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: monitor-pv
+  namespace: rpi
+  labels:
+    app: monitor
+    type: local
+spec:
+  storageClassName: standard
+  capacity:
+    storage: 100M
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  hostPath:
+    path: "/var/lib/rpimonitor"
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: monitor-pvc
+  namespace: rpi
+  labels:
+    app: monitor
+spec:
+  storageClassName: standard
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100M
 
 ---
 apiVersion: apps/v1
@@ -137,6 +171,8 @@ spec:
             - name: vcsm
               mountPath: /dev/vcsm
               readOnly: true
+            - name: data-volume-mount
+              mountPath: /var/lib/rpimonitor
             - name: data-conf
               mountPath: /etc/rpimonitor/data.conf
               subPath: data.conf
@@ -165,6 +201,9 @@ spec:
         - name: vcsm
           hostPath:
             path: /dev/vcsm
+        - name: data-volume-mount
+          persistentVolumeClaim:
+            claimName: monitor-pvc
         - name: data-conf
           configMap:
             name: monitor-conf-cfg

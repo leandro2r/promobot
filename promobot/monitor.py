@@ -91,16 +91,19 @@ class Monitor():
     def __init__(self, **kwargs):
         self.alert = kwargs.get('alert')
 
-        self.options.add_argument('--headless')
-        self.options.add_argument('--ignore-certificate-errors')
-        self.options.add_argument('--log-level=3')
         self.options.add_argument('--no-sandbox')
+        self.options.add_argument('--headless')
+        self.options.add_experimental_option('useAutomationExtension', False)
+
         self.options.add_argument('--proxy-bypass-list=*')
         self.options.add_argument('--proxy-server="direct://"')
         self.options.add_argument('--safe-mode')
+        self.options.add_argument('--remote-debugging-port=9222')
+        self.options.add_argument('--log-level=3')
         self.options.add_argument('--output=/dev/null')
+        self.options.add_argument('--ignore-certificate-errors')
         self.options.add_argument(
-            '--js-flags="--max_old_space_size=512 --max_semi_space_size=512"'
+            '--js-flags="--max_old_space_size=256 --max_semi_space_size=256"'
         )
         self.options.add_argument('blink-settings=imagesEnabled=false')
 
@@ -116,7 +119,6 @@ class Monitor():
         self.options.add_argument('--disable-popup-blocking')
         self.options.add_argument('--disable-setuid-sandbox')
 
-        self.options.add_experimental_option('useAutomationExtension', False)
         self.options.add_experimental_option(
             'prefs',
             {'profile.managed_default_content_settings.images': 2}
