@@ -8,9 +8,11 @@ from kubernetes import client, config as conf
 if __package__ is None or __package__ == '':
     from config import Config
     from data import Data
+    from log import Log
 else:
     from promobot.config import Config
     from promobot.data import Data
+    from promobot.log import Log
 
 
 logger = telebot.logger
@@ -20,10 +22,36 @@ config = Config().data
 bot = telebot.TeleBot(
     config['telegram'].get('token')
 )
-
 database = Data(
     config.get('db')
 )
+log = Log(
+    muted=config['monitor'].get('muted'),
+    timeout=config['monitor'].get('timeout'),
+)
+
+
+def handle_report(title, anchor):
+    subs = config['telegram'].get('chat_id', [])
+
+    if config['monitor']['muted']:
+        subs = []
+
+    for chat_id in subs:
+        try:
+            bot.send_message(
+                chat_id,
+                'Keyword: **[{}]({})**'.format(
+                    title,
+                    anchor,
+                ),
+                parse_mode='Markdown',
+            )
+        except telebot.apihelper.ApiTelegramException as error:
+            log.alert(
+                'ERROR',
+                f'Error on publishing data on telegram: {error}'
+            )
 
 
 def handle_help(message, **kwargs):

@@ -90,6 +90,7 @@ class Monitor():
 
     def __init__(self, **kwargs):
         self.alert = kwargs.get('alert')
+        self.report = kwargs.get('report')
 
         self.options.add_argument('--no-sandbox')
         self.options.add_argument('--headless')
@@ -194,34 +195,6 @@ class Monitor():
                 'INFO',
                 f'{action} keywords: {result}'
             )
-
-    def report(self, title, anchor):
-        subs = self.config['telegram'].get('chat_id', [])
-
-        if self.config['monitor']['muted']:
-            subs = []
-
-        for chat_id in subs:
-            try:
-                text = urllib.parse.urlencode({
-                    'chat_id': chat_id,
-                    'parse_mode': 'Markdown',
-                    'text': 'Keyword: **[{}]({})**'.format(
-                        title,
-                        anchor,
-                    ),
-                }).encode()
-
-                urllib.request.urlopen(
-                    self.config['telegram']['url'],
-                    text,
-                    timeout=self.config['monitor']['timeout'],
-                )
-            except (urllib.error.HTTPError, IncompleteRead, OSError) as error:
-                self.alert(
-                    'ERROR',
-                    f'Error on publishing data on telegram: {error}'
-                )
 
     def lookup(self, keyword, data, add):
         src = [

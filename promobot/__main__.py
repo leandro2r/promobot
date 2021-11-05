@@ -52,6 +52,7 @@ def main():
             proxies=config.get('proxies'),
             telegram=config.get('telegram'),
             alert=log.alert,
+            report=bot.handle_report,
         )
 
         data.add_keywords([], initial=True)
