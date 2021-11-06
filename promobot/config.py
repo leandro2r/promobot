@@ -17,7 +17,7 @@ class Config():
 
         self.data['monitor'] = {
             'delay': int(os.environ.get('DELAY', 40)),
-            'muted': eval(os.environ.get('MUTED', 'false').title()),
+            'muted': bool(os.environ.get('MUTED', 'false') == 'true'),
             'reset': int(os.environ.get('RESET_TIME', 72)),
             'timeout': int(os.environ.get('TIMEOUT', 30)),
         }
@@ -187,8 +187,8 @@ class Config():
             os.environ.get('AUTH_PROXY', '')
         ).decode('utf-8').strip()
 
-        proxy_enabled = eval(
-            os.environ.get('PROXY_ENABLED', 'False').title()
+        proxy_enabled = bool(
+            os.environ.get('PROXY_ENABLED', 'false') == 'true'
         )
 
         if not proxy_enabled:

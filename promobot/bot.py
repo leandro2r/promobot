@@ -32,10 +32,10 @@ log = Log(
 
 
 def handle_report(title, anchor):
-    subs = config['telegram'].get('chat_id', [])
+    subs = database.list_chat()
 
-    # if config['monitor']['muted']:
-    #     subs = []
+    if config['monitor']['muted']:
+        subs = []
 
     for chat_id in subs:
         try:
