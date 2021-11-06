@@ -168,11 +168,11 @@ def handle_mgmt(message, **kwargs):
 
                 if len(args) > 0:
                     if 'add' in cmd:
-                        database.add_keywords(args)
+                        database.add_keyword(args)
                     elif 'del' in cmd:
-                        database.del_keywords(args)
+                        database.del_keyword(args)
 
-                items = database.list_keywords()
+                items = database.list_keyword()
 
                 if items:
                     for i in range(len(items)):
