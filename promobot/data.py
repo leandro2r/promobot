@@ -51,7 +51,7 @@ class Data():
             upsert=True,
         )
 
-    def list_users(self, **kwargs):
+    def list_user(self, **kwargs):
         users = []
         col = [
             self.db_conn['chat'],
@@ -106,7 +106,7 @@ class Data():
 
         return chat
 
-    def list_chats(self):
+    def list_chat(self):
         col = self.db_conn['chat']
 
         chat_ids = list(
@@ -117,7 +117,7 @@ class Data():
 
         return chat_ids
 
-    def add_keywords(self, keywords, **kwargs):
+    def add_keyword(self, keywords, **kwargs):
         data = {}
         col = self.db_conn['keyword']
 
@@ -142,7 +142,7 @@ class Data():
                     upsert=True,
                 )
 
-    def del_keywords(self, keywords):
+    def del_keyword(self, keywords):
         col = self.db_conn['keyword']
         lis = col.distinct('keyword')
 
@@ -158,7 +158,7 @@ class Data():
 
         return False
 
-    def list_keywords(self):
+    def list_keyword(self):
         col = self.db_conn['keyword']
 
         keywords = list(
@@ -166,3 +166,28 @@ class Data():
         )
 
         return keywords
+
+    def add_result(self, data):
+        col = self.db_conn['result']
+
+        if not data:
+            data = {}
+
+        col.update_one(
+            data,
+            {'$setOnInsert': data},
+            upsert=True,
+        )
+
+    def list_result(self):
+        col = self.db_conn['result']
+
+        result = col.find_one(
+            {},
+            {'_id': False}
+        )
+
+        if not result:
+            result = {}
+
+        return result

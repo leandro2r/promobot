@@ -77,8 +77,6 @@ def mount(src, each, t_title):
 
 
 class Monitor():
-    config = {}
-    data = {}
     header = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) '
                       'AppleWebKit/537.36 (KHTML, like Gecko) '
@@ -90,7 +88,11 @@ class Monitor():
 
     def __init__(self, **kwargs):
         self.alert = kwargs.get('alert')
+        self.config = kwargs.get('config')
+        self.db_data = kwargs.get('data')
         self.report = kwargs.get('report')
+
+        self.data = self.db_data.list_result()
 
         self.options.add_argument('--no-sandbox')
         self.options.add_argument('--headless')
@@ -124,16 +126,6 @@ class Monitor():
             {'profile.managed_default_content_settings.images': 2}
         )
 
-        self.config.update({
-            'monitor': kwargs.get('monitor'),
-            'proxies': kwargs.get('proxies'),
-            'telegram': kwargs.get('telegram'),
-        })
-
-        self.config['telegram'].update({
-            'chat_id': []
-        })
-
     def manage_config(self, configs):
         for i in configs:
             if i.get('delay'):
@@ -151,22 +143,7 @@ class Monitor():
                     'timeout': int(i.get('timeout'))
                 })
 
-    def manage_chats(self, chats):
-        config = self.config.get('telegram')
-        add = list(
-            set(chats) - set(config.get('chat_id'))
-        )
-        remove = list(
-            set(config.get('chat_id')) - set(chats)
-        )
-
-        if add:
-            config.get('chat_id').extend(add)
-
-        for chat in remove:
-            config.get('chat_id').remove(chat)
-
-    def manage_keywords(self, keys):
+    def manage_keyword(self, keys):
         result = []
         add = list(
             set(keys) - set(self.data.keys())
@@ -427,7 +404,7 @@ class Monitor():
                         )
                         del val[i]
 
-    def runner(self, data, url):
+    def runner(self, url):
         runtime = 0
 
         self.alert(
@@ -439,18 +416,18 @@ class Monitor():
 
         while True:
             try:
-                config = data.list_config()
-                chats = data.list_chats()
-                keywords = data.list_keywords()
+                config = self.db_data.list_config()
+                keywords = self.db_data.list_keyword()
 
                 self.manage_config(
                     config
                 )
-                self.manage_chats(
-                    chats
-                )
-                self.manage_keywords(
+                self.manage_keyword(
                     keywords
+                )
+
+                self.db_data.add_result(
+                    self.data
                 )
 
                 self.monitor(url)
@@ -470,10 +447,11 @@ class Monitor():
                 self.clean_up(reset)
                 runtime = 0
 
-    def main(self, data, sites):
+    def main(self):
         proc = []
         urls = []
 
+        sites = self.config.get('urls', [])
         dft = [x for x in sites if not x.get('tool')]
         sel = [x for x in sites if x.get('tool')]
 
@@ -489,7 +467,6 @@ class Monitor():
             module = threading.Thread(
                 target=self.runner,
                 args=(
-                    data,
                     urls[i],
                 )
             )

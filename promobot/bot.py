@@ -34,8 +34,8 @@ log = Log(
 def handle_report(title, anchor):
     subs = config['telegram'].get('chat_id', [])
 
-    if config['monitor']['muted']:
-        subs = []
+    # if config['monitor']['muted']:
+    #     subs = []
 
     for chat_id in subs:
         try:
@@ -104,7 +104,7 @@ def handle_intro(message, **kwargs):
                     if len(args) > 1:
                         forall = ' '.join(args[1:])
 
-                    for chat_id in database.list_chats():
+                    for chat_id in database.list_chat():
                         bot.send_message(
                             chat_id,
                             text=f'Hey all, {forall}'
@@ -152,7 +152,7 @@ def handle_mgmt(message, **kwargs):
                 msg = f'Configs:\n```\n{res}```'
             elif 'who' in cmd:
                 res = '\n'.join(
-                    str(i) for i in database.list_users(all=True)
+                    str(i) for i in database.list_user(all=True)
                 )
 
                 msg = f'Users:\n{res}'

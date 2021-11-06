@@ -47,20 +47,16 @@ def main():
             config.get('db')
         )
 
+        data.add_keyword([], initial=True)
+
         monitor = Monitor(
-            monitor=config.get('monitor'),
-            proxies=config.get('proxies'),
-            telegram=config.get('telegram'),
             alert=log.alert,
+            config=config,
+            data=data,
             report=bot.handle_report,
         )
 
-        data.add_keywords([], initial=True)
-
-        monitor.main(
-            data,
-            config.get('urls', []),
-        )
+        monitor.main()
 
 
 if __name__ == '__main__':
