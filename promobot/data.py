@@ -168,16 +168,22 @@ class Data():
         return keywords
 
     def add_result(self, data):
+        result_id = {}
         col = self.db_conn['result']
 
-        if not data:
-            data = {}
+        if data:
+            last_id = col.find_one({}, sort=[('_id', -1)])
 
-        col.update_one(
-            data,
-            {'$setOnInsert': data},
-            upsert=True,
-        )
+            if last_id:
+                result_id = {
+                    '_id': last_id.get('_id')
+                }
+
+            col.update_one(
+                result_id,
+                {'$set': {'data': data}},
+                upsert=True
+            )
 
     def list_result(self):
         col = self.db_conn['result']
@@ -187,7 +193,9 @@ class Data():
             {'_id': False}
         )
 
-        if not result:
+        if result:
+            result = result.get('data')
+        else:
             result = {}
 
         return result

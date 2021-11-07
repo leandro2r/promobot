@@ -331,7 +331,7 @@ class Monitor():
     def monitor(self, src):
         promo = self.get_promo(src)
 
-        for k in self.data:
+        for key in list(self.data):
             add = True
 
             for each in promo:
@@ -353,7 +353,7 @@ class Monitor():
                     )
 
                     self.lookup(
-                        k,
+                        key,
                         data,
                         add,
                     )
