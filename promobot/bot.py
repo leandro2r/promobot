@@ -55,64 +55,62 @@ def handle_help(message, **kwargs):
     msg = ''
     support = kwargs.get('support')
 
-    if message.chat.type == 'private':
-        if database.find_chat(message.chat.id):
-            msg = (
-                'You can chat with me using one of the '
-                'following commands below:\n/{}'.format(
-                    '\n/'.join(support)
-                )
+    if database.find_chat(message.chat.id):
+        msg = (
+            'You can chat with me using one of the '
+            'following commands below:\n/{}'.format(
+                '\n/'.join(support)
             )
+        )
 
     return msg
 
 
 def handle_intro(message, **kwargs):
     msg = ''
+    username = ''
     cmd = kwargs.get('cmd')
     args = message.text.split()[1:]
 
-    if message.chat.type == 'private':
-        username = ''
-        if message.chat.username:
-            username = f'@{message.chat.username}'
+    if message.chat.username:
+        username = f'@{message.chat.username}'
 
-        data = {
-            'id': message.chat.id,
-            'user': (
-                f'{message.chat.first_name} {message.chat.last_name} '
-                f'({username})'
-            ),
-            'username': username,
-        }
+    data = {
+        'id': message.chat.id,
+        'user': (
+            f'{message.chat.first_name} {message.chat.last_name} '
+            f'({username})'
+        ),
+        'username': username,
+    }
 
-        if len(args) > 0:
-            if config['telegram'].get('chat_passwd') == args[0]:
-                if 'start' in cmd:
-                    msg = 'Now you gonna receive all reports!'
-                    database.add_chat(data)
-                elif 'stop' in cmd:
-                    msg = 'You will no longer receive the reports!'
-                    database.del_chat(data)
-                else:
-                    forall = 'I\'m under maintenance...'
-                    msg = 'Message has been sent for all chats!'
-
-                    if len(args) > 1:
-                        forall = ' '.join(args[1:])
-
-                    for chat_id in database.list_chat():
-                        bot.send_message(
-                            chat_id,
-                            text=f'Hey all, {forall}'
-                        )
+    if len(args) > 0:
+        if config['telegram'].get('chat_passwd') == args[0]:
+            if 'start' in cmd:
+                msg = 'Now you gonna receive all reports!'
+                database.add_chat(data)
+            elif 'stop' in cmd:
+                msg = 'You will no longer receive the reports!'
+                database.del_chat(data)
             else:
-                data.update({
-                    'date': datetime.utcfromtimestamp(
-                        message.date
-                    ).strftime('%Y-%m-%dT%H:%M:%S.000Z'),
-                })
-                database.add_intruder(data)
+                forall = 'I\'m under maintenance...'
+                msg = 'Message has been sent for all chats!'
+
+                if len(args) > 1:
+                    forall = ' '.join(args[1:])
+
+                for chat_id in database.list_chat():
+                    bot.send_message(
+                        chat_id,
+                        text=f'Hey all, {forall}'
+                    )
+        else:
+            data.update({
+                'date': datetime.utcfromtimestamp(
+                    message.date
+                ).strftime('%Y-%m-%dT%H:%M:%S.000Z'),
+            })
+            database.add_intruder(data)
 
     return msg
 
@@ -123,64 +121,72 @@ def handle_mgmt(message, **kwargs):
     cmd = kwargs.get('cmd')
     args = message.text.split()[1:]
 
-    if message.chat.type == 'private':
-        if database.find_chat(message.chat.id):
-            if 'kube' in cmd:
-                info = 'status'
-                if len(args) > 0:
-                    info = args[0]
+    if database.find_chat(message.chat.id):
+        if 'kube' in cmd:
+            info = 'status'
+            if len(args) > 0:
+                info = args[0]
 
-                msg = manage_kube(info)
-            elif 'config' in cmd:
-                if len(args) > 0:
-                    database.add_config(args)
+            msg = manage_kube(info)
+        elif 'config' in cmd:
+            if len(args) > 0:
+                database.add_config(args)
 
-                for data in database.list_config():
-                    for k, val in data.items():
-                        res += f'{k}={val}\n'
+            for data in database.list_config():
+                for k, val in data.items():
+                    res += f'{k}={val}\n'
 
-                if 'delay' not in res:
-                    res += 'delay=<default>\n'
-                if 'reset' not in res:
-                    res += 'reset=<default>\n'
-                if 'timeout' not in res:
-                    res += 'timeout=<default>\n'
+            if 'delay' not in res:
+                res += 'delay=<default>\n'
+            if 'reset' not in res:
+                res += 'reset=<default>\n'
+            if 'timeout' not in res:
+                res += 'timeout=<default>\n'
 
-                msg = f'Configs:\n```\n{res}```'
-            elif 'who' in cmd:
-                res = '\n'.join(
-                    str(i) for i in database.list_user(all=True)
+            msg = f'Configs:\n```\n{res}```'
+        elif 'who' in cmd:
+            res = '\n'.join(
+                str(i) for i in database.list_user(all=True)
+            )
+
+            msg = f'Users:\n{res}'
+        elif 'url' in cmd:
+            for k in config.get('urls'):
+                res += '{}\n'.format(
+                    k.get('url')
                 )
 
-                msg = f'Users:\n{res}'
-            elif 'url' in cmd:
-                for k in config.get('urls'):
-                    res += '{}\n'.format(
-                        k.get('url')
-                    )
-
-                msg = f'URLs:\n```\n{res}```'
-            else:
-                msg = 'Empty keyword list.'
-
-                if len(args) > 0:
-                    if 'add' in cmd:
-                        database.add_keyword(args)
-                    elif 'del' in cmd:
-                        database.del_keyword(args)
-
-                items = database.list_keyword()
-
-                if items:
-                    for i in range(len(items)):
-                        items[i] = '{:02d}) {}'.format(
-                            i + 1,
-                            items[i],
+            msg = f'URLs:\n```\n{res}```'
+        elif 'summary' in cmd:
+            for key, val in database.list_result():
+                if val:
+                    msg += f'\n**{key}**:'
+                    for i in val:
+                        msg += (
+                            f"\n\t{i.get('datetime')} "
+                            f"[{i.get('title')}]({i.get('url')})"
                         )
+        else:
+            msg = 'Empty keyword list.'
 
-                    msg = '```\n{}```'.format(
-                        '\n'.join(items),
+            if len(args) > 0:
+                if 'add' in cmd:
+                    database.add_keyword(args)
+                elif 'del' in cmd:
+                    database.del_keyword(args)
+
+            items = database.list_keyword()
+
+            if items:
+                for i in range(len(items)):
+                    items[i] = '{:02d}) {}'.format(
+                        i + 1,
+                        items[i],
                     )
+
+                msg = '```\n{}```'.format(
+                    '\n'.join(items),
+                )
 
     return msg
 
@@ -261,7 +267,14 @@ def bot_reply(message):
 
     data = {
         'mgmt': [
-            'add', 'del', 'list', 'who', 'kube', 'config', 'url'
+            'add',
+            'del',
+            'list',
+            'who',
+            'kube',
+            'config',
+            'url',
+            'summary',
         ],
         'help': [
             'help'
@@ -271,35 +284,36 @@ def bot_reply(message):
         ],
     }
 
-    for opt in data:
-        if cmd in data.get(opt):
-            if opt == 'mgmt':
-                res = handle_mgmt(
-                    message,
-                    cmd=cmd,
-                )
-            elif opt == 'help':
-                res = handle_help(
-                    message,
-                    support=data.get('mgmt'),
-                )
-            elif opt == 'intro':
-                res = handle_intro(
-                    message,
-                    cmd=cmd,
-                )
+    if message.chat.type == 'private':
+        for opt in data:
+            if cmd in data.get(opt):
+                if opt == 'mgmt':
+                    res = handle_mgmt(
+                        message,
+                        cmd=cmd,
+                    )
+                elif opt == 'help':
+                    res = handle_help(
+                        message,
+                        support=data.get('mgmt'),
+                    )
+                elif opt == 'intro':
+                    res = handle_intro(
+                        message,
+                        cmd=cmd,
+                    )
 
-            if not res:
-                res = 'This message costed me R$0,31.'
+    if not res:
+        res = 'This message costed me R$0,31.'
 
-            try:
-                bot.reply_to(
-                    message,
-                    res,
-                    parse_mode='Markdown',
-                )
-            except Exception:
-                pass
+    try:
+        bot.reply_to(
+            message,
+            res,
+            parse_mode='Markdown',
+        )
+    except Exception:
+        pass
 
 
 def main():
