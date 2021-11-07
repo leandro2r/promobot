@@ -207,8 +207,10 @@ class Monitor():
                     )
 
                     self.report(
-                        keyword,
-                        data.get('url'),
+                        'Keyword: **[{}]({})**'.format(
+                            keyword,
+                            data.get('url'),
+                        )
                     )
 
                 break
@@ -460,6 +462,10 @@ class Monitor():
                 urls.append(dft[i])
             if len(sel) > i:
                 urls.append(sel[i])
+
+        self.report(
+            'Promobot has been started!'
+        )
 
         num_urls = len(urls)
 

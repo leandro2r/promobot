@@ -53,7 +53,7 @@ def main():
             alert=log.alert,
             config=config,
             data=data,
-            report=bot.handle_report,
+            report=bot.handle_message,
         )
 
         monitor.main()

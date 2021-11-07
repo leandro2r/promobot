@@ -31,7 +31,7 @@ log = Log(
 )
 
 
-def handle_report(title, anchor):
+def handle_message(message):
     subs = database.list_chat()
 
     if config['monitor']['muted']:
@@ -41,10 +41,7 @@ def handle_report(title, anchor):
         try:
             bot.send_message(
                 chat_id,
-                'Keyword: **[{}]({})**'.format(
-                    title,
-                    anchor,
-                ),
+                message,
                 parse_mode='Markdown',
             )
         except telebot.apihelper.ApiTelegramException as error:
