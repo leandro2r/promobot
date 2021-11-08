@@ -137,11 +137,11 @@ def handle_mgmt(message, **kwargs):
                     res += f'{k}={val}\n'
 
             if 'delay' not in res:
-                res += 'delay=<default>\n'
+                res += f"delay={config['monitor']['delay']}\n"
             if 'reset' not in res:
-                res += 'reset=<default>\n'
+                res += f"reset={config['monitor']['reset']}\n"
             if 'timeout' not in res:
-                res += 'timeout=<default>\n'
+                res += f"timeout={config['monitor']['timeout']}\n"
 
             msg = f'Configs:\n```\n{res}```'
         elif 'who' in cmd:
@@ -156,15 +156,21 @@ def handle_mgmt(message, **kwargs):
                     k.get('url')
                 )
 
-            msg = f'URLs:\n```\n{res}```'
-        elif 'summary' in cmd:
-            for key, val in database.list_result():
+            msg = f'URLs:\n{res}'
+        elif 'history' in cmd:
+            for key, val in database.list_result().items():
                 if val:
-                    msg += f'\n**{key}**:'
+                    msg += f'\n\n```\n{key}```'
                     for i in val:
+                        title = re.sub(r'\[|\]|\(|\)|_', '', i.get('title'))
+                        date = datetime.strptime(
+                            i.get('datetime'),
+                            '%d-%m-%Y %H:%M'
+                        ).strftime('%d-%m %H:%M')
+
                         msg += (
-                            f"\n\t{i.get('datetime')} "
-                            f"[{i.get('title')}]({i.get('url')})"
+                            f"\n_{date}_ "
+                            f"[{title[:23]}]({i.get('url')})"
                         )
         else:
             msg = 'Empty keyword list.'
@@ -274,7 +280,7 @@ def bot_reply(message):
             'kube',
             'config',
             'url',
-            'summary',
+            'history',
         ],
         'help': [
             'help'
@@ -311,8 +317,13 @@ def bot_reply(message):
             message,
             res,
             parse_mode='Markdown',
+            disable_web_page_preview=True,
         )
-    except Exception:
+    except Exception as error:
+        log.alert(
+            'ERROR',
+            f'Error on publishing data on telegram: {error}'
+        )
         pass
 
 
