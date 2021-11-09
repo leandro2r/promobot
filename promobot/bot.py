@@ -158,20 +158,33 @@ def handle_mgmt(message, **kwargs):
 
             msg = f'URLs:\n{res}'
         elif 'history' in cmd:
+            history_limit = 5
+
             for key, val in database.list_result().items():
                 if val:
+                    start = len(val) - 1
+                    stop = max(-1, start - history_limit)
+
                     msg += f'\n\n```\n{key}```'
-                    for i in val:
-                        title = re.sub(r'\[|\]|\(|\)|_', '', i.get('title'))
+
+                    for i in range(start, stop, -1):
+                        title = re.sub(
+                            r'\[|\]|\(|\)|_',
+                            '',
+                            val[i].get('title')
+                        )
                         date = datetime.strptime(
-                            i.get('datetime'),
+                            val[i].get('datetime'),
                             '%d-%m-%Y %H:%M'
                         ).strftime('%d-%m %H:%M')
 
                         msg += (
                             f"\n_{date}_ "
-                            f"[{title[:23]}]({i.get('url')})"
+                            f"[{title[:23]}]({val[i].get('url')})"
                         )
+
+                    if start > history_limit:
+                        msg += f'\n... { {start - history_limit + 1} }'
         else:
             msg = 'Empty keyword list.'
 
@@ -246,7 +259,7 @@ def manage_kube(info):
 
                 runtime = datetime.utcnow() - started_at
 
-                log = v1_api.read_namespaced_pod_log(
+                log_stdout = v1_api.read_namespaced_pod_log(
                     name=i.metadata.name,
                     namespace=i.metadata.namespace,
                     container=status.name,
@@ -258,7 +271,7 @@ def manage_kube(info):
                     runtime,
                     status.restart_count,
                     status.name.title(),
-                    log,
+                    log_stdout,
                 )
 
     return msg
@@ -324,7 +337,6 @@ def bot_reply(message):
             'ERROR',
             f'Error on publishing data on telegram: {error}'
         )
-        pass
 
 
 def main():
