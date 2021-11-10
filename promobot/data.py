@@ -126,7 +126,8 @@ class Data():
 
         if kwargs.get('initial'):
             initial = os.environ.get(
-                'INITIAL_KEYWORDS'
+                'INITIAL_KEYWORDS',
+                ';'
             )
             keywords = list(
                 filter(None, initial.split(';'))

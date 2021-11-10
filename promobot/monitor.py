@@ -445,7 +445,7 @@ class Monitor():
             time.sleep(delay)
             runtime += delay
 
-            if runtime >= reset * 3600 / 2:
+            if runtime >= 14400:
                 self.clean_up(reset)
                 runtime = 0
 
