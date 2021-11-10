@@ -159,6 +159,11 @@ def handle_mgmt(message, **kwargs):
             msg = f'URLs:\n{res}'
         elif 'history' in cmd:
             history_limit = 5
+            if len(args) > 0:
+                try:
+                    history_limit = int(args[0])
+                except ValueError:
+                    pass
 
             for key, val in database.list_result().items():
                 if val:
