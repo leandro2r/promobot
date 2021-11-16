@@ -41,7 +41,7 @@ class Config():
                 'tool': 'selenium',
                 'topic': {
                     'tag': 'div',
-                    'class': 'sc-1t2mqdt-9 jmQjPk'
+                    'class': 'sc-1i67vkz-0 gxYaYg'
                 },
                 'thread': {
                     'tag': 'a',
@@ -56,7 +56,7 @@ class Config():
                 'tool': 'selenium',
                 'topic': {
                     'tag': 'div',
-                    'class': 'sc-1t2mqdt-9 jmQjPk'
+                    'class': 'sc-1i67vkz-0 gxYaYg'
                 },
                 'thread': {
                     'tag': 'a',
@@ -71,7 +71,7 @@ class Config():
                 'tool': 'selenium',
                 'topic': {
                     'tag': 'div',
-                    'class': 'sc-1t2mqdt-9 jmQjPk'
+                    'class': 'sc-1i67vkz-0 gxYaYg'
                 },
                 'thread': {
                     'tag': 'a',
