@@ -151,10 +151,10 @@ def handle_mgmt(message, **kwargs):
 
             msg = f'Users:\n{res}'
         elif 'url' in cmd:
+            count = 0
             for k in config.get('urls'):
-                res += '{}\n'.format(
-                    k.get('url')
-                )
+                res += f"{count} {k.get('url')}\n"
+                count += 1
 
             msg = f'URLs:\n{res}'
         elif 'history' in cmd:

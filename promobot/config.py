@@ -12,7 +12,8 @@ class Config():
         }
     }
 
-    def __init__(self):
+    def __init__(self, **kwargs):
+        urls = kwargs.get('urls')
         self.set_proxy()
 
         self.data['monitor'] = {
@@ -154,6 +155,19 @@ class Config():
                 }
             },
         ]
+
+        if urls:
+            all_urls = list(
+                range(
+                    len(self.data['urls'])
+                )
+            )
+            urls = list(
+                map(int, urls.split(','))
+            )
+
+            for i in sorted(set(all_urls) - set(urls), reverse=True):
+                del self.data['urls'][i]
 
         self.data['telegram'] = {
             'token': os.environ.get(

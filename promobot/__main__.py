@@ -22,9 +22,16 @@ def create_parser():
 
     parser.add_argument(
         '--bot',
-        action="store_true",
-        help='Run bot module. Default: False}',
+        action='store_true',
+        help='Run bot module. Default: False',
         default=False,
+    )
+
+    parser.add_argument(
+        '-U',
+        '--urls',
+        type=str,
+        help='Choose which urls going to be monitored. Default: all',
     )
 
     return parser
@@ -36,7 +43,9 @@ def main():
     if args.bot:
         bot.main()
     else:
-        config = Config().data
+        config = Config(
+            urls=args.urls
+        ).data
 
         log = Log(
             muted=config['monitor'].get('muted'),
