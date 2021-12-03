@@ -127,14 +127,14 @@ class Config():
                 'tool': 'selenium',
                 'topic': {
                     'tag': 'div',
-                    'class': 'e3v0xnz0 css-17t7jll e1ppb8bk0'
+                    'class': 'e19tro4z0 css-17t7jll e1ppb8bk0'
                 },
                 'thread': {
                     'tag': 'a',
                 },
                 'desc': {
-                    'tag': 'div',
-                    'class': 'css-l9grs1 e1qw2zwd0'
+                    'tag': 'span',
+                    'class': 'ejdy5300 css-10227v0 e10o2vra0'
                 }
             },
             {
@@ -143,14 +143,14 @@ class Config():
                 'tool': 'selenium',
                 'topic': {
                     'tag': 'div',
-                    'class': 'e3v0xnz0 css-17t7jll e1ppb8bk0'
+                    'class': 'e19tro4z0 css-17t7jll e1ppb8bk0'
                 },
                 'thread': {
                     'tag': 'a',
                 },
                 'desc': {
-                    'tag': 'div',
-                    'class': 'css-l9grs1 e1qw2zwd0'
+                    'tag': 'span',
+                    'class': 'ejdy5300 css-10227v0 e10o2vra0'
                 }
             },
         ]
