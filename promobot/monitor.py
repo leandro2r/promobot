@@ -176,6 +176,7 @@ class Monitor():
     def lookup(self, keyword, data, add):
         src = [
             data.get('url', '').replace('-', ' '),
+            data.get('title'),
             data.get('desc'),
         ]
 

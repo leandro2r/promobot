@@ -85,15 +85,14 @@ class Config():
                 'url': 'https://www.gatry.com',
                 'topic': {
                     'tag': 'div',
-                    'class': 'informacoes'
+                    'class': 'description'
                 },
                 'thread': {
                     'tag': 'a',
-                    'class': 'mais hidden-xs'
                 },
                 'desc': {
                     'tag': 'p',
-                    'class': 'preco comentario clear'
+                    'class': 'comment text-break'
                 }
             },
             # {
