@@ -67,21 +67,6 @@ class Config():
                 }
             },
             {
-                'url': 'https://www.pelando.com.br/mais-quentes',
-                'tool': 'selenium',
-                'topic': {
-                    'tag': 'div',
-                    'class': 'sc-1i67vkz-0 gxYaYg'
-                },
-                'thread': {
-                    'tag': 'a',
-                },
-                'desc': {
-                    'tag': 'a',
-                    'class': 'sc-1t2mqdt-10 oueGS'
-                }
-            },
-            {
                 'url': 'https://www.gatry.com',
                 'topic': {
                     'tag': 'div',
