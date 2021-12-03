@@ -95,18 +95,18 @@ class Config():
                     'class': 'comment text-break'
                 }
             },
-            # {
-            #     'url': 'https://forum.adrenaline.com.br/'
-            #            'forums/for-sale.221',
-            #     'topic': {
-            #         'tag': 'div',
-            #         'class': 'structItem-title'
-            #     },
-            #     'thread': {
-            #         'tag': 'a',
-            #         'preview-tooltip': 'data-xf-init'
-            #     }
-            # },
+            {
+                'url': 'https://forum.adrenaline.com.br/'
+                       'forums/for-sale.221',
+                'topic': {
+                    'tag': 'div',
+                    'class': 'structItem-title'
+                },
+                'thread': {
+                    'tag': 'a',
+                    'preview-tooltip': 'data-xf-init'
+                }
+            },
             {
                 'url': 'https://www.ofertaesperta.com',
                 'tool': 'selenium',
