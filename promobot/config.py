@@ -41,14 +41,14 @@ class Config():
                 'tool': 'selenium',
                 'topic': {
                     'tag': 'div',
-                    'class': 'sc-1i67vkz-0 kDiqYf'
+                    'class': 'pf7gf4-0 fhviAs'
                 },
                 'thread': {
                     'tag': 'a',
                 },
                 'desc': {
                     'tag': 'a',
-                    'class': 'sc-1t2mqdt-10 oueGS'
+                    'class': 'pf7gf4-4 eUBBJN'
                 }
             },
             {
@@ -56,14 +56,14 @@ class Config():
                 'tool': 'selenium',
                 'topic': {
                     'tag': 'div',
-                    'class': 'sc-1i67vkz-0 kDiqYf'
+                    'class': 'pf7gf4-0 fhviAs'
                 },
                 'thread': {
                     'tag': 'a',
                 },
                 'desc': {
                     'tag': 'a',
-                    'class': 'sc-1t2mqdt-10 oueGS'
+                    'class': 'pf7gf4-4 eUBBJN'
                 }
             },
             {
@@ -112,14 +112,14 @@ class Config():
                 'tool': 'selenium',
                 'topic': {
                     'tag': 'div',
-                    'class': 'e19tro4z0 css-17t7jll e1ppb8bk0'
+                    'class': 'e19tro4z0 css-120k3lz e1ppb8bk0'
                 },
                 'thread': {
                     'tag': 'a',
                 },
                 'desc': {
                     'tag': 'span',
-                    'class': 'ejdy5300 css-10227v0 e10o2vra0'
+                    'class': 'ejdy5300 css-9zk395 e10o2vra0'
                 }
             },
             {
@@ -128,14 +128,14 @@ class Config():
                 'tool': 'selenium',
                 'topic': {
                     'tag': 'div',
-                    'class': 'e19tro4z0 css-17t7jll e1ppb8bk0'
+                    'class': 'e19tro4z0 css-120k3lz e1ppb8bk0'
                 },
                 'thread': {
                     'tag': 'a',
                 },
                 'desc': {
                     'tag': 'span',
-                    'class': 'ejdy5300 css-10227v0 e10o2vra0'
+                    'class': 'ejdy5300 css-9zk395 e10o2vra0'
                 }
             },
         ]
