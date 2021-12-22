@@ -189,10 +189,13 @@ class Data():
     def list_result(self):
         col = self.db_conn['result']
 
-        result = col.find_one(
-            {},
-            {'_id': False}
-        )
+        try:
+            result = col.find_one(
+                {},
+                {'_id': False}
+            )
+        except pymongo.errors.ServerSelectionTimeoutError:
+            result = {}
 
         if result:
             result = result.get('data')
