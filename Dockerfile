@@ -34,6 +34,7 @@ RUN apt update && apt install --no-install-recommends -y software-properties-com
     ln -sf python3.8 /usr/bin/python &&\
     python get-pip.py &&\
     pip install -U pip setuptools &&\
+    ./setup.py install --user &&\
     ./setup.py install &&\
     rm -rf /opt/promobot/* /var/lib/apt/lists/* &&\
     mkdir -p /opt/promobot
