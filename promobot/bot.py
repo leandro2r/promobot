@@ -31,8 +31,10 @@ log = Log(
 )
 
 
-def handle_message(message):
-    subs = database.list_chat()
+def handle_message(message, **kwargs):
+    chat_ids = kwargs.get('chat_ids', [])
+
+    subs = database.list_chat(default=chat_ids)
 
     if config['monitor']['muted']:
         subs = []

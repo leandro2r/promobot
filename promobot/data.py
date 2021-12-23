@@ -106,14 +106,21 @@ class Data():
 
         return chat
 
-    def list_chat(self):
+    def list_chat(self, **kwargs):
         col = self.db_conn['chat']
+        default = kwargs.get('default', [])
 
-        chat_ids = list(
-            col.distinct(
-                'id'
+        try:
+            chat_ids = list(
+                col.distinct(
+                    'id'
+                )
             )
-        )
+        except pymongo.errors.ServerSelectionTimeoutError:
+            chat_ids = []
+
+        if not chat_ids and default:
+            chat_ids = default
 
         return chat_ids
 

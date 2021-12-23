@@ -92,6 +92,7 @@ class Monitor():
         self.db_data = kwargs.get('data')
         self.report = kwargs.get('report')
 
+        self.chat_ids = self.db_data.list_chat()
         self.data = self.db_data.list_result()
 
         self.options.add_argument('--no-sandbox')
@@ -211,7 +212,8 @@ class Monitor():
                         'Keyword: **[{}]({})**'.format(
                             keyword,
                             data.get('url'),
-                        )
+                        ),
+                        chat_ids=self.chat_ids
                     )
 
                 break
@@ -465,7 +467,8 @@ class Monitor():
                 urls.append(sel[i])
 
         self.report(
-            'Promobot has been started!'
+            'Promobot has been started!',
+            chat_ids=self.chat_ids
         )
 
         num_urls = len(urls)
