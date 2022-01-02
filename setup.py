@@ -19,7 +19,7 @@ setup(
     zip_safe=False,
     install_requires=[
         'bs4<0.1',
-        'pymongo<3.13',
+        'pymongo<4.1',
         'pyTelegramBotAPI<4.2',
         'requests<2.27',
         'kubernetes<19.16',
