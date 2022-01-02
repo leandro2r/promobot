@@ -24,6 +24,7 @@ setup(
         'requests<2.27',
         'kubernetes<19.16',
         'selenium<4',
+        'pymongo[srv]',
     ],
     extras_require={
         'dev': dev_requirements
