@@ -4,32 +4,32 @@ IMG=leandro2r/$(SVC)
 VERSION=`cat setup.py | grep -i version | sed -E "s|\s+version='([^']+)',|\1|g"`
 
 clean:
-	@echo -e "Cleaning files..."
+	@echo "Cleaning files..."
 	@rm -rf *.egg-info build dist
 
 install: deploy
-	@echo -e "Installing files..."
+	@echo "Installing files..."
 	@cp -f extras/logrotate/pods /etc/logrotate.d/
 
 update:
-	@echo -e "Updating pods..."
+	@echo "Updating pods..."
 	@kubectl scale --replicas=0 deploy $(SVC) -n $(NAMESPACE)
 	@kubectl scale --replicas=1 deploy $(SVC) -n $(NAMESPACE)
 
 build:
-	@echo -e "Building docker image..."
+	@echo "Building docker image..."
 	@docker build -t $(IMG):$(VERSION) . --squash
 	@docker system prune -f
 
 release:
-	@echo -e "Pushing docker images..."
+	@echo "Pushing docker images..."
 	@docker tag  $(IMG):$(VERSION) $(IMG):latest
 	@docker push $(IMG):$(VERSION)
 	@docker push $(IMG):latest
 
-deploy: update
-	@echo -e "Deploying on kubernetes..."
-	@kubectl apply -f extras/k3s
+deploy:
+	@echo "Deploying on kubernetes..."
+	@kubectl apply -f extras/k3s/deployment.yml -f extras/k3s/db-deployment.yml -f extras/k3s/rbac-role.yml
 
 all: clean build release deploy
-	@echo -e "Done!"
+	@echo "Done!"

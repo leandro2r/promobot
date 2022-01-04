@@ -34,7 +34,7 @@ services:
     <<: *promobot
     # network_mode: "host"
     volumes:
-      - .:/home/promobot
+      - .:/opt/promobot
       - ${HOME}/.kube/config:/root/.kube/config:ro
     # entrypoint: "promobot"
     # command: "--bot"
