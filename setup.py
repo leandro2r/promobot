@@ -20,10 +20,10 @@ setup(
     install_requires=[
         'bs4<0.1',
         'pymongo<4.1',
-        'pyTelegramBotAPI<4.2',
+        'pyTelegramBotAPI<4.3',
         'requests<2.27',
         'kubernetes<19.16',
-        'selenium<4',
+        'selenium<4.2',
         'pymongo[srv]',
     ],
     extras_require={

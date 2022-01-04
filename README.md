@@ -6,8 +6,8 @@ Promobot is a web scraper made using the python libraries Requests and Selenium 
 
 - Docker>=19.03.5
 - Docker-compose>=1.24.1
-- MongoDB>=4.2.8
-- Python 3.8
+- MongoDB>=4.4.10
+- Python 3.9
 
 #### Local installation
 

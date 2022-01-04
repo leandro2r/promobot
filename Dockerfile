@@ -27,11 +27,11 @@ RUN apt update && apt install --no-install-recommends -y software-properties-com
     apt purge -y python3.6 &&\
     apt install --no-install-recommends -y \
     tzdata \
-    python3.8 \
-    python3.8-distutils \
+    python3.9 \
+    python3.9-distutils \
     chromium-chromedriver \
     &&\
-    ln -sf python3.8 /usr/bin/python &&\
+    ln -sf python3.9 /usr/bin/python &&\
     python get-pip.py &&\
     pip install -U pip setuptools &&\
     ./setup.py install --user &&\
