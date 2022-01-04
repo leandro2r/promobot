@@ -26,14 +26,20 @@ RUN apt update && apt install --no-install-recommends -y software-properties-com
     add-apt-repository ppa:deadsnakes/ppa &&\
     apt purge -y python3.6 &&\
     apt install --no-install-recommends -y \
+    build-essential \
+    rustc \
+    cargo \
+    libffi-dev \
     tzdata \
     python3.9 \
+    python3.9-dev \
     python3.9-distutils \
     chromium-chromedriver \
     &&\
     ln -sf python3.9 /usr/bin/python &&\
     python get-pip.py &&\
-    pip install -U pip setuptools &&\
+    pip install setuptools-rust &&\
+    pip install -U pip setuptools setuptools-rust &&\
     ./setup.py install --user &&\
     ./setup.py install &&\
     rm -rf /opt/promobot/* /var/lib/apt/lists/* &&\
