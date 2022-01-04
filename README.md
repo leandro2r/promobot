@@ -6,13 +6,13 @@ Promobot is a web scraper made using the python libraries Requests and Selenium 
 
 - Docker>=19.03.5
 - Docker-compose>=1.24.1
-- MongoDB>=4.4.10
+- MongoDB==4.4.10
 - Python 3.9
 
 #### Local installation
 
 ```shell
-$ [sudo] apt install python3.8 python-pip
+$ [sudo] apt install python3.9 python-pip
 $ pip install setuptools
 $ ./setup.py install
 ```
@@ -43,6 +43,10 @@ $ promobot --bot
 
 Environment variables:
 ```
+DB_HOST=<mongodb-host>
+MONGO_INITDB_ROOT_USERNAME=promobot
+MONGO_INITDB_ROOT_PASSWORD=juliusrock
+MONGO_INITDB_DATABASE=promobot
 TELEGRAM_TOKEN=<telegram-token>
 TELEGRAM_CHAT_PASSWD=<chat-password>
 INITIAL_KEYWORDS=<keyword1>;<keyword2>
@@ -50,14 +54,6 @@ DELAY=10
 MUTED=false
 RESET_TIME=24
 TIMEOUT=10
-```
-
-If your environment has proxy configuration, there are more environment variables such as
-```
-PROXY_ENABLED=true
-HTTP_PROXY=<http-proxy>
-HTTPS_PROXY=<https-proxy>
-AUTH_PROXY=<user>:<passwd>
 ```
 
 ### Docker image
