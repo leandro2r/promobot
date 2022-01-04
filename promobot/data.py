@@ -157,7 +157,7 @@ class Data():
         for i in keywords:
             index = int(i) - 1
 
-            col.remove({
+            col.delete_many({
                 'keyword': lis[index]
             })
 
