@@ -1,0 +1,35 @@
+FROM ubuntu:bionic
+
+ENV TZ=America/Sao_Paulo \
+    PYTHONUNBUFFERED=1 \
+    DISPLAY=:0
+
+WORKDIR /tmp/promobot-dependencies
+
+ADD https://bootstrap.pypa.io/get-pip.py .
+
+COPY setup.py .
+
+RUN apt update && apt install --no-install-recommends -y software-properties-common &&\
+    add-apt-repository ppa:deadsnakes/ppa &&\
+    apt purge -y python3.6 &&\
+    apt install --no-install-recommends -y \
+    build-essential \
+    rustc \
+    cargo \
+    libffi-dev \
+    tzdata \
+    python3.9 \
+    python3.9-dev \
+    python3.9-distutils \
+    chromium-chromedriver \
+    &&\
+    ln -sf python3.9 /usr/bin/python &&\
+    python get-pip.py &&\
+    pip install setuptools-rust &&\
+    pip install -U pip setuptools setuptools-rust &&\
+    ./setup.py egg_info &&\
+    sed -i '/^\[dev\]$/Q' *.egg-info/requires.txt &&\
+    pip install -r *.egg-info/requires.txt &&\
+    apt purge -y build-essential rustc cargo libffi-dev &&\
+    rm -rf /tmp/promobot-dependencies /var/lib/apt/lists/*

@@ -31,4 +31,5 @@ jobs:
         docker buildx build \
           -t leandro2r/promobot-dependencies:latest \
           --platform linux/amd64,linux/arm/v7 \
-          --pull --push Dockerfile.dependencies
+          -f Dockerfile.dependencies \
+          --pull --push .
