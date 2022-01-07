@@ -5,8 +5,9 @@ on:
     branches:
       - main
     paths:
-      - 'Dockerfile.dependencies'
-      - '.github/workflows/dependencies.yml'
+      - 'Dockerfile.dep'
+      - 'setup.py'
+      - '.github/workflows/dep.yml'
 
 jobs:
   release:
@@ -29,7 +30,7 @@ jobs:
     - name: Build and push the Docker image
       run: |
         docker buildx build \
-          -t leandro2r/promobot-dependencies:latest \
+          -t leandro2r/promobot:latest-dep \
           --platform linux/amd64,linux/arm/v7 \
-          -f Dockerfile.dependencies \
+          -f Dockerfile.dep \
           --pull --push .
