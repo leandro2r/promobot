@@ -57,3 +57,17 @@ jobs:
           -t leandro2r/promobot:latest \
           --platform linux/amd64,linux/arm/v7 \
           --pull --push .
+
+  notice:
+    runs-on: ubuntu-latest
+    needs: release
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Send message on telegram
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_CHAT_ID }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        message: A new version is now available!
