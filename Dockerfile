@@ -1,4 +1,4 @@
-FROM leandro2r/promobot-dependencies
+FROM leandro2r/promobot:dep-latest
 
 ENV DB_HOST= \
     MONGO_INITDB_ROOT_USERNAME= \
