@@ -1,11 +1,6 @@
-FROM ubuntu:bionic
+FROM leandro2r/promobot-dependencies
 
-ARG DEBIAN_FRONTEND=noninteractive
-
-ENV TZ=America/Sao_Paulo \
-    PYTHONUNBUFFERED=1 \
-    DISPLAY=:0 \
-    DB_HOST= \
+ENV DB_HOST= \
     MONGO_INITDB_ROOT_USERNAME= \
     MONGO_INITDB_ROOT_PASSWORD= \
     MONGO_INITDB_DATABASE= \
@@ -18,31 +13,11 @@ ENV TZ=America/Sao_Paulo \
 
 WORKDIR /opt/promobot
 
-ADD https://bootstrap.pypa.io/get-pip.py .
-
 COPY . .
 
-RUN apt update && apt install --no-install-recommends -y software-properties-common &&\
-    add-apt-repository ppa:deadsnakes/ppa &&\
-    apt purge -y python3.6 &&\
-    apt install --no-install-recommends -y \
-    build-essential \
-    rustc \
-    cargo \
-    libffi-dev \
-    tzdata \
-    python3.9 \
-    python3.9-dev \
-    python3.9-distutils \
-    chromium-chromedriver \
-    &&\
-    ln -sf python3.9 /usr/bin/python &&\
-    python get-pip.py &&\
-    pip install setuptools-rust &&\
-    pip install -U pip setuptools setuptools-rust &&\
-    ./setup.py install --user &&\
+RUN ./setup.py install --user &&\
     ./setup.py install &&\
-    rm -rf /opt/promobot/* /var/lib/apt/lists/* &&\
+    rm -rf /opt/promobot &&\
     mkdir -p /opt/promobot
 
 ENTRYPOINT [ "promobot" ]
