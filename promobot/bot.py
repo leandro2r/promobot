@@ -168,9 +168,9 @@ def handle_mgmt(message, **kwargs):
                 f'({virtual_memory.percent:.1f} % used)'
             )
 
-            swap_memory = psutil.swap_memory().percent
-            mem += (
-                f'\n{swap_memory.total/1024000000:.2f} Gb '
+            swap_memory = psutil.swap_memory()
+            swap = (
+                f'{swap_memory.total/1024000000:.2f} Gb '
                 f'({swap_memory.percent:.1f} % used)'
             )
 
@@ -182,6 +182,7 @@ def handle_mgmt(message, **kwargs):
             msg = (
                 f'CPUs: ```\n{cpu}```\n'
                 f'Memory: ```\n{mem}```\n'
+                f'Swap: ```\n{swap}```\n'
                 f'Disk: ```\n{disk}```\n'
                 f'Temperature: ```\n{temp}```\n'
             )
