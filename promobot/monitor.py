@@ -212,7 +212,7 @@ class Monitor():
 
                 break
 
-    def get_promo(self, src):
+    def get_promo(self, src, driver):
         content = ''
         delay = self.config['monitor'].get('delay') * 2
         timeout = self.config['monitor'].get('timeout')
@@ -220,18 +220,8 @@ class Monitor():
 
         while len(topic) == 0:
             try:
-                if src.get('tool', '').lower() == 'selenium':
-                    driver = webdriver.Chrome(
-                        options=self.options,
-                        service_log_path=os.path.devnull,
-                    )
-
-                    driver.set_script_timeout(timeout)
-                    driver.set_page_load_timeout(-1)
-
-                    driver.get(
-                        src.get('url')
-                    )
+                if driver:
+                    driver.refresh()
 
                     height = driver.execute_script(
                         'return document.body.scrollHeight'
@@ -307,25 +297,13 @@ class Monitor():
                     f'Error on getting data from {src.get("url")}: {error}'
                 )
 
-            if src.get('tool', '').lower() == 'selenium':
-                try:
-                    driver.quit()
-                except UnboundLocalError as error:
-                    self.alert(
-                        'WARNING',
-                        (
-                            'Failed to quit selenium driver from '
-                            f'{src.get("url")}: {error}'
-                        )
-                    )
-
             if len(topic) == 0:
                 time.sleep(delay)
 
         return topic
 
-    def monitor(self, src):
-        promo = self.get_promo(src)
+    def monitor(self, src, driver):
+        promo = self.get_promo(src, driver)
 
         for key in list(self.data):
             add = True
@@ -393,12 +371,27 @@ class Monitor():
                         del val[i]
 
     def runner(self, url):
+        driver = {}
         runtime = 0
+        timeout = self.config['monitor'].get('timeout')
 
         self.alert(
             'INFO',
             f'Starting runner at {url.get("url")}'
         )
+
+        if url.get('tool', '').lower() == 'selenium':
+            driver = webdriver.Chrome(
+                options=self.options,
+                service_log_path=os.path.devnull,
+            )
+
+            driver.set_script_timeout(timeout)
+            driver.set_page_load_timeout(-1)
+
+            driver.get(
+                url.get('url')
+            )
 
         while True:
             try:
@@ -416,7 +409,7 @@ class Monitor():
                     self.data
                 )
 
-                self.monitor(url)
+                self.monitor(url, driver)
             except (ServerSelectionTimeoutError, AutoReconnect) as error:
                 self.alert(
                     'ERROR',
