@@ -56,10 +56,7 @@ def mount(src, each, t_title):
             src.get('url'),
         ).group()
 
-        url = '{}/{}'.format(
-            domain,
-            re.sub(r'^/', '', url),
-        )
+        url = f'{domain}/{re.sub(r"^/", "", url)}'
 
     desc = re.sub(r'\n|\t|"', '', str(desc))
     title = re.sub(r'\n|\t|"', '', str(title))
@@ -183,7 +180,7 @@ class Monitor():
 
         for text in src:
             if re.match(
-                    r'.*{}.*'.format(keyword),
+                    rf'.*{keyword}.*',
                     str(text),
                     re.IGNORECASE,
             ):
@@ -209,10 +206,7 @@ class Monitor():
                     )
 
                     self.report(
-                        'Keyword: **[{}]({})**'.format(
-                            keyword,
-                            data.get('url'),
-                        ),
+                        f'Keyword: **[{keyword}]({data.get("url")})**',
                         chat_ids=self.chat_ids
                     )
 
@@ -294,9 +288,9 @@ class Monitor():
                     if len(topic) == 0:
                         self.alert(
                             'ERROR',
-                            'Error on searching topics in {}: {:50.50}'.format(
-                                src.get('url'),
-                                str(soup)
+                            (
+                                'Error on searching topics in '
+                                f'{src.get("url")}: {str(soup):50.50}'
                             )
                         )
 
@@ -310,10 +304,7 @@ class Monitor():
             ) as error:
                 self.alert(
                     'ERROR',
-                    'Error on getting data from {}: {}'.format(
-                        src.get('url'),
-                        error,
-                    )
+                    f'Error on getting data from {src.get("url")}: {error}'
                 )
 
             if src.get('tool', '').lower() == 'selenium':
@@ -322,9 +313,9 @@ class Monitor():
                 except UnboundLocalError as error:
                     self.alert(
                         'WARNING',
-                        'Failed to quit selenium driver from {}: {}'.format(
-                            src.get('url'),
-                            error,
+                        (
+                            'Failed to quit selenium driver from '
+                            f'{src.get("url")}: {error}'
                         )
                     )
 
@@ -365,16 +356,12 @@ class Monitor():
 
         self.alert(
             'DEBUG',
-            '\n{}'.format(
-                dumps(self.data, indent=2, ensure_ascii=False),
-            )
+            f'\n{dumps(self.data, indent=2, ensure_ascii=False)}'
         )
 
         self.alert(
             'INFO',
-            'Last lookup from {}'.format(
-                src.get('url'),
-            )
+            f'Last lookup from {src.get("url")}'
         )
 
     def clean_up(self, hours):
@@ -399,12 +386,8 @@ class Monitor():
                         self.alert(
                             'INFO',
                             (
-                                'Clean up {}º {} '
-                                'value from {}'
-                            ).format(
-                                i + 1,
-                                k,
-                                val[i]['datetime'],
+                                f'Clean up {i + 1}º {k} '
+                                f'value from {val[i]["datetime"]}'
                             )
                         )
                         del val[i]
@@ -414,9 +397,7 @@ class Monitor():
 
         self.alert(
             'INFO',
-            'Starting runner at {}'.format(
-                url.get('url'),
-            )
+            f'Starting runner at {url.get("url")}'
         )
 
         while True:

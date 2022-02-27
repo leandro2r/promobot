@@ -205,10 +205,7 @@ def handle_mgmt(message, **kwargs):
 
             if items:
                 for i in range(len(items)):
-                    items[i] = '{:02d}) {}'.format(
-                        i + 1,
-                        items[i],
-                    )
+                    items[i] = f'{i + 1:02d}) {items[i]}'
 
                 msg = '```\n{}```'.format(
                     '\n'.join(items),
@@ -273,12 +270,9 @@ def manage_kube(info):
                     tail_lines=tail_lines,
                 )
 
-                msg += '{} {} - {} restarts ({})\n```\n{}```\n\n'.format(
-                    state,
-                    runtime,
-                    status.restart_count,
-                    status.name.title(),
-                    log_stdout,
+                msg += (
+                    f'{state} {runtime} - {status.restart_count} restarts '
+                    f'({status.name.title()})\n```\n{log_stdout}```\n\n'
                 )
 
     return msg
