@@ -2,6 +2,7 @@ import logging
 import re
 import time
 from datetime import datetime
+import psutil
 import telebot
 from kubernetes import client, config as conf
 
@@ -152,6 +153,38 @@ def handle_mgmt(message, **kwargs):
             )
 
             msg = f'Users:\n{res}'
+        elif 'stats' in cmd:
+            cpu = f'{psutil.cpu_count()} {psutil.getloadavg()}'
+
+            disk_usage = f'{psutil.disk_usage("/").percent} %'
+            disk = (
+                f'{disk_usage.total/1024000000:.2f} Gb '
+                f'({disk_usage.percent:.1f} % used)'
+            )
+
+            virtual_memory = psutil.virtual_memory()
+            mem = (
+                f'{virtual_memory.total/1024000000:.2f} Gb '
+                f'({virtual_memory.percent:.1f} % used)'
+            )
+
+            swap_memory = psutil.swap_memory().percent
+            mem += (
+                f'\n{swap_memory.total/1024000000:.2f} Gb '
+                f'({swap_memory.percent:.1f} % used)'
+            )
+
+            sensors_temp = psutil.sensors_temperatures().get('cpu_thermal')
+            temp = 0
+            if len(sensors_temp) > 0:
+                temp = f'{sensors_temp[0].current:.1f} °C'
+
+            msg = (
+                f'CPUs: ```\n{cpu}```\n'
+                f'Memory: ```\n{mem}```\n'
+                f'Disk: ```\n{disk}```\n'
+                f'Temperature: ```\n{temp}```\n'
+            )
         elif 'url' in cmd:
             count = 0
             for k in config.get('urls'):
@@ -288,13 +321,14 @@ def bot_reply(message):
     data = {
         'mgmt': [
             'add',
-            'del',
-            'list',
-            'who',
-            'kube',
             'config',
-            'url',
+            'del',
             'history',
+            'kube',
+            'list',
+            'stats',
+            'url',
+            'who',
         ],
         'help': [
             'help'
