@@ -156,7 +156,7 @@ def handle_mgmt(message, **kwargs):
         elif 'stats' in cmd:
             cpu = f'{psutil.cpu_count()} {psutil.getloadavg()}'
 
-            disk_usage = f'{psutil.disk_usage("/").percent} %'
+            disk_usage = psutil.disk_usage("/")
             disk = (
                 f'{disk_usage.total/1024000000:.2f} Gb '
                 f'({disk_usage.percent:.1f} % used)'
