@@ -286,7 +286,6 @@ class Monitor():
 
             except (
                 urllib.error.HTTPError,
-                WebDriverException,
                 MaxRetryError,
                 ConnectionError,
                 IncompleteRead,
@@ -389,9 +388,15 @@ class Monitor():
             driver.set_script_timeout(timeout)
             driver.set_page_load_timeout(-1)
 
-            driver.get(
-                url.get('url')
-            )
+            try:
+                driver.get(
+                    url.get('url')
+                )
+            except WebDriverException as error:
+                self.alert(
+                    'ERROR',
+                    f'Error on loading {url.get("url")}: {error}'
+                )
 
         while True:
             try:
