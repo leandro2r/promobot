@@ -112,14 +112,14 @@ class Config():
                 'tool': 'selenium',
                 'topic': {
                     'tag': 'div',
-                    'class': 'e19tro4z0 css-120k3lz e1ppb8bk0'
+                    'class': 'e19tro4z0 css-18hidx3 e1ppb8bk0'
                 },
                 'thread': {
                     'tag': 'a',
                 },
                 'desc': {
                     'tag': 'span',
-                    'class': 'ejdy5300 css-9zk395 e10o2vra0'
+                    'class': 'ejdy5300 css-1um6tmm e10o2vra0'
                 }
             },
             {
