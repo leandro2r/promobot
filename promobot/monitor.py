@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 from pymongo.errors import ServerSelectionTimeoutError, AutoReconnect
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from selenium.common.exceptions import WebDriverException
+from selenium.common.exceptions import WebDriverException, TimeoutException
 from urllib3.exceptions import MaxRetryError
 
 
@@ -67,9 +67,9 @@ def mount(src, each, t_title):
     )
 
     return {
-        'title': title,
-        'desc': desc,
-        'url': url,
+        'title': title.strip(),
+        'desc': desc.strip(),
+        'url': url.strip(),
     }
 
 
@@ -292,7 +292,8 @@ class Monitor():
                 MaxRetryError,
                 ConnectionError,
                 IncompleteRead,
-                OSError
+                OSError,
+                TimeoutException
             ) as error:
                 self.alert(
                     'ERROR',
@@ -390,7 +391,6 @@ class Monitor():
 
             driver.set_script_timeout(timeout)
             driver.set_page_load_timeout(timeout)
-            driver.implicitly_wait(5)
 
             try:
                 driver.get(

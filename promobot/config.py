@@ -143,13 +143,14 @@ class Config():
                 'tool': 'selenium',
                 'topic': {
                     'tag': 'div',
-                    'ng-show': 'clicked'
+                    'ng-init': 'clicked=false'
                 },
                 'thread': {
                     'tag': 'a',
                 },
                 'desc': {
-                    'tag': 'span',
+                    'tag': 'div',
+                    'class': 'ng-binding'
                 }
             },
         ]
