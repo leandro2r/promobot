@@ -75,8 +75,9 @@ spec:
           envFrom: *env
           resources:
             limits:
-              cpu: 2000m
-              memory: 3000M
+              cpu: 1500m
+              memory: 2000M
           volumeMounts:
             - mountPath: /dev/shm
               name: dshm
+          args: ["-U 0,1,2,3,4,5,6,7,8"]
