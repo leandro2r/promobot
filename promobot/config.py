@@ -138,6 +138,20 @@ class Config():
                     'class': 'ejdy5300 css-9zk395 e10o2vra0'
                 }
             },
+            {
+                'url': 'https://gafanho.to/facebook',
+                'tool': 'selenium',
+                'topic': {
+                    'tag': 'div',
+                    'ng-show': 'clicked'
+                },
+                'thread': {
+                    'tag': 'a',
+                },
+                'desc': {
+                    'tag': 'span',
+                }
+            },
         ]
 
         if urls:

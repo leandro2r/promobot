@@ -265,10 +265,13 @@ class Monitor():
                         'html.parser',
                     )
 
-                    if src['topic'].get('class'):
+                    attr = src['topic'].copy()
+                    del attr['tag']
+
+                    if attr:
                         topic = soup.findAll(
                             src['topic']['tag'],
-                            {'class': src['topic']['class']}
+                            attrs=attr
                         )
                     else:
                         topic = soup.findAll(
