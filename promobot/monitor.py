@@ -389,7 +389,8 @@ class Monitor():
             )
 
             driver.set_script_timeout(timeout)
-            driver.set_page_load_timeout(-1)
+            driver.set_page_load_timeout(timeout)
+            driver.implicitly_wait(5)
 
             try:
                 driver.get(
