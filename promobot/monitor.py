@@ -265,13 +265,10 @@ class Monitor():
                         'html.parser',
                     )
 
-                    attr = src['topic'].copy()
-                    del attr['tag']
-
-                    if attr:
+                    if src['topic'].get('attr'):
                         topic = soup.findAll(
                             src['topic']['tag'],
-                            attrs=attr
+                            src['topic']['attr']
                         )
                     else:
                         topic = soup.findAll(
@@ -390,7 +387,7 @@ class Monitor():
             )
 
             driver.set_script_timeout(timeout)
-            driver.set_page_load_timeout(timeout)
+            driver.set_page_load_timeout(-1)
 
             try:
                 driver.get(

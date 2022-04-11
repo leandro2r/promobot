@@ -29,7 +29,9 @@ class Config():
                        '?s=&pp=50&daysprune=1&sort=dateline&order=desc',
                 'topic': {
                     'tag': 'div',
-                    'class': 'threadinfo'
+                    'attr': {
+                        'class': 'threadinfo'
+                    }
                 },
                 'thread': {
                     'tag': 'a',
@@ -41,7 +43,9 @@ class Config():
                 'tool': 'selenium',
                 'topic': {
                     'tag': 'div',
-                    'class': 'pf7gf4-0 fhviAs'
+                    'attr': {
+                        'class': 'pf7gf4-0 fhviAs'
+                    }
                 },
                 'thread': {
                     'tag': 'a',
@@ -56,7 +60,9 @@ class Config():
                 'tool': 'selenium',
                 'topic': {
                     'tag': 'div',
-                    'class': 'pf7gf4-0 fhviAs'
+                    'attr': {
+                        'class': 'pf7gf4-0 fhviAs'
+                    }
                 },
                 'thread': {
                     'tag': 'a',
@@ -70,7 +76,9 @@ class Config():
                 'url': 'https://www.gatry.com',
                 'topic': {
                     'tag': 'div',
-                    'class': 'description'
+                    'attr': {
+                        'class': 'description'
+                    }
                 },
                 'thread': {
                     'tag': 'a',
@@ -85,7 +93,9 @@ class Config():
                        'forums/for-sale.221',
                 'topic': {
                     'tag': 'div',
-                    'class': 'structItem-title'
+                    'attr': {
+                        'class': 'structItem-title'
+                    }
                 },
                 'thread': {
                     'tag': 'a',
@@ -97,7 +107,9 @@ class Config():
                 'tool': 'selenium',
                 'topic': {
                     'tag': 'div',
-                    'class': 'common-card'
+                    'attr': {
+                        'class': 'common-card'
+                    }
                 },
                 'thread': {
                     'tag': 'a',
@@ -112,7 +124,9 @@ class Config():
                 'tool': 'selenium',
                 'topic': {
                     'tag': 'div',
-                    'class': 'e19tro4z0 css-18hidx3 e1ppb8bk0'
+                    'attr': {
+                        'class': 'e19tro4z0 css-18hidx3 e1ppb8bk0'
+                    }
                 },
                 'thread': {
                     'tag': 'a',
@@ -128,7 +142,9 @@ class Config():
                 'tool': 'selenium',
                 'topic': {
                     'tag': 'div',
-                    'class': 'e19tro4z0 css-120k3lz e1ppb8bk0'
+                    'attr': {
+                        'class': 'e19tro4z0 css-120k3lz e1ppb8bk0'
+                    }
                 },
                 'thread': {
                     'tag': 'a',
@@ -143,7 +159,9 @@ class Config():
                 'tool': 'selenium',
                 'topic': {
                     'tag': 'div',
-                    'ng-init': 'clicked=false'
+                    'attr': {
+                        'ng-init': 'clicked=false'
+                    }
                 },
                 'thread': {
                     'tag': 'a',
