@@ -265,15 +265,10 @@ class Monitor():
                         'html.parser',
                     )
 
-                    if src['topic'].get('attr'):
-                        topic = soup.findAll(
-                            src['topic']['tag'],
-                            src['topic']['attr']
-                        )
-                    else:
-                        topic = soup.findAll(
-                            src['topic']['tag']
-                        )
+                    topic = soup.findAll(
+                        src['topic']['tag'],
+                        src['topic'].get('attr', {})
+                    )
 
                     if len(topic) == 0:
                         self.alert(
@@ -309,15 +304,10 @@ class Monitor():
             add = True
 
             for each in promo:
-                if src['thread'].get('class'):
-                    t_title = each.find(
-                        src['thread']['tag'],
-                        {'class': src['thread']['class']}
-                    )
-                else:
-                    t_title = each.find(
-                        src['thread']['tag']
-                    )
+                t_title = each.find(
+                    src['thread']['tag'],
+                    src['thread'].get('attr', {})
+                )
 
                 if t_title:
                     data = mount(

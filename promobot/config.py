@@ -35,7 +35,9 @@ class Config():
                 },
                 'thread': {
                     'tag': 'a',
-                    'class': 'title'
+                    'attr': {
+                        'class': 'title'
+                    }
                 }
             },
             {
@@ -82,6 +84,9 @@ class Config():
                 },
                 'thread': {
                     'tag': 'a',
+                    'attr': {
+                        'data-lightbox-comments': 'data-lightbox-comments'
+                    }
                 },
                 'desc': {
                     'tag': 'p',
@@ -99,7 +104,9 @@ class Config():
                 },
                 'thread': {
                     'tag': 'a',
-                    'preview-tooltip': 'data-xf-init'
+                    'attr': {
+                        'preview-tooltip': 'data-xf-init'
+                    }
                 }
             },
             {
