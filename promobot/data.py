@@ -10,6 +10,7 @@ class Data():
             host=config.get('host'),
             username=config.get('user'),
             password=config.get('passwd'),
+            appname='promobot',
         )
 
         self.db_conn = conn[client]
@@ -176,20 +177,32 @@ class Data():
         return keywords
 
     def add_result(self, data):
-        result_id = {}
         col = self.db_conn['result']
 
         if data:
-            last_id = col.find_one({}, sort=[('_id', -1)])
+            last_data = {}
+            last_id = {}
+            updated_data = {}
 
-            if last_id:
-                result_id = {
-                    '_id': last_id.get('_id')
+            last_one = col.find_one({}, sort=[('_id', -1)])
+
+            if last_one:
+                last_data = last_one.get('data')
+                last_id = {
+                    '_id': last_one.get('_id')
                 }
 
+            for key in (last_data | data).keys():
+                data_merged = last_data.get(key, []) + data.get(key, [])
+                updated_data[key] = list(
+                    {
+                        i['url']: i for i in data_merged
+                    }.values()
+                )
+
             col.update_one(
-                result_id,
-                {'$set': {'data': data}},
+                last_id,
+                {'$set': {'data': updated_data}},
                 upsert=True
             )
 

@@ -88,6 +88,7 @@ class Monitor():
         self.config = kwargs.get('config')
         self.db_data = kwargs.get('data')
         self.report = kwargs.get('report')
+        self.flag_new = False
 
         self.chat_ids = self.db_data.list_chat()
         self.data = self.db_data.list_result()
@@ -190,6 +191,8 @@ class Monitor():
                         break
 
                 if add:
+                    self.flag_new = True
+
                     data.update({
                         'url': re.sub(
                             r'(\?)(?!.*\1).*$',
@@ -361,6 +364,7 @@ class Monitor():
                         del val[i]
 
     def runner(self, url):
+        delay = 0
         driver = {}
         runtime = 0
         timeout = self.config['monitor'].get('timeout')
@@ -389,7 +393,7 @@ class Monitor():
                     f'Error on loading {url.get("url")}: {error}'
                 )
 
-        while True:
+        while time.sleep(delay) is None:
             try:
                 config = self.db_data.list_config()
                 keywords = self.db_data.list_keyword()
@@ -401,11 +405,13 @@ class Monitor():
                     keywords
                 )
 
-                self.db_data.add_result(
-                    self.data
-                )
-
                 self.monitor(url, driver)
+
+                if self.flag_new:
+                    self.db_data.add_result(
+                        self.data
+                    )
+                    self.flag_new = False
             except (ServerSelectionTimeoutError, AutoReconnect) as error:
                 self.alert(
                     'ERROR',
@@ -415,7 +421,6 @@ class Monitor():
             delay = self.config['monitor']['delay']
             reset = self.config['monitor']['reset']
 
-            time.sleep(delay)
             runtime += delay
 
             if runtime >= 14400:
