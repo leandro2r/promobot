@@ -151,15 +151,21 @@ class Data():
                     upsert=True,
                 )
 
-    def del_keyword(self, keywords):
+    def del_keyword(self, indexes):
         col = self.db_conn['keyword']
         lis = col.distinct('keyword')
+        keywords = []
 
-        for i in keywords:
+        for i in indexes:
             index = int(i) - 1
 
+            keywords.append(
+                lis[index]
+            )
+
+        if self.del_result(keywords):
             col.delete_many({
-                'keyword': lis[index]
+                'keyword': {'$in': keywords}
             })
 
         if keywords:
@@ -205,6 +211,21 @@ class Data():
                 {'$set': {'data': updated_data}},
                 upsert=True
             )
+
+    def del_result(self, keywords):
+        col = self.db_conn['result']
+
+        for i in keywords:
+            col.update_many(
+                {},
+                {'$unset': {f'data.{i}': ''}},
+                upsert=True
+            )
+
+        if keywords:
+            return True
+
+        return False
 
     def list_result(self):
         col = self.db_conn['result']

@@ -88,7 +88,7 @@ class Monitor():
         self.config = kwargs.get('config')
         self.db_data = kwargs.get('data')
         self.report = kwargs.get('report')
-        self.flag_new = False
+        self.flag_result = False
 
         self.chat_ids = self.db_data.list_chat()
         self.data = self.db_data.list_result()
@@ -191,7 +191,7 @@ class Monitor():
                         break
 
                 if add:
-                    self.flag_new = True
+                    self.flag_result = True
 
                     data.update({
                         'url': re.sub(
@@ -407,11 +407,11 @@ class Monitor():
 
                 self.monitor(url, driver)
 
-                if self.flag_new:
+                if self.flag_result:
                     self.db_data.add_result(
                         self.data
                     )
-                    self.flag_new = False
+                    self.flag_result = False
             except (ServerSelectionTimeoutError, AutoReconnect) as error:
                 self.alert(
                     'ERROR',
