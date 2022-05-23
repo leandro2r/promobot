@@ -186,20 +186,20 @@ class Data():
         col = self.db_conn['result']
 
         if data:
-            last_data = {}
-            last_id = {}
+            res_data = {}
+            res_id = {}
             updated_data = {}
 
-            last_one = col.find_one({}, sort=[('_id', -1)])
+            res = self.list_result()
 
-            if last_one:
-                last_data = last_one.get('data')
-                last_id = {
-                    '_id': last_one.get('_id')
+            if res:
+                res_data = res.get('data')
+                res_id = {
+                    '_id': res.get('_id')
                 }
 
-            for key in (last_data | data).keys():
-                data_merged = last_data.get(key, []) + data.get(key, [])
+            for key in (res_data | data).keys():
+                data_merged = res_data.get(key, []) + data.get(key, [])
                 updated_data[key] = list(
                     {
                         i['url']: i for i in data_merged
@@ -207,7 +207,7 @@ class Data():
                 )
 
             col.update_one(
-                last_id,
+                res_id,
                 {'$set': {'data': updated_data}},
                 upsert=True
             )
@@ -215,31 +215,47 @@ class Data():
     def del_result(self, keywords):
         col = self.db_conn['result']
 
-        for i in keywords:
-            col.update_many(
-                {},
-                {'$unset': {f'data.{i}': ''}},
+        res = self.list_result()
+
+        if res:
+            res_data = res.get('data', {})
+            res_id = {
+                '_id': res.get('_id')
+            }
+
+            for i in keywords:
+                res_data.pop(i)
+
+            col.update_one(
+                res_id,
+                {'$set': {'data': res_data}},
                 upsert=True
             )
 
-        if keywords:
-            return True
+            if keywords:
+                return True
 
         return False
 
-    def list_result(self):
+    def list_result(self, **kwargs):
         col = self.db_conn['result']
+        get_id = kwargs.get('id', True)
 
         try:
-            result = col.find_one(
+            data = col.find_one(
                 {},
-                {'_id': False}
+                sort=[('_id', -1)]
             )
         except pymongo.errors.ServerSelectionTimeoutError:
-            result = {}
+            data = {}
 
-        if result:
-            result = result.get('data')
+        if data:
+            result = {
+                '_id': data.get('_id'),
+                'data': data.get('data')
+            }
+            if not get_id:
+                result = result.get('data')
         else:
             result = {}
 

@@ -91,7 +91,7 @@ class Monitor():
         self.flag_result = False
 
         self.chat_ids = self.db_data.list_chat()
-        self.data = self.db_data.list_result()
+        self.data = self.db_data.list_result(id=False)
 
         self.options.add_argument('--no-sandbox')
         self.options.add_argument('--headless')

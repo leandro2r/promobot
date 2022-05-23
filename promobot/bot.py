@@ -201,7 +201,7 @@ def handle_mgmt(message, **kwargs):
                 except ValueError:
                     pass
 
-            for key, val in database.list_result().items():
+            for key, val in database.list_result(id=False).items():
                 if val:
                     start = len(val) - 1
                     stop = max(-1, start - history_limit)
