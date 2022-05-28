@@ -418,8 +418,9 @@ class Monitor():
                 reset = self.config['monitor']['reset']
                 runtime = 0
 
-                if self.db_data.clean_up_result(reset):
-                    self.data = self.db_data.list_result(id=False)
+                cleaned_data = self.db_data.clean_up_result(reset)
+                if cleaned_data:
+                    self.data = cleaned_data
                     self.alert(
                         'INFO',
                         'The old data has been cleaned up.'

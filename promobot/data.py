@@ -242,6 +242,7 @@ class Data():
                         del val[i]
 
         if cleaned_up:
+            cleaned_up = res_data
             col.update_one(
                 res_id,
                 {'$set': {'data': res_data}},
