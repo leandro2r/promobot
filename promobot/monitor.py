@@ -6,6 +6,7 @@ import urllib.request
 from datetime import datetime
 from http.client import IncompleteRead
 from json import dumps
+from random import randint
 from bs4 import BeautifulSoup
 from pymongo.errors import ServerSelectionTimeoutError, AutoReconnect
 from selenium import webdriver
@@ -91,7 +92,9 @@ class Monitor():
         self.flag_result = False
 
         self.chat_ids = self.db_data.list_chat()
-        self.data = self.db_data.list_result(id=False)
+        self.data = self.db_data.clean_up_result(
+            self.config['monitor']['reset']
+        )
 
         self.options.add_argument('--no-sandbox')
         self.options.add_argument('--headless')
@@ -374,7 +377,7 @@ class Monitor():
 
     def runner(self, url):
         delay = 0
-        runtime = 0
+        runtime = randint(0, 300)
 
         self.alert(
             'INFO',
@@ -414,17 +417,17 @@ class Monitor():
             delay = self.config['monitor']['delay']
             runtime += delay
 
-            if runtime >= 14400:
+            if runtime >= 14700:
                 reset = self.config['monitor']['reset']
-                runtime = 0
+                runtime = randint(0, 300)
 
-                cleaned_data = self.db_data.clean_up_result(reset)
-                if cleaned_data:
-                    self.data = cleaned_data
-                    self.alert(
-                        'INFO',
-                        'The old data has been cleaned up.'
-                    )
+                self.alert(
+                    'INFO',
+                    f'Cleaning any data older than {reset} hours.'
+                )
+
+                reset = self.config['monitor']['reset']
+                self.data = self.db_data.clean_up_result(reset)
 
     def main(self):
         proc = []

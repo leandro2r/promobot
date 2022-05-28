@@ -242,14 +242,13 @@ class Data():
                         del val[i]
 
         if cleaned_up:
-            cleaned_up = res_data
             col.update_one(
                 res_id,
                 {'$set': {'data': res_data}},
                 upsert=True
             )
 
-        return cleaned_up
+        return res_data
 
     def del_result(self, keywords):
         col = self.db_conn['result']
