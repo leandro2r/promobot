@@ -3,7 +3,7 @@ import re
 import threading
 import time
 import urllib.request
-from datetime import datetime, timedelta
+from datetime import datetime
 from http.client import IncompleteRead
 from json import dumps
 from bs4 import BeautifulSoup
@@ -349,34 +349,6 @@ class Monitor():
             f'Last lookup from {src.get("url")}'
         )
 
-    def clean_up(self, hours):
-        self.alert(
-            'INFO',
-            'Checking old values to be cleaned up'
-        )
-
-        for k, val in self.data.items():
-            for i in range(len(val)):
-                if i < len(val):
-                    cur = time.mktime(
-                        datetime.strptime(
-                            val[i]['datetime'], '%d-%m-%Y %H:%M'
-                        ).timetuple()
-                    )
-                    old = time.mktime(
-                        (datetime.now() - timedelta(hours=hours)).timetuple()
-                    )
-
-                    if cur <= old:
-                        self.alert(
-                            'INFO',
-                            (
-                                f'Clean up {i + 1}º {k} '
-                                f'value from {val[i]["datetime"]}'
-                            )
-                        )
-                        del val[i]
-
     def init_driver(self, tool, url):
         driver = {}
         timeout = self.config['monitor'].get('timeout')
@@ -440,13 +412,18 @@ class Monitor():
                 )
 
             delay = self.config['monitor']['delay']
-            reset = self.config['monitor']['reset']
-
             runtime += delay
 
             if runtime >= 14400:
-                self.clean_up(reset)
+                reset = self.config['monitor']['reset']
                 runtime = 0
+
+                if self.db_data.clean_up_result(reset):
+                    self.data = self.db_data.list_result(id=False)
+                    self.alert(
+                        'INFO',
+                        'The old data has been cleaned up.'
+                    )
 
     def main(self):
         proc = []

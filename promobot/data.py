@@ -1,4 +1,6 @@
 import os
+import time
+from datetime import datetime, timedelta
 import pymongo
 
 
@@ -211,6 +213,42 @@ class Data():
                 {'$set': {'data': updated_data}},
                 upsert=True
             )
+
+    def clean_up_result(self, hours):
+        col = self.db_conn['result']
+
+        cleaned_up = False
+
+        res = self.list_result()
+        res_data = res.get('data', {})
+        res_id = {
+            '_id': res.get('_id')
+        }
+
+        for val in res_data.values():
+            for i in range(len(val)):
+                if i < len(val):
+                    cur = time.mktime(
+                        datetime.strptime(
+                            val[i]['datetime'], '%d-%m-%Y %H:%M'
+                        ).timetuple()
+                    )
+                    old = time.mktime(
+                        (datetime.now() - timedelta(hours=hours)).timetuple()
+                    )
+
+                    if cur <= old:
+                        cleaned_up = True
+                        del val[i]
+
+        if cleaned_up:
+            col.update_one(
+                res_id,
+                {'$set': {'data': res_data}},
+                upsert=True
+            )
+
+        return cleaned_up
 
     def del_result(self, keywords):
         col = self.db_conn['result']

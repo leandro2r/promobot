@@ -32,8 +32,8 @@ services:
 
   monitor_2:
     <<: *promobot
-    entrypoint: "python"
-    command: "promobot/__main__.py -U 1"
+    # entrypoint: "python"
+    # command: "promobot/__main__.py -U 1"
 
   bot:
     <<: *promobot
@@ -41,8 +41,8 @@ services:
     volumes:
       - .:/opt/promobot
       - ${HOME}/.kube/config:/root/.kube/config:ro
-    entrypoint: "python"
-    command: "promobot/__main__.py --bot"
+    # entrypoint: "python"
+    # command: "promobot/__main__.py --bot"
 
   mongodb:
     image: mongo:latest
