@@ -215,6 +215,43 @@ class Monitor():
 
                 break
 
+    def load_page(self, driver, url):
+        try:
+            driver.refresh()
+        except WebDriverException as error:
+            self.alert(
+                'ERROR',
+                f'Error on refreshing page {url}: {error}'
+            )
+            driver.quit()
+            driver = self.init_driver('selenium', url)
+
+        height = driver.execute_script(
+            'return document.body.scrollHeight'
+        )
+
+        if height:
+            limit = height * 1.5
+            wait_time = 0
+
+            while height <= limit:
+                driver.execute_script(
+                    'window.scrollTo(0, '
+                    'document.body.scrollHeight);'
+                )
+
+                wait_time += 1
+                time.sleep(wait_time)
+
+                height = driver.execute_script(
+                    'return document.body.scrollHeight'
+                )
+
+                if wait_time > 5:
+                    break
+
+        return driver.page_source
+
     def get_promo(self, src, driver):
         content = ''
         delay = self.config['monitor'].get('delay') * 2
@@ -224,33 +261,10 @@ class Monitor():
         while len(topic) == 0:
             try:
                 if driver:
-                    driver.refresh()
-
-                    height = driver.execute_script(
-                        'return document.body.scrollHeight'
+                    content = self.load_page(
+                        driver,
+                        src.get('url')
                     )
-
-                    if height:
-                        limit = height * 1.5
-                        wait_time = 0
-
-                        while height <= limit:
-                            driver.execute_script(
-                                'window.scrollTo(0, '
-                                'document.body.scrollHeight);'
-                            )
-
-                            wait_time += 1
-                            time.sleep(wait_time)
-
-                            height = driver.execute_script(
-                                'return document.body.scrollHeight'
-                            )
-
-                            if wait_time > 5:
-                                break
-
-                    content = driver.page_source
                 else:
                     req = urllib.request.Request(
                         url=src.get('url'),
@@ -363,18 +377,11 @@ class Monitor():
                         )
                         del val[i]
 
-    def runner(self, url):
-        delay = 0
+    def init_driver(self, tool, url):
         driver = {}
-        runtime = 0
         timeout = self.config['monitor'].get('timeout')
 
-        self.alert(
-            'INFO',
-            f'Starting runner at {url.get("url")}'
-        )
-
-        if url.get('tool', '').lower() == 'selenium':
+        if tool.lower() == 'selenium':
             driver = webdriver.Chrome(
                 options=self.options,
                 service_log_path=os.path.devnull,
@@ -384,14 +391,28 @@ class Monitor():
             driver.set_page_load_timeout(-1)
 
             try:
-                driver.get(
-                    url.get('url')
-                )
+                driver.get(url)
             except WebDriverException as error:
                 self.alert(
                     'ERROR',
-                    f'Error on loading {url.get("url")}: {error}'
+                    f'Error on loading {url}: {error}'
                 )
+
+        return driver
+
+    def runner(self, url):
+        delay = 0
+        runtime = 0
+
+        self.alert(
+            'INFO',
+            f'Starting runner at {url.get("url")}'
+        )
+
+        driver = self.init_driver(
+            url.get('tool', ''),
+            url.get('url')
+        )
 
         while time.sleep(delay) is None:
             try:
