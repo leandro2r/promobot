@@ -226,8 +226,8 @@ class Monitor():
                 'ERROR',
                 f'Error on refreshing page {url}: {error}'
             )
-            driver.quit()
-            driver = self.init_driver('selenium', url)
+            driver.close()
+            driver = self.init_driver(driver, url)
 
         height = driver.execute_script(
             'return document.body.scrollHeight'
@@ -352,11 +352,10 @@ class Monitor():
             f'Last lookup from {src.get("url")}'
         )
 
-    def init_driver(self, tool, url):
-        driver = {}
+    def init_driver(self, driver, url):
         timeout = self.config['monitor'].get('timeout')
 
-        if tool.lower() == 'selenium':
+        if not driver:
             driver = webdriver.Chrome(
                 options=self.options,
                 service_log_path=os.path.devnull,
@@ -365,18 +364,19 @@ class Monitor():
             driver.set_script_timeout(timeout)
             driver.set_page_load_timeout(-1)
 
-            try:
-                driver.get(url)
-            except WebDriverException as error:
-                self.alert(
-                    'ERROR',
-                    f'Error on loading {url}: {error}'
-                )
+        try:
+            driver.get(url)
+        except WebDriverException as error:
+            self.alert(
+                'ERROR',
+                f'Error on loading {url}: {error}'
+            )
 
         return driver
 
     def runner(self, url):
         delay = 0
+        driver = {}
         runtime = randint(0, 300)
 
         self.alert(
@@ -384,10 +384,11 @@ class Monitor():
             f'Starting runner at {url.get("url")}'
         )
 
-        driver = self.init_driver(
-            url.get('tool', ''),
-            url.get('url')
-        )
+        if url.get('tool', '').lower() == 'selenium':
+            driver = self.init_driver(
+                driver,
+                url.get('url')
+            )
 
         while time.sleep(delay) is None:
             try:
