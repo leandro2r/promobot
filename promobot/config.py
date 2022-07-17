@@ -178,6 +178,81 @@ class Config():
                     'class': 'ng-binding'
                 }
             },
+            {
+                'url': 'https://forums.redflagdeals.com/hot-deals-f9/',
+                'topic': {
+                    'tag': 'div',
+                    'attr': {
+                        'class': 'thread_info_title'
+                    }
+                },
+                'thread': {
+                    'tag': 'a',
+                    'attr': {
+                        'class': 'topic_title_link'
+                    }
+                },
+                'desc': {
+                    'tag': 'h3',
+                    'class': 'topictitle topictitle_has_retailer'
+                }
+            },
+            {
+                'url': 'https://forums.redflagdeals.com/ongoing-deal-discussion-f129/',
+                'topic': {
+                    'tag': 'div',
+                    'attr': {
+                        'class': 'thread_info_title'
+                    }
+                },
+                'thread': {
+                    'tag': 'a',
+                    'attr': {
+                        'class': 'topic_title_link'
+                    }
+                },
+                'desc': {
+                    'tag': 'h3',
+                    'class': 'topictitle topictitle_has_retailer'
+                }
+            },
+            {
+                'url': 'http://pricefinder.ca/',
+                'topic': {
+                    'tag': 'table',
+                    'attr': {
+                        'class': 'pf-table'
+                    }
+                },
+                'thread': {
+                    'tag': 'a',
+                },
+                'desc': {
+                    'tag': 'td',
+                    'class': 'pf-descr pf-shorten'
+                }
+            },
+            {
+                'url': 'https://www.reddit.com/r/ShopCanada/',
+                'topic': {
+                    'tag': 'div',
+                    'attr': {
+                        'data-click-id': 'background'
+                    }
+                },
+                'thread': {
+                    'tag': 'a',
+                    'attr': {
+                        'data-click-id': 'body'
+                    }
+                },
+                'desc': {
+                    'tag': 'div',
+                    'attr': {
+                        'data-click-id': 'text'
+                    }
+                }
+            },
         ]
 
         if urls:

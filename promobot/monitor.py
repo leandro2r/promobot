@@ -23,9 +23,7 @@ def mount(src, each, t_title):
     if src.get('desc'):
         desc = each.find(
             src['desc'].get('tag'),
-            {
-                'class': src['desc'].get('class'),
-            }
+            src['desc'].get('attr', {})
         )
 
         try:
