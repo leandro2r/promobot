@@ -30,10 +30,10 @@ services:
     entrypoint: ""
     command: "tail -f /dev/null"
 
-  monitor_2:
+  monitor_ca:
     <<: *promobot
     # entrypoint: "python"
-    # command: "promobot/__main__.py -U 1"
+    # command: "promobot/__main__.py --region ca --urls 1"
 
   bot:
     <<: *promobot

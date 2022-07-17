@@ -28,6 +28,14 @@ def create_parser():
     )
 
     parser.add_argument(
+        '-R',
+        '--region',
+        type=str,
+        help='Choose which region the URLs are based on. Default: br',
+        default='br',
+    )
+
+    parser.add_argument(
         '-U',
         '--urls',
         type=str,
@@ -44,6 +52,7 @@ def main():
         bot.main()
     else:
         config = Config(
+            region=args.region,
             urls=args.urls
         ).data
 

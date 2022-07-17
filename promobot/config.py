@@ -13,7 +13,245 @@ class Config():
     }
 
     def __init__(self, **kwargs):
+        region = kwargs.get('region')
         urls = kwargs.get('urls')
+        options = {
+            'br': [
+                {
+                    'url': 'https://www.hardmob.com.br/forums/407-Promocoes'
+                           '?s=&pp=50&daysprune=1&sort=dateline&order=desc',
+                    'topic': {
+                        'tag': 'div',
+                        'attr': {
+                            'class': 'threadinfo'
+                        }
+                    },
+                    'thread': {
+                        'tag': 'a',
+                        'attr': {
+                            'class': 'title'
+                        }
+                    }
+                },
+                {
+                    'url': 'https://www.pelando.com.br/recentes',
+                    'tool': 'selenium',
+                    'topic': {
+                        'tag': 'div',
+                        'attr': {
+                            'class': 'pf7gf4-0 fhviAs'
+                        }
+                    },
+                    'thread': {
+                        'tag': 'a',
+                    },
+                    'desc': {
+                        'tag': 'a',
+                        'class': 'pf7gf4-4 eUBBJN'
+                    }
+                },
+                {
+                    'url': 'https://www.pelando.com.br',
+                    'tool': 'selenium',
+                    'topic': {
+                        'tag': 'div',
+                        'attr': {
+                            'class': 'pf7gf4-0 fhviAs'
+                        }
+                    },
+                    'thread': {
+                        'tag': 'a',
+                    },
+                    'desc': {
+                        'tag': 'a',
+                        'class': 'pf7gf4-4 eUBBJN'
+                    }
+                },
+                {
+                    'url': 'https://www.gatry.com',
+                    'topic': {
+                        'tag': 'div',
+                        'attr': {
+                            'class': 'description'
+                        }
+                    },
+                    'thread': {
+                        'tag': 'a',
+                        'attr': {
+                            'data-lightbox-comments': 'data-lightbox-comments'
+                        }
+                    },
+                    'desc': {
+                        'tag': 'p',
+                        'class': 'comment text-break'
+                    }
+                },
+                {
+                    'url': 'https://forum.adrenaline.com.br/'
+                           'forums/for-sale.221',
+                    'topic': {
+                        'tag': 'div',
+                        'attr': {
+                            'class': 'structItem-title'
+                        }
+                    },
+                    'thread': {
+                        'tag': 'a',
+                        'attr': {
+                            'preview-tooltip': 'data-xf-init'
+                        }
+                    }
+                },
+                {
+                    'url': 'https://www.ofertaesperta.com',
+                    'tool': 'selenium',
+                    'topic': {
+                        'tag': 'div',
+                        'attr': {
+                            'class': 'common-card'
+                        }
+                    },
+                    'thread': {
+                        'tag': 'a',
+                    },
+                    'desc': {
+                        'tag': 'div',
+                        'class': 'store-icon'
+                    }
+                },
+                {
+                    'url': 'https://www.promobit.com.br',
+                    'tool': 'selenium',
+                    'topic': {
+                        'tag': 'div',
+                        'attr': {
+                            'class': 'e19tro4z0 css-18hidx3 e1ppb8bk0'
+                        }
+                    },
+                    'thread': {
+                        'tag': 'a',
+                    },
+                    'desc': {
+                        'tag': 'span',
+                        'class': 'ejdy5300 css-1um6tmm e10o2vra0'
+                    }
+                },
+                {
+                    'url': 'https://www.promobit.com.br/promocoes/'
+                           'melhores-ofertas',
+                    'tool': 'selenium',
+                    'topic': {
+                        'tag': 'div',
+                        'attr': {
+                            'class': 'e19tro4z0 css-120k3lz e1ppb8bk0'
+                        }
+                    },
+                    'thread': {
+                        'tag': 'a',
+                    },
+                    'desc': {
+                        'tag': 'span',
+                        'class': 'ejdy5300 css-9zk395 e10o2vra0'
+                    }
+                },
+                {
+                    'url': 'https://gafanho.to/facebook',
+                    'tool': 'selenium',
+                    'topic': {
+                        'tag': 'div',
+                        'attr': {
+                            'ng-init': 'clicked=false'
+                        }
+                    },
+                    'thread': {
+                        'tag': 'a',
+                    },
+                    'desc': {
+                        'tag': 'div',
+                        'class': 'ng-binding'
+                    }
+                },
+            ],
+            'ca': [
+                {
+                    'url': 'https://forums.redflagdeals.com/hot-deals-f9/',
+                    'topic': {
+                        'tag': 'div',
+                        'attr': {
+                            'class': 'thread_info_title'
+                        }
+                    },
+                    'thread': {
+                        'tag': 'a',
+                        'attr': {
+                            'class': 'topic_title_link'
+                        }
+                    },
+                    'desc': {
+                        'tag': 'h3',
+                        'class': 'topictitle topictitle_has_retailer'
+                    }
+                },
+                {
+                    'url': 'https://forums.redflagdeals.com/'
+                           'ongoing-deal-discussion-f129/',
+                    'topic': {
+                        'tag': 'div',
+                        'attr': {
+                            'class': 'thread_info_title'
+                        }
+                    },
+                    'thread': {
+                        'tag': 'a',
+                        'attr': {
+                            'class': 'topic_title_link'
+                        }
+                    },
+                    'desc': {
+                        'tag': 'h3',
+                        'class': 'topictitle topictitle_has_retailer'
+                    }
+                },
+                {
+                    'url': 'http://pricefinder.ca/',
+                    'topic': {
+                        'tag': 'table',
+                        'attr': {
+                            'class': 'pf-table'
+                        }
+                    },
+                    'thread': {
+                        'tag': 'a',
+                    },
+                    'desc': {
+                        'tag': 'td',
+                        'class': 'pf-descr pf-shorten'
+                    }
+                },
+                {
+                    'url': 'https://www.reddit.com/r/ShopCanada/',
+                    'topic': {
+                        'tag': 'div',
+                        'attr': {
+                            'data-click-id': 'background'
+                        }
+                    },
+                    'thread': {
+                        'tag': 'a',
+                        'attr': {
+                            'data-click-id': 'body'
+                        }
+                    },
+                    'desc': {
+                        'tag': 'div',
+                        'attr': {
+                            'data-click-id': 'text'
+                        }
+                    }
+                },
+            ]
+        }
+
         self.set_proxy()
 
         self.data['monitor'] = {
@@ -23,237 +261,7 @@ class Config():
             'timeout': int(os.environ.get('TIMEOUT', 30)),
         }
 
-        self.data['urls'] = [
-            {
-                'url': 'https://www.hardmob.com.br/forums/407-Promocoes'
-                       '?s=&pp=50&daysprune=1&sort=dateline&order=desc',
-                'topic': {
-                    'tag': 'div',
-                    'attr': {
-                        'class': 'threadinfo'
-                    }
-                },
-                'thread': {
-                    'tag': 'a',
-                    'attr': {
-                        'class': 'title'
-                    }
-                }
-            },
-            {
-                'url': 'https://www.pelando.com.br/recentes',
-                'tool': 'selenium',
-                'topic': {
-                    'tag': 'div',
-                    'attr': {
-                        'class': 'pf7gf4-0 fhviAs'
-                    }
-                },
-                'thread': {
-                    'tag': 'a',
-                },
-                'desc': {
-                    'tag': 'a',
-                    'class': 'pf7gf4-4 eUBBJN'
-                }
-            },
-            {
-                'url': 'https://www.pelando.com.br',
-                'tool': 'selenium',
-                'topic': {
-                    'tag': 'div',
-                    'attr': {
-                        'class': 'pf7gf4-0 fhviAs'
-                    }
-                },
-                'thread': {
-                    'tag': 'a',
-                },
-                'desc': {
-                    'tag': 'a',
-                    'class': 'pf7gf4-4 eUBBJN'
-                }
-            },
-            {
-                'url': 'https://www.gatry.com',
-                'topic': {
-                    'tag': 'div',
-                    'attr': {
-                        'class': 'description'
-                    }
-                },
-                'thread': {
-                    'tag': 'a',
-                    'attr': {
-                        'data-lightbox-comments': 'data-lightbox-comments'
-                    }
-                },
-                'desc': {
-                    'tag': 'p',
-                    'class': 'comment text-break'
-                }
-            },
-            {
-                'url': 'https://forum.adrenaline.com.br/'
-                       'forums/for-sale.221',
-                'topic': {
-                    'tag': 'div',
-                    'attr': {
-                        'class': 'structItem-title'
-                    }
-                },
-                'thread': {
-                    'tag': 'a',
-                    'attr': {
-                        'preview-tooltip': 'data-xf-init'
-                    }
-                }
-            },
-            {
-                'url': 'https://www.ofertaesperta.com',
-                'tool': 'selenium',
-                'topic': {
-                    'tag': 'div',
-                    'attr': {
-                        'class': 'common-card'
-                    }
-                },
-                'thread': {
-                    'tag': 'a',
-                },
-                'desc': {
-                    'tag': 'div',
-                    'class': 'store-icon'
-                }
-            },
-            {
-                'url': 'https://www.promobit.com.br',
-                'tool': 'selenium',
-                'topic': {
-                    'tag': 'div',
-                    'attr': {
-                        'class': 'e19tro4z0 css-18hidx3 e1ppb8bk0'
-                    }
-                },
-                'thread': {
-                    'tag': 'a',
-                },
-                'desc': {
-                    'tag': 'span',
-                    'class': 'ejdy5300 css-1um6tmm e10o2vra0'
-                }
-            },
-            {
-                'url': 'https://www.promobit.com.br/promocoes/'
-                       'melhores-ofertas',
-                'tool': 'selenium',
-                'topic': {
-                    'tag': 'div',
-                    'attr': {
-                        'class': 'e19tro4z0 css-120k3lz e1ppb8bk0'
-                    }
-                },
-                'thread': {
-                    'tag': 'a',
-                },
-                'desc': {
-                    'tag': 'span',
-                    'class': 'ejdy5300 css-9zk395 e10o2vra0'
-                }
-            },
-            {
-                'url': 'https://gafanho.to/facebook',
-                'tool': 'selenium',
-                'topic': {
-                    'tag': 'div',
-                    'attr': {
-                        'ng-init': 'clicked=false'
-                    }
-                },
-                'thread': {
-                    'tag': 'a',
-                },
-                'desc': {
-                    'tag': 'div',
-                    'class': 'ng-binding'
-                }
-            },
-            {
-                'url': 'https://forums.redflagdeals.com/hot-deals-f9/',
-                'topic': {
-                    'tag': 'div',
-                    'attr': {
-                        'class': 'thread_info_title'
-                    }
-                },
-                'thread': {
-                    'tag': 'a',
-                    'attr': {
-                        'class': 'topic_title_link'
-                    }
-                },
-                'desc': {
-                    'tag': 'h3',
-                    'class': 'topictitle topictitle_has_retailer'
-                }
-            },
-            {
-                'url': 'https://forums.redflagdeals.com/ongoing-deal-discussion-f129/',
-                'topic': {
-                    'tag': 'div',
-                    'attr': {
-                        'class': 'thread_info_title'
-                    }
-                },
-                'thread': {
-                    'tag': 'a',
-                    'attr': {
-                        'class': 'topic_title_link'
-                    }
-                },
-                'desc': {
-                    'tag': 'h3',
-                    'class': 'topictitle topictitle_has_retailer'
-                }
-            },
-            {
-                'url': 'http://pricefinder.ca/',
-                'topic': {
-                    'tag': 'table',
-                    'attr': {
-                        'class': 'pf-table'
-                    }
-                },
-                'thread': {
-                    'tag': 'a',
-                },
-                'desc': {
-                    'tag': 'td',
-                    'class': 'pf-descr pf-shorten'
-                }
-            },
-            {
-                'url': 'https://www.reddit.com/r/ShopCanada/',
-                'topic': {
-                    'tag': 'div',
-                    'attr': {
-                        'data-click-id': 'background'
-                    }
-                },
-                'thread': {
-                    'tag': 'a',
-                    'attr': {
-                        'data-click-id': 'body'
-                    }
-                },
-                'desc': {
-                    'tag': 'div',
-                    'attr': {
-                        'data-click-id': 'text'
-                    }
-                }
-            },
-        ]
+        self.data['urls'] = options.get(region, {})
 
         if urls:
             all_urls = list(
