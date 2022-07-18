@@ -1,6 +1,5 @@
 import logging
 import re
-import time
 from datetime import datetime
 import psutil
 import telebot
@@ -315,6 +314,7 @@ def manage_kube(info):
 @bot.message_handler(func=lambda message: True)
 def bot_reply(message):
     cmd = message.text.split()[0]
+    res = ''
 
     if cmd:
         cmd = re.sub('[^a-z]+', '', cmd.lower())
@@ -377,6 +377,9 @@ def bot_reply(message):
 
 def main():
     try:
-        bot.polling(none_stop=True)
-    except Exception:
-        time.sleep(20)
+        bot.polling(non_stop=True)
+    except Exception as error:
+        log.alert(
+            'ERROR',
+            f'Error on polling bot on telegram: {error}'
+        )
