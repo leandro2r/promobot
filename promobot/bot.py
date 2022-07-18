@@ -175,7 +175,7 @@ def handle_mgmt(message, **kwargs):
 
             sensors_temp = psutil.sensors_temperatures().get('cpu_thermal')
             temp = 0
-            if len(sensors_temp) > 0:
+            if sensors_temp and len(sensors_temp) > 0:
                 temp = f'{sensors_temp[0].current:.1f} °C'
 
             msg = (
