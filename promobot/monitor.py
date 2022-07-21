@@ -195,11 +195,6 @@ class Monitor():
                     self.flag_result = True
 
                     data.update({
-                        'url': re.sub(
-                            r'(\?)(?!.*\1).*$',
-                            '',
-                            data.get('url')
-                        ),
                         'datetime': datetime.now().strftime(
                             '%d-%m-%Y %H:%M'
                         )
