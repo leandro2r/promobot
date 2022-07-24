@@ -193,6 +193,25 @@ class Config():
                     }
                 },
                 {
+                    'url': 'https://forums.redflagdeals.com/hot-deals-f9/2/',
+                    'topic': {
+                        'tag': 'div',
+                        'attr': {
+                            'class': 'thread_info_title'
+                        }
+                    },
+                    'thread': {
+                        'tag': 'a',
+                        'attr': {
+                            'class': 'topic_title_link'
+                        }
+                    },
+                    'desc': {
+                        'tag': 'h3',
+                        'class': 'topictitle topictitle_has_retailer'
+                    }
+                },
+                {
                     'url': 'https://forums.redflagdeals.com/'
                            'ongoing-deal-discussion-f129/',
                     'topic': {
@@ -213,6 +232,22 @@ class Config():
                     }
                 },
                 {
+                    'url': 'https://forum.smartcanucks.ca/'
+                           'canadian-shopping-deals-flyers/?pp=100',
+                    'topic': {
+                        'tag': 'h3',
+                        'attr': {
+                            'class': 'threadtitle'
+                        }
+                    },
+                    'thread': {
+                        'tag': 'a',
+                        'attr': {
+                            'class': 'title'
+                        }
+                    }
+                },
+                {
                     'url': 'http://pricefinder.ca/',
                     'topic': {
                         'tag': 'table',
@@ -229,7 +264,52 @@ class Config():
                     }
                 },
                 {
+                    'url': 'https://www.reddit.com/r/canadadeals/',
+                    'tool': 'selenium',
+                    'topic': {
+                        'tag': 'div',
+                        'attr': {
+                            'data-click-id': 'background'
+                        }
+                    },
+                    'thread': {
+                        'tag': 'a',
+                        'attr': {
+                            'data-click-id': 'body'
+                        }
+                    },
+                    'desc': {
+                        'tag': 'div',
+                        'attr': {
+                            'data-click-id': 'text'
+                        }
+                    }
+                },
+                {
+                    'url': 'https://www.reddit.com/r/bapcsalescanada/',
+                    'tool': 'selenium',
+                    'topic': {
+                        'tag': 'div',
+                        'attr': {
+                            'data-click-id': 'background'
+                        }
+                    },
+                    'thread': {
+                        'tag': 'a',
+                        'attr': {
+                            'data-click-id': 'body'
+                        }
+                    },
+                    'desc': {
+                        'tag': 'div',
+                        'attr': {
+                            'data-click-id': 'text'
+                        }
+                    }
+                },
+                {
                     'url': 'https://www.reddit.com/r/ShopCanada/',
+                    'tool': 'selenium',
                     'topic': {
                         'tag': 'div',
                         'attr': {
