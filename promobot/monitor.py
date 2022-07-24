@@ -223,7 +223,7 @@ class Monitor():
             driver = self.init_driver(driver, url)
 
         height = driver.execute_script(
-            'return document.body.scrollHeight'
+            'return document.documentElement.scrollHeight'
         )
 
         if height:
@@ -233,14 +233,14 @@ class Monitor():
             while height <= limit:
                 driver.execute_script(
                     'window.scrollTo(0, '
-                    'document.body.scrollHeight);'
+                    'document.documentElement.scrollHeight);'
                 )
 
                 wait_time += 1
                 time.sleep(wait_time)
 
                 height = driver.execute_script(
-                    'return document.body.scrollHeight'
+                    'return document.documentElement.scrollHeight'
                 )
 
                 if wait_time > 5:
