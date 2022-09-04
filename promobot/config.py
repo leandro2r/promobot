@@ -329,6 +329,22 @@ class Config():
                         }
                     }
                 },
+                {
+                    'url': 'https://www.cdndeals.ca/',
+                    'topic': {
+                        'tag': 'div',
+                        'attr': {
+                            'class': 'fusion-post-content post-content'
+                        }
+                    },
+                    'thread': {
+                        'tag': 'a',
+                    },
+                    'desc': {
+                        'tag': 'div',
+                        'class': 'fusion-post-content-container'
+                    }
+                },
             ]
         }
 
