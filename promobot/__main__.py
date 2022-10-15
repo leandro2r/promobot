@@ -61,11 +61,7 @@ def main():
             timeout=config['monitor'].get('timeout'),
         )
 
-        data = Data(
-            config.get('db')
-        )
-
-        data.add_keyword([], initial=True)
+        data = Data(config)
 
         monitor = Monitor(
             alert=log.alert,

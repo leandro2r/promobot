@@ -357,6 +357,15 @@ class Config():
             'timeout': int(os.environ.get('TIMEOUT', 30)),
         }
 
+        keywords = os.environ.get(
+            'KEYWORDS',
+            ';'
+        )
+
+        self.data['keywords'] = list(
+            filter(None, keywords.split(';'))
+        )
+
         self.data['urls'] = options.get(region, {})
 
         if urls:
@@ -387,13 +396,13 @@ class Config():
         })
 
         self.data['db'] = {
-            'host': os.environ.get('DB_HOST', 'localhost:27017'),
-            'user': os.environ.get('MONGO_INITDB_ROOT_USERNAME'),
-            'passwd': os.environ.get('MONGO_INITDB_ROOT_PASSWORD'),
             'client': os.environ.get(
                 'MONGO_INITDB_DATABASE',
                 'promobot'
             ),
+            'host': os.environ.get('DB_HOST', 'localhost:27017'),
+            'user': os.environ.get('MONGO_INITDB_ROOT_USERNAME'),
+            'passwd': os.environ.get('MONGO_INITDB_ROOT_PASSWORD'),
         }
 
     def set_proxy(self):
