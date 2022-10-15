@@ -185,7 +185,7 @@ def handle_mgmt(message, **kwargs):
             )
         elif 'url' in cmd:
             count = 0
-            for k in config.get('urls'):
+            for k in database.list_url():
                 res += f"{count} {k.get('url')}\n"
                 count += 1
 
