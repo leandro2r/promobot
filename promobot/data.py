@@ -6,16 +6,21 @@ import pymongo
 
 class Data():
     def __init__(self, config):
-        client = config.get('client')
+        client = config['db'].get('client')
 
         conn = pymongo.MongoClient(
-            host=config.get('host'),
-            username=config.get('user'),
-            password=config.get('passwd'),
+            host=config['db'].get('host'),
+            username=config['db'].get('user'),
+            password=config['db'].get('passwd'),
             appname='promobot',
         )
 
         self.db_conn = conn[client]
+
+        if config.get('keywords'):
+            self.add_keyword(
+                config.get('keywords')
+            )
 
     def add_config(self, envs):
         data = []
@@ -127,21 +132,12 @@ class Data():
 
         return chat_ids
 
-    def add_keyword(self, keywords, **kwargs):
+    def add_keyword(self, keywords):
         data = {}
         col = self.db_conn['keyword']
 
         if not keywords:
             keywords = []
-
-        if kwargs.get('initial'):
-            initial = os.environ.get(
-                'INITIAL_KEYWORDS',
-                ';'
-            )
-            keywords = list(
-                filter(None, initial.split(';'))
-            )
 
         if keywords:
             for k in keywords:

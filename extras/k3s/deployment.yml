@@ -27,7 +27,7 @@ metadata:
   namespace: promobot
 data:
   DB_HOST: db
-  INITIAL_KEYWORDS: ""
+  KEYWORDS: ""
   DELAY: "60"
   MUTED: "false"
   RESET_TIME: "72"

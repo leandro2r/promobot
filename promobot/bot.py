@@ -22,9 +22,7 @@ config = Config().data
 bot = telebot.TeleBot(
     config['telegram'].get('token')
 )
-database = Data(
-    config.get('db')
-)
+database = Data(config)
 log = Log(
     muted=config['monitor'].get('muted'),
     timeout=config['monitor'].get('timeout'),
