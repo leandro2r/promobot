@@ -21,6 +21,11 @@ class Data():
                 config.get('keywords')
             )
 
+        if config.get('urls'):
+            self.add_url(
+                config.get('urls')
+            )
+
     def add_config(self, envs):
         data = []
         col = self.db_conn['config']
@@ -293,3 +298,34 @@ class Data():
             result = {}
 
         return result
+
+    def add_url(self, urls):
+        data = {}
+        col = self.db_conn['url']
+
+        col.delete_many({})
+
+        if not urls:
+            urls = []
+
+        if urls:
+            data['url'] = []
+
+            for k in urls:
+                data['url'].append(
+                    k.get('url')
+                )
+
+            col.insert_one(
+                data
+            )
+
+    def list_url(self):
+        col = self.db_conn['url']
+
+        urls = col.find_one(
+            {},
+            {'_id': False}
+        ).get('url')
+
+        return urls
