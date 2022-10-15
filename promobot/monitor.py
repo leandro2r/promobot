@@ -417,7 +417,7 @@ class Monitor():
 
                 self.alert(
                     'INFO',
-                    f'Cleaning any data older than {reset} hours.'
+                    f'Checking any data older than {reset} hours...'
                 )
 
                 reset = self.config['monitor']['reset']
