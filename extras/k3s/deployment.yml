@@ -80,4 +80,4 @@ spec:
           volumeMounts:
             - mountPath: /dev/shm
               name: dshm
-          args: ["-R br", "-U 0,1,2,3,4,5,6,7,8"]
+          args: ["--region", "br", "--urls", "0,1,2,3,4,5,6,7,8"]
