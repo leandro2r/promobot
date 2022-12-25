@@ -1,16 +1,6 @@
-build
-dist
-*.egg-info
-*.pyc
-__pycache__
-.vscode
-.DS_Store
-.dockerignore
-.git
-.gitignore
-.github
-README.md
-env.*
-tmp
-docker-compose.yml
-Dockerfile
+**
+
+# Allow
+!/config/**
+!/promobot/**
+!/setup.py

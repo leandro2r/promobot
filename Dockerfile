@@ -1,6 +1,7 @@
 FROM leandro2r/promobot:latest-dep
 
-ENV DB_HOST= \
+ENV CONFIG=/etc/promobot/promobot.yml \
+    DB_HOST= \
     MONGO_INITDB_ROOT_USERNAME= \
     MONGO_INITDB_ROOT_PASSWORD= \
     MONGO_INITDB_DATABASE= \
@@ -10,6 +11,8 @@ ENV DB_HOST= \
     DELAY=10 \
     MUTED=false \
     RESET_TIME=24
+
+COPY config /etc/promobot
 
 WORKDIR /opt/promobot
 

@@ -26,6 +26,7 @@ setup(
         'selenium<4.2',
         'psutil<5.10',
         'pymongo[srv]',
+        'PyYAML<6.1',
     ],
     extras_require={
         'dev': dev_requirements
