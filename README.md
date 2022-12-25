@@ -1,6 +1,8 @@
 # PromoBot
 
-Promobot is a web scraper made using the python libraries Requests and Selenium together with BeautifulSoup. This solution monitors the main Brazilian promotion sites by searching keywords occurrences and reporting to a Telegram channel.
+Promobot is a customizable web scraper made with some of the most used python libraries for this purpose such as Requests, Selenium, and BeautifulSoup. This solution monitors the main Brazilian (and now also Canadian) promotion sites by searching keywords occurrences and reporting to a Telegram channel.
+
+It was built to support any websites in different languages, once the algorithm look at HTML tags on the URL's page where you can customize them in the `config/promobot.yml` in accordance with the country/region list (BR, CA, etc).
 
 ## Requirements
 
@@ -32,6 +34,7 @@ DELAY=60
 MUTED=false
 RESET_TIME=72
 TIMEOUT=30
+TZ=America/Sao_Paulo
 ```
 
 ### Install
