@@ -25,6 +25,7 @@ services:
       - MUTED=true
       - RESET_TIME=24
       - TIMEOUT=10
+      - TZ=America/Sao_Paulo
     volumes:
       - .:/opt/promobot
     entrypoint: ""

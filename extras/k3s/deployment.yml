@@ -32,6 +32,7 @@ data:
   MUTED: "false"
   RESET_TIME: "72"
   TIMEOUT: "30"
+  TZ: "America/Sao_Paulo"
 
 ---
 apiVersion: apps/v1
