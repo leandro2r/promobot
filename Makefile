@@ -29,7 +29,7 @@ release:
 
 deploy:
 	@echo "Deploying on kubernetes..."
-	@kubectl apply -f .kube/deployment.yml -f .kube/db-deployment.yml -f .kube/rbac-role.yml
+	@kubectl apply -f .kube/manifests/deployment.yml -f .kube/manifests/db-deployment.yml -f .kube/manifests/rbac-role.yml
 
 all: clean build release deploy
 	@echo "Done!"

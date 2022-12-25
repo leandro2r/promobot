@@ -20,7 +20,7 @@ There're two files to setup your bot, depending on which docker orchestrator you
 |Orchestrator|YAML|
 |:-|:-|
 Docker-compose | [docker-compose.yml](docker-compose.yml) |
-Kubernetes | [.kube/deployment.yml](.kube/deployment.yml) |
+Kubernetes | [.kube/manifests/deployment.yml](.kube/manifests/deployment.yml) |
 
 The environment variables below are related to what you can customize in your end.
 If you would like to run the easiest one, you will only need to setup the `TELEGRAM_CHAT_PASSWD` and `TELEGRAM_TOKEN`.
