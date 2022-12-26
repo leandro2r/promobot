@@ -85,7 +85,8 @@ start <chat-password>
 | del | Delete keywords by using their ID. | `del 31` |
 | help | List all supported commands. | `help` |
 | history | Get the latest promotions found for each added keyword. | `history` |
-| kube | Manage your kubernetes if you chose it as the orchestrator. | `kube reload`<br/>`kube status` |
+| info | General info about the bot. | `info` |
+| kube | Manage your kubernetes if you chose it as the orchestrator. | `kube info`<br/>`kube reload`<br/>`kube status` |
 | list | List all added keywords. | `list` |
 | stats | Get the environment stats from where the promobot is running, such as CPUs, Memory, Swap, Disk, and Temperature. | `stats` |
 | url | List all URLs which have been used by your promobot. | `url` |

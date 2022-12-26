@@ -44,7 +44,9 @@ setup(
     ],
     keywords=[],
     license='No license',
-    author='leandro2r',
-    description='Promobot monitor keywords found in BR '
-                'promotion sites managed by telegram chatbot.',
+    author='Leandro Rodrigues',
+    author_email='leandro.l2r@gmail.com',
+    description='Promobot monitors promotion sites by searching keywords'
+                ' occurrences and reporting to a Telegram channel.',
+    url='https://github.com/leandro2r/promobot',
 )

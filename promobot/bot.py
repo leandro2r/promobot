@@ -4,6 +4,7 @@ from datetime import datetime
 import psutil
 import telebot
 from kubernetes import client, config as conf
+from pkg_resources import get_distribution
 
 if __package__ is None or __package__ == '':
     from config import Config
@@ -66,7 +67,7 @@ def handle_help(message, **kwargs):
     return msg
 
 
-def handle_intro(message, **kwargs):
+def handle_init(message, **kwargs):
     msg = ''
     username = ''
     cmd = kwargs.get('cmd')
@@ -223,6 +224,17 @@ def handle_mgmt(message, **kwargs):
 
                     if start > history_limit:
                         msg += f'\n... { {start - history_limit + 1} }'
+        elif 'info' in cmd:
+            node_ip = manage_kube('info')
+            url = 'https://github.com/leandro2r/promobot'
+            version = get_distribution('promobot').version
+
+            msg = (
+                f'Promobot\n'
+                f'Version: ```\n{version}```\n'
+                f'URL: ```\n{url}```\n'
+                f'Node IP: ```\n{node_ip}```\n'
+            )
         else:
             msg = 'Empty keyword list.'
 
@@ -245,7 +257,7 @@ def handle_mgmt(message, **kwargs):
     return msg
 
 
-def manage_kube(info):
+def manage_kube(opt):
     msg = ''
     name = 'promobot'
 
@@ -254,7 +266,23 @@ def manage_kube(info):
     except conf.config_exception.ConfigException:
         conf.load_kube_config()
 
-    if info == 'reload':
+    if opt == 'info':
+        label = 'node-role.kubernetes.io/master=true'
+
+        v1_api = client.CoreV1Api()
+
+        node = v1_api.list_node(
+            watch=False,
+            label_selector=label
+        )
+
+        for i in node.items:
+            msg = i.metadata.annotations.get(
+                'flannel.alpha.coreos.com/public-ip',
+                ''
+            )
+
+    elif opt == 'reload':
         v1_api = client.AppsV1Api()
 
         for i in range(2):
@@ -270,7 +298,7 @@ def manage_kube(info):
 
     else:
         try:
-            tail_lines = int(info)
+            tail_lines = int(opt)
         except ValueError:
             tail_lines = 3
 
@@ -323,6 +351,7 @@ def bot_reply(message):
             'config',
             'del',
             'history',
+            'info',
             'kube',
             'list',
             'stats',
@@ -332,7 +361,7 @@ def bot_reply(message):
         'help': [
             'help'
         ],
-        'intro': [
+        'init': [
             'start', 'stop', 'forall'
         ],
     }
@@ -350,8 +379,8 @@ def bot_reply(message):
                         message,
                         support=data.get('mgmt'),
                     )
-                elif opt == 'intro':
-                    res = handle_intro(
+                elif opt == 'init':
+                    res = handle_init(
                         message,
                         cmd=cmd,
                     )

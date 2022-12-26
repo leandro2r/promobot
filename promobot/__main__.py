@@ -16,8 +16,8 @@ else:
 
 def create_parser():
     parser = argparse.ArgumentParser(
-        description='Promobot monitor keywords found in BR '
-                    'promotion sites managed by telegram chatbot.'
+        description='Promobot monitors promotion sites by searching keywords'
+                    ' occurrences and reporting to a Telegram channel.'
     )
 
     parser.add_argument(
