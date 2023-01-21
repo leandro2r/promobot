@@ -1,8 +1,10 @@
 # PromoBot
 
-Promobot is a customizable web scraper made with some of the most used python libraries for this purpose such as Requests, Selenium, and BeautifulSoup. This solution monitors the main Brazilian (and now also Canadian) promotion sites by searching keywords occurrences and reporting to a Telegram channel.
+Promobot is a customizable web scraper made with some of the most used python libraries such as Requests, Selenium, and BeautifulSoup. This solution monitors websites by searching keywords occurrences and reporting to a Telegram chatbot.
 
-It was built to support any websites in different languages, once the algorithm look at HTML tags on the URL's page where you can customize them in the `config/promobot.yml` in accordance with the country/region list (BR, CA, etc).
+The customization is the main resource which is the algorithm able to use any URL once you say the HTML tags where it’ll look to the keywords and get the link to share in Telegram. 
+
+The default customizations are classified in the country/region list (BR, CA, etc) and you can find them at `config/promobot.yml`.
 
 ## Requirements
 
@@ -15,15 +17,15 @@ It was built to support any websites in different languages, once the algorithm 
 
 ### Setup
 
-There're two files to setup your bot, depending on which docker orchestrator you will run.
+There're two files to setup your bot, based on each docker orchestrator.
 
 |Orchestrator|YAML|
 |:-|:-|
 Docker-compose | [docker-compose.yml](docker-compose.yml) |
 Kubernetes | [.kube/manifests/deployment.yml](.kube/manifests/deployment.yml) |
 
-The environment variables below are related to what you can customize in your end.
-If you would like to run the easiest one, you will only need to setup the `TELEGRAM_CHAT_PASSWD` and `TELEGRAM_TOKEN`.
+The environment variables below are what you can customize on your end.
+The only required setups are `TELEGRAM_CHAT_PASSWD` and `TELEGRAM_TOKEN`.
 
 ```
 DB_HOST=<mongodb-host>
@@ -67,15 +69,16 @@ $ promobot --bot
 
 ## Telegram chatbot
 
-To be able to interact and also get all the promotions, you should start a chat with your chatbot, ask to register and then manage your promobot with some of available commands.
+To be able to interact and get all the promotions found, you should start a chat with your chatbot, ask to register. After that, you can manage your promobot with the available commands.
 
 ### Register your user to the chatbot
-
-FYI: The `<chat-password>` is what you setup in your `TELEGRAM_CHAT_PASSWD` environment variable.
 
 ```
 start <chat-password>
 ```
+
+FYI: The `<chat-password>` must be the same value as the `TELEGRAM_CHAT_PASSWD` environment variable.
+
 ### Commands to manage your promobot
 
 |Command|Description|Example|
