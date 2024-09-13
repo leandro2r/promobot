@@ -192,15 +192,17 @@ def handle_mgmt(message, **kwargs):
 
             msg = f'URLs:\n{res}'
         elif 'history' in cmd:
-            history_limit = 5
+            history_limit = 10
+            keyword_history = ''
+
             if len(args) > 0:
                 try:
-                    history_limit = int(args[0])
+                    keyword_history = database.get_keyword(args[0])
                 except ValueError:
                     pass
 
             for key, val in database.list_result(id=False).items():
-                if val:
+                if key == keyword_history:
                     start = len(val) - 1
                     stop = max(-1, start - history_limit)
 

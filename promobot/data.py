@@ -175,6 +175,15 @@ class Data():
 
         return False
 
+    def get_keyword(self, index):
+        col = self.db_conn['keyword']
+        lis = col.distinct('keyword')
+
+        if int(index) > 0:
+            return lis[int(index) - 1]
+
+        return False
+
     def list_keyword(self):
         col = self.db_conn['keyword']
 
