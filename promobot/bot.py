@@ -388,7 +388,7 @@ def bot_reply(message):
                     )
 
     if not res:
-        res = 'This message costed me R$0,31.'
+        res = 'This message costed me $0.31'
 
     try:
         bot.reply_to(
