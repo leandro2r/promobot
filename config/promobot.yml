@@ -111,6 +111,18 @@ promobot:
           desc:
             tag: h3
             class: topictitle topictitle_has_retailer
+        - url: https://forums.redflagdeals.com/hot-deals-f9/2/?sk=tt&rfd_sk=tt
+          topic:
+            tag: div
+            attr:
+              class: thread_info_title
+          thread:
+            tag: a
+            attr:
+              class: topic_title_link
+          desc:
+            tag: h3
+            class: topictitle topictitle_has_retailer
         - url: https://forums.redflagdeals.com/hot-deals-f9/?sk=pv&rfd_sk=pv&sd=d
           topic:
             tag: div
@@ -132,16 +144,6 @@ promobot:
             tag: a
             attr:
               class: title
-        - url: http://pricefinder.ca/
-          topic:
-            tag: table
-            attr:
-              class: pf-table
-          thread:
-            tag: a
-          desc:
-            tag: td
-            class: pf-descr pf-shorten
         - url: https://www.reddit.com/r/canadadeals/
           tool: selenium
           topic:
