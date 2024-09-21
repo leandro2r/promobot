@@ -333,16 +333,6 @@ class Monitor():
                     add,
                 )
 
-        self.alert(
-            'DEBUG',
-            f'\n{dumps(self.data, indent=2, ensure_ascii=False)}'
-        )
-
-        self.alert(
-            'INFO',
-            f'Last lookup from {src.get("url")}'
-        )
-
     def monitor(self, src, driver):
         keys = list(self.data)
         topics = self.get_topic(src, driver)
@@ -359,6 +349,16 @@ class Monitor():
                     future.result()
                 except Exception as error:
                     self.alert('ERROR', f'Error processing key {key}: {error}')
+
+        self.alert(
+            'DEBUG',
+            f'\n{dumps(self.data, indent=2, ensure_ascii=False)}'
+        )
+
+        self.alert(
+            'INFO',
+            f'Last lookup from {src.get("url")}'
+        )
 
     def init_driver(self, driver, url):
         timeout = self.config['monitor'].get('timeout')
