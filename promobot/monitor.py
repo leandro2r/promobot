@@ -8,6 +8,7 @@ from http.client import IncompleteRead
 from json import dumps
 from random import randint
 from bs4 import BeautifulSoup
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pymongo.errors import ServerSelectionTimeoutError, AutoReconnect
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -248,7 +249,7 @@ class Monitor():
 
         return driver.page_source
 
-    def get_promo(self, src, driver):
+    def get_topic(self, src, driver):
         content = ''
         delay = self.config['monitor'].get('delay') * 2
         timeout = self.config['monitor'].get('timeout')
@@ -310,30 +311,27 @@ class Monitor():
 
         return topic
 
-    def monitor(self, src, driver):
-        promo = self.get_promo(src, driver)
+    def start_lookup(self, src, topics, key):
+        add = True
 
-        for key in list(self.data):
-            add = True
+        for promo in topics:
+            t_title = promo.find(
+                src['thread']['tag'],
+                src['thread'].get('attr', {})
+            )
 
-            for each in promo:
-                t_title = each.find(
-                    src['thread']['tag'],
-                    src['thread'].get('attr', {})
+            if t_title:
+                data = mount(
+                    src,
+                    promo,
+                    t_title
                 )
 
-                if t_title:
-                    data = mount(
-                        src,
-                        each,
-                        t_title
-                    )
-
-                    self.lookup(
-                        key,
-                        data,
-                        add,
-                    )
+                self.lookup(
+                    key,
+                    data,
+                    add,
+                )
 
         self.alert(
             'DEBUG',
@@ -344,6 +342,19 @@ class Monitor():
             'INFO',
             f'Last lookup from {src.get("url")}'
         )
+
+    def monitor(self, src, driver):
+        topics = self.get_topic(src, driver)
+
+        with ThreadPoolExecutor(max_workers=4) as executor:
+            futures = {executor.submit(self.start_lookup, src, topics, key): key for key in list(self.data)}
+
+            for future in as_completed(futures):
+                key = futures[future]
+                try:
+                    future.result()
+                except Exception as error:
+                    self.alert('ERROR', f'Error processing key {key}: {error}')
 
     def init_driver(self, driver, url):
         timeout = self.config['monitor'].get('timeout')
