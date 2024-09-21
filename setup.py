@@ -40,13 +40,13 @@ setup(
     classifiers=[
         'Environment :: Console',
         'Natural Language :: English',
-        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
     ],
     keywords=[],
     license='No license',
     author='Leandro Rodrigues',
     author_email='leandro.l2r@gmail.com',
-    description='Promobot monitors promotion sites by searching keywords'
-                ' occurrences and reporting to a Telegram channel.',
+    description='Promobot monitors promotion sites by searching keyword'
+                ' occurrences and reporting them to a Telegram channel.',
     url='https://github.com/leandro2r/promobot',
 )

@@ -21,7 +21,7 @@ services:
       - MONGO_INITDB_DATABASE=promobot
       - TELEGRAM_TOKEN=
       - TELEGRAM_CHAT_PASSWD=
-      - KEYWORDS=
+      - KEYWORDS=miles
       - DELAY=10
       - MUTED=true
       - RESET_TIME=24
@@ -29,10 +29,10 @@ services:
       - TZ=America/Toronto
     volumes:
       - .:/opt/promobot
-    entrypoint: ""
-    command: "tail -f /dev/null"
-    # entrypoint: "python"
-    # command: "promobot/__main__.py --region ca --urls 1"
+    # entrypoint: ""
+    # command: "tail -f /dev/null"
+    entrypoint: "python"
+    command: "promobot/__main__.py --region ca --urls 3"
 
   bot:
     <<: *promobot

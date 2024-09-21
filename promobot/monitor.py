@@ -344,10 +344,14 @@ class Monitor():
         )
 
     def monitor(self, src, driver):
+        keys = list(self.data)
         topics = self.get_topic(src, driver)
 
         with ThreadPoolExecutor(max_workers=4) as executor:
-            futures = {executor.submit(self.start_lookup, src, topics, key): key for key in list(self.data)}
+            futures = {
+                executor.submit(self.start_lookup, src, topics, key): key
+                for key in keys
+            }
 
             for future in as_completed(futures):
                 key = futures[future]
