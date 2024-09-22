@@ -1,9 +1,9 @@
-FROM python:3.9-slim-buster
+FROM ubuntu:bionic
 
 ENV DEBIAN_FRONTEND=noninteractive \
     DISPLAY=:0 \
     PYTHONUNBUFFERED=1 \
-    TZ=America/New_York
+    TZ=America/Sao_Paulo
 
 WORKDIR /tmp/promobot-dependencies
 
@@ -11,30 +11,27 @@ ADD https://bootstrap.pypa.io/get-pip.py .
 
 COPY setup.py .
 
-RUN apt update && apt install --no-install-recommends -y wget gnupg ca-certificates \
-    && apt install --no-install-recommends -y \
+RUN apt update && apt install --no-install-recommends -y software-properties-common &&\
+    add-apt-repository ppa:deadsnakes/ppa &&\
+    apt purge -y python3.6 &&\
+    apt install --no-install-recommends -y \
     build-essential \
     rustc \
     cargo \
     libffi-dev \
     libssl-dev \
     tzdata \
-    unzip \
-        && wget -q -O - https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
-        && wget -q -O /etc/apt/sources.list.d/mssql-release.list https://packages.microsoft.com/config/debian/10/prod.list \
-        && apt-get update \
-        && apt-get install -y chromium \
-        && CHROME_DRIVER_VERSION=$(wget -q -O - https://chromedriver.storage.googleapis.com/LATEST_RELEASE) \
-        && wget https://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip \
-        && unzip chromedriver_linux64.zip \
-        && mv chromedriver /usr/local/bin/chromedriver \
-        && chmod +x /usr/local/bin/chromedriver \
-        && rm chromedriver_linux64.zip \
-    && python get-pip.py \
-    && pip install setuptools-rust \
-    && pip install -U pip setuptools setuptools-rust \
-    && ./setup.py egg_info \
-    && sed -i '/^\[dev\]$/Q' *.egg-info/requires.txt \
-    && pip install -r *.egg-info/requires.txt \
-    && apt purge -y build-essential rustc cargo libffi-dev libssl-dev \
-    && rm -rf /tmp/promobot-dependencies /var/lib/apt/lists/*
+    python3.9 \
+    python3.9-dev \
+    python3.9-distutils \
+    chromium-chromedriver \
+    &&\
+    ln -sf python3.9 /usr/bin/python &&\
+    python get-pip.py &&\
+    pip install setuptools-rust &&\
+    pip install -U pip setuptools setuptools-rust &&\
+    ./setup.py egg_info &&\
+    sed -i '/^\[dev\]$/Q' *.egg-info/requires.txt &&\
+    pip install -r *.egg-info/requires.txt &&\
+    apt purge -y build-essential rustc cargo libffi-dev libssl-dev &&\
+    rm -rf /tmp/promobot-dependencies /var/lib/apt/lists/*
