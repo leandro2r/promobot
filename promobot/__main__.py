@@ -31,7 +31,7 @@ def create_parser():
         '-R',
         '--region',
         type=str,
-        help='Choose which region the URLs are based on. Default: br',
+        help='Choose which region the URLs are based on. Default: ca',
         default='br',
     )
 
