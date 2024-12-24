@@ -148,6 +148,19 @@ promobot:
             tag: div
             attr:
               class: post_preview_body
+        - url: https://forums.redflagdeals.com/hot-deals-f9/?h=2/
+          topic:
+            tag: div
+            attr:
+              class: thread_main
+          thread:
+            tag: a
+            attr:
+              class: topic_title_link
+          desc:
+            tag: div
+            attr:
+              class: post_preview_body
         - url: https://forum.smartcanucks.ca/canadian-shopping-deals-flyers/?pp=100
           topic:
             tag: h3
