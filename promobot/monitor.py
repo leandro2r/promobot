@@ -251,7 +251,6 @@ class Monitor():
     def get_topic(self, src, driver):
         content = ''
         delay = self.config['monitor'].get('delay') * 2
-        timeout = self.config['monitor'].get('timeout')
         topic = []
 
         while len(topic) == 0:
