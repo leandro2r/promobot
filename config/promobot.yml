@@ -151,7 +151,33 @@ promobot:
             tag: div
             attr:
               class: thread_inner_header
-        - url: https://forums.redflagdeals.com/hot-deals-f9/?h=2/
+        - url: https://forums.redflagdeals.com/hot-deals-f9/?h=2&sk=tt&rfd_sk=tt&sd=d
+          topic:
+            tag: li
+            attr:
+              class: topic
+          thread:
+            tag: a
+            attr:
+              class: thread_title_link
+          desc:
+            tag: div
+            attr:
+              class: thread_inner_header
+        - url: https://forums.redflagdeals.com/hot-deals-f9/2/?h=2&sk=tt&rfd_sk=tt&sd=d
+          topic:
+            tag: li
+            attr:
+              class: topic
+          thread:
+            tag: a
+            attr:
+              class: thread_title_link
+          desc:
+            tag: div
+            attr:
+              class: thread_inner_header
+        - url: https://forums.redflagdeals.com/hot-deals-f9/2/?h=2&sk=pv&rfd_sk=pv&sd=d
           topic:
             tag: li
             attr:
@@ -215,13 +241,3 @@ promobot:
             tag: div
             attr:
               data-click-id: text
-        - url: https://www.cdndeals.ca/
-          topic:
-            tag: div
-            attr:
-              class: fusion-post-content post-content
-          thread:
-            tag: a
-          desc:
-            tag: div
-            class: fusion-post-content-container
