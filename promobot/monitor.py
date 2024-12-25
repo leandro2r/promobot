@@ -2,7 +2,7 @@ import os
 import re
 import threading
 import time
-import urllib.request
+import requests
 from datetime import datetime
 from http.client import IncompleteRead
 from json import dumps
@@ -13,7 +13,6 @@ from pymongo.errors import ServerSelectionTimeoutError, AutoReconnect
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import WebDriverException, TimeoutException
-from urllib3.exceptions import MaxRetryError
 
 
 def mount(src, each, t_title):
@@ -263,15 +262,10 @@ class Monitor():
                         src.get('url')
                     )
                 else:
-                    req = urllib.request.Request(
-                        url=src.get('url'),
+                    content = requests.get(
+                        src.get('url'),
                         headers=self.header
-                    )
-
-                    content = urllib.request.urlopen(
-                        req,
-                        timeout=timeout,
-                    ).read()
+                    ).text
 
                 if content:
                     soup = BeautifulSoup(
@@ -294,8 +288,8 @@ class Monitor():
                         )
 
             except (
-                urllib.error.HTTPError,
-                MaxRetryError,
+                requests.exceptions.HTTPError,
+                requests.exceptions.ConnectionError,
                 ConnectionError,
                 IncompleteRead,
                 OSError,
