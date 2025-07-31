@@ -99,11 +99,11 @@ class Monitor():
         self.options.add_argument('--headless')
         self.options.add_argument("start-maximized")
         self.options.add_experimental_option(
-            "excludeSwitches", 
+            "excludeSwitches",
             ["enable-automation"]
         )
         self.options.add_experimental_option(
-            'useAutomationExtension', 
+            'useAutomationExtension',
             False
         )
 
