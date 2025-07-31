@@ -97,7 +97,9 @@ class Monitor():
 
         self.options.add_argument('--no-sandbox')
         self.options.add_argument('--headless')
-        self.options.add_argument("--disable-blink-features=AutomationControlled")
+        self.options.add_argument("start-maximized")
+        self.options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        self.options.add_experimental_option('useAutomationExtension', False)
 
         self.options.add_argument('--proxy-bypass-list=*')
         self.options.add_argument('--proxy-server="direct://"')
