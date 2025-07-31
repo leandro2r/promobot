@@ -225,7 +225,7 @@ def handle_mgmt(message, **kwargs):
                         )
 
                     if start > history_limit:
-                        msg += f'\n... {{start - history_limit + 1}}'
+                        msg += f'\n... {start - history_limit + 1}'
         elif 'info' in cmd:
             node_ip = manage_kube('info')
             url = 'https://github.com/leandro2r/promobot'
