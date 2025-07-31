@@ -156,19 +156,19 @@ def handle_mgmt(message, **kwargs):
 
             disk_usage = psutil.disk_usage("/")
             disk = (
-                f'{disk_usage.total/1024000000:.2f} Gb '
+                f'{disk_usage.total / 1024000000:.2f} Gb '
                 f'({disk_usage.percent:.1f} % used)'
             )
 
             virtual_memory = psutil.virtual_memory()
             mem = (
-                f'{virtual_memory.total/1024000000:.2f} Gb '
+                f'{virtual_memory.total / 1024000000:.2f} Gb '
                 f'({virtual_memory.percent:.1f} % used)'
             )
 
             swap_memory = psutil.swap_memory()
             swap = (
-                f'{swap_memory.total/1024000000:.2f} Gb '
+                f'{swap_memory.total / 1024000000:.2f} Gb '
                 f'({swap_memory.percent:.1f} % used)'
             )
 
@@ -225,15 +225,14 @@ def handle_mgmt(message, **kwargs):
                         )
 
                     if start > history_limit:
-                        msg += f'\n... { {start - history_limit + 1} }'
+                        msg += f'\n... {{start - history_limit + 1}}'
         elif 'info' in cmd:
             node_ip = manage_kube('info')
             url = 'https://github.com/leandro2r/promobot'
-            version = version('promobot')
 
             msg = (
                 f'Promobot\n'
-                f'Version: ```\n{version}```\n'
+                f'Version: ```\n{version("promobot")}```\n'
                 f'URL: ```\n{url}```\n'
                 f'Node IP: ```\n{node_ip}```\n'
             )
