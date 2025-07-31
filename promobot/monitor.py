@@ -367,7 +367,7 @@ class Monitor():
     def init_driver(self, driver, url):
         timeout = self.config['monitor'].get('timeout')
 
-        if not driver:        
+        if not driver:
             driver = webdriver.Chrome(
                 options=self.options,
                 service_log_path=os.path.devnull,
