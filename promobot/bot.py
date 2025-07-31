@@ -4,7 +4,7 @@ from datetime import datetime
 import psutil
 import telebot
 from kubernetes import client, config as conf
-from pkg_resources import get_distribution
+from importlib.metadata import version
 
 if __package__ is None or __package__ == '':
     from config import Config
@@ -229,7 +229,7 @@ def handle_mgmt(message, **kwargs):
         elif 'info' in cmd:
             node_ip = manage_kube('info')
             url = 'https://github.com/leandro2r/promobot'
-            version = get_distribution('promobot').version
+            version = version('promobot')
 
             msg = (
                 f'Promobot\n'
