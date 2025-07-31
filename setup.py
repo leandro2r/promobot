@@ -21,7 +21,7 @@ setup(
         'bs4<0.1',
         'pymongo<4.1',
         'pyTelegramBotAPI<4.7',
-        'requests<2.33',
+        'requests>=2.32.0,<2.33.0',
         'kubernetes<19.16',
         'selenium<4.2',
         'selenium-stealth<1.1',
