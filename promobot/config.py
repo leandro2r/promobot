@@ -1,7 +1,4 @@
-import base64
 import os
-import random
-import re
 import yaml
 
 from swiftshadow.classes import ProxyInterface
@@ -116,7 +113,10 @@ class Config():
             )
         except Exception as error:
             print(
-                f'Error when retrieving {region} HTTP and HTTPS proxies: {error}'
+                (
+                    f'Error when retrieving {region} '
+                    f'HTTP and HTTPS proxies: {error}'
+                )
             )
 
         self.data['proxies'] = {
