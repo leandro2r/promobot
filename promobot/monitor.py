@@ -11,6 +11,7 @@ from bs4 import BeautifulSoup
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pymongo.errors import ServerSelectionTimeoutError, AutoReconnect
 from selenium import webdriver
+from selenium_stealth import stealth
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import WebDriverException, TimeoutException
 
@@ -96,7 +97,7 @@ class Monitor():
 
         self.options.add_argument('--no-sandbox')
         self.options.add_argument('--headless')
-        self.options.add_experimental_option('useAutomationExtension', False)
+        self.options.add_argument("--disable-blink-features=AutomationControlled")
 
         self.options.add_argument('--proxy-bypass-list=*')
         self.options.add_argument('--proxy-server="direct://"')
@@ -365,9 +366,21 @@ class Monitor():
             driver.set_script_timeout(timeout)
             driver.set_page_load_timeout(-1)
 
+            stealth(
+                driver,
+                languages=["en-US", "en"],
+                vendor="Google Inc.",
+                platform="Win32",
+                webgl_vendor="Intel Inc.",
+                renderer="Intel Iris OpenGL Engine",
+                fix_hairline=True,
+                run_on_insecure_origins=False,
+            )
+
         try:
             driver.get(url)
         except WebDriverException as error:
+            driver.delete_all_cookies()
             self.alert(
                 'ERROR',
                 f'Error on loading {url}: {error}'
