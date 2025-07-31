@@ -108,9 +108,16 @@ class Config():
                 protocol="https"
             ).get().as_string()
 
-            print(f'Setting {region} proxies HTTP {proxy_http} and HTTPS {proxy_https}')
+            print(
+                (
+                    f'Setting {region} proxies '
+                    f'HTTP {proxy_http} and HTTPS {proxy_https}'
+                )
+            )
         except Exception as error:
-            print(f'Error when retrieving {region} HTTP and HTTPS proxies: {error}')
+            print(
+                f'Error when retrieving {region} HTTP and HTTPS proxies: {error}'
+            )
 
         self.data['proxies'] = {
             'http': proxy_http,
