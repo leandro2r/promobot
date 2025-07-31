@@ -13,7 +13,7 @@ COPY setup.py .
 
 RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list && \
     sed -i 's/security.debian.org/archive.debian.org/g' /etc/apt/sources.list && \
-    sed -i '/buster\/updates/d' /etc/apt/sources. && \
+    sed -i '/buster\/updates/d' /etc/apt/sources.list && \
     apt update && apt install --no-install-recommends -y wget gnupg ca-certificates \
     && apt install --no-install-recommends -y \
     build-essential \
