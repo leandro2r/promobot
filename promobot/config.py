@@ -99,7 +99,7 @@ class Config():
                 countries=countries,
                 protocol="http"
             ).get().as_string()
-    
+
             proxy_https = ProxyInterface(
                 countries=countries,
                 protocol="https"
