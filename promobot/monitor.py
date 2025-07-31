@@ -108,7 +108,9 @@ class Monitor():
         )
 
         self.options.add_argument('--proxy-bypass-list=*')
-        self.options.add_argument('--proxy-server="direct://"')
+        self.options.add_argument(
+            f'--proxy-server={self.data["proxies"].get("https", "direct://")}'
+        )
         self.options.add_argument('--safe-mode')
         self.options.add_argument('--log-level=3')
         self.options.add_argument('--output=/dev/null')
@@ -386,7 +388,10 @@ class Monitor():
             )
 
         try:
-            driver.get(url)
+            driver.get(
+                url,
+                proxies=self.data.get('proxies')
+            )
         except WebDriverException as error:
             driver.delete_all_cookies()
             self.alert(

@@ -28,6 +28,7 @@ setup(
         'psutil<6.1',
         'pymongo[srv]',
         'PyYAML<6.1',
+        'swiftshadow<2.3',
     ],
     extras_require={
         'dev': dev_requirements

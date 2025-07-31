@@ -4,14 +4,11 @@ import random
 import re
 import yaml
 
+from swiftshadow.classes import ProxyInterface
+
 
 class Config():
-    data = {
-        'proxies': {
-            'http': '',
-            'https': ''
-        }
-    }
+    data = {}
 
     def __init__(self, **kwargs):
         config_file = os.environ.get('CONFIG', '/etc/promobot/promobot.yml')
@@ -36,7 +33,7 @@ class Config():
                 )
             )
 
-        self.set_proxy()
+        self.set_proxy(region)
 
         self.data['monitor'] = {
             'delay': int(os.environ.get('DELAY', 40)),
@@ -93,46 +90,36 @@ class Config():
             'passwd': os.environ.get('MONGO_INITDB_ROOT_PASSWORD'),
         }
 
-    def set_proxy(self):
-        ip_address = ''
-        ips = []
-        proxy_file = '/etc/environment'
-        url = base64.b64decode(
-            os.environ.get('AUTH_PROXY', '')
-        ).decode('utf-8').strip()
+    def set_proxy(self, region):
+        countries = []
+        proxy_http = ''
+        proxy_https = ''
 
-        proxy_enabled = bool(
-            os.environ.get('PROXY_ENABLED', 'false') == 'true'
-        )
+        countries.append(region.upper())
 
-        if not proxy_enabled:
-            if "HTTP_PROXY" in os.environ:
-                del os.environ['HTTP_PROXY']
+        try:
+            proxy_http = ProxyInterface(
+                countries=countries,
+                protocol="http"
+            ).get().as_string()
+    
+            proxy_https = ProxyInterface(
+                countries=countries,
+                protocol="https"
+            ).get().as_string()
 
-            if "HTTPS_PROXY" in os.environ:
-                del os.environ['HTTPS_PROXY']
+            print(
+                (
+                    f'Setting {region} proxies '
+                    f'HTTP {proxy_http} and HTTPS {proxy_https}'
+                )
+            )
+        except Exception as error:
+            print(
+                f'Error when retrieving {region} HTTP and HTTPS proxies: {error}'
+            )
 
-            return
-
-        if ips:
-            ip_address = random.choice(ips)
-
-        elif os.path.exists(proxy_file):
-            with open(proxy_file, 'r', encoding='UTF-8') as file:
-                get_proxy = re.search(r'http://\S+', file.read())
-                file.close()
-
-                ip_address = get_proxy.group()
-
-        ip_auth = ip_address.replace(
-            'http://',
-            f'http://{url}'
-        )
-
-        os.environ['HTTP_PROXY'] = ip_auth
-        os.environ['HTTPS_PROXY'] = ip_auth
-
-        self.data['proxies'].update({
-            'http': os.environ.get('HTTP_PROXY'),
-            'https': os.environ.get('HTTPS_PROXY')
-        })
+        self.data['proxies'] = {
+            'http': proxy_http,
+            'https': proxy_https
+        }
