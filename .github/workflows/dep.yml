@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'Dockerfile.dep'
+      - 'setup.py'
       - '.github/workflows/dep.yml'
 
 jobs:
