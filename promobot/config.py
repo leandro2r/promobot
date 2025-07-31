@@ -95,7 +95,7 @@ class Config():
         proxy_http = ''
         proxy_https = ''
 
-        countries.append(region)
+        countries.append(region.upper())
 
         try:
             proxy_http = ProxyInterface(
