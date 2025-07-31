@@ -2,7 +2,7 @@
 
 Promobot is a customizable web scraper made with some of the most used python libraries such as Requests, Selenium, and BeautifulSoup. This solution monitors websites by searching keywords occurrences and reporting to a Telegram chatbot.
 
-The customization is the main resource which is the algorithm able to use any URL once you say the HTML tags where it’ll look to the keywords and get the link to share in Telegram. 
+The customization is the main resource which is the algorithm able to use any URL once you say the HTML tags where it’ll look to the keywords and get the link to share in Telegram.
 
 The default customizations are classified in the country/region list (BR, CA, etc) and you can find them at `config/promobot.yml`.
 
@@ -11,7 +11,7 @@ The default customizations are classified in the country/region list (BR, CA, et
 - Docker>=19.03.5
 - Docker-compose>=1.24.1
 - MongoDB==4.4.10
-- Python 3.9
+- Python 3.12
 
 ## How to
 
@@ -48,7 +48,7 @@ $ make install
 #### Package only install
 
 ```shell
-$ [sudo] apt install python3.9 python-pip
+$ [sudo] apt install python3.12 python-pip
 $ pip install setuptools
 $ ./setup.py install
 ```

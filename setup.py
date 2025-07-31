@@ -19,16 +19,16 @@ setup(
     zip_safe=False,
     install_requires=[
         'bs4<0.1',
-        'pymongo>=4.0,<4.1',
-        'pyTelegramBotAPI>=4.6,<4.7',
+        'pymongo<4.1',
+        'pyTelegramBotAPI<4.7',
         'requests>=2.32.0,<2.33.0',
-        'kubernetes>=19.15,<19.16',
-        'selenium>=4.1,<4.2',
-        'selenium-stealth>=1.0,<1.1',
-        'swiftshadow>=2.2,<2.3',
-        'psutil>=6.0,<6.1',
+        'kubernetes<19.16',
+        'selenium<4.2',
+        'selenium-stealth<1.1',
+        'swiftshadow<2.3',
+        'psutil<6.1',
         'pymongo[srv]',
-        'PyYAML>=6.0,<6.1',
+        'PyYAML<6.1',
     ],
     extras_require={
         'dev': dev_requirements
@@ -42,7 +42,7 @@ setup(
     classifiers=[
         'Environment :: Console',
         'Natural Language :: English',
-        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.12',
     ],
     keywords=[],
     license='No license',
