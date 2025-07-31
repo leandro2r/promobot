@@ -24,6 +24,7 @@ setup(
         'requests<2.27',
         'kubernetes<19.16',
         'selenium<4.2',
+        'selenium-stealth<1.1',
         'psutil<6.1',
         'pymongo[srv]',
         'PyYAML<6.1',
