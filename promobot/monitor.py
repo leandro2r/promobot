@@ -109,7 +109,7 @@ class Monitor():
 
         self.options.add_argument('--proxy-bypass-list=*')
         self.options.add_argument(
-            f'--proxy-server={self.data["proxies"].get("https", "direct://")}'
+            f'--proxy-server={self.config["proxies"].get("https", "direct://")}'
         )
         self.options.add_argument('--safe-mode')
         self.options.add_argument('--log-level=3')
