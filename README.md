@@ -1,33 +1,33 @@
 # PromoBot
 
-Promobot is a customizable web scraper made with some of the most used python libraries such as Requests, Selenium, and BeautifulSoup. This solution monitors websites by searching keywords occurrences and reporting to a Telegram chatbot.
+PromoBot is a customizable web scraper built with some of the most popular Python libraries, such as Requests, Selenium, and BeautifulSoup. It monitors websites by searching for keyword occurrences and reporting the results to a Telegram chatbot.
 
-The customization is the main resource which is the algorithm able to use any URL once you say the HTML tags where it’ll look to the keywords and get the link to share in Telegram.
+Its main strength is customization, which allows the bot to work with any URL once you define the HTML tags where it should look for keywords and extract the link to share in Telegram.
 
-The default customizations are classified in the country/region list (BR, CA, etc) and you can find them at `config/promobot.yml`.
+The default configurations are organized by country/region code (BR, CA, etc.) and can be found in `config/promobot.yml`.
 
 ## Requirements
 
-- Docker>=19.03.5
-- Docker-compose>=1.24.1
-- MongoDB==4.4.10
+- Docker >= 19.03.5
+- Docker Compose >= 1.24.1
+- MongoDB == 4.4.10
 - Python 3.12
 
 ## How to
 
 ### Setup
 
-There're two files to setup your bot, based on each docker orchestrator.
+There are two orchestrators available to set up your bot:
 
-|Orchestrator|YAML|
-|:-|:-|
-Docker-compose | [docker-compose.yml](docker-compose.yml) |
-Kubernetes | [.kube/manifests/deployment.yml](.kube/manifests/deployment.yml) |
+| Orchestrator | YAML |
+|:-:|:-|
+| Docker Compose | [docker-compose.yml](docker-compose.yml) |
+| Kubernetes | [.kube/manifests/deployment.yml](.kube/manifests/deployment.yml) |
 
-The environment variables below are what you can customize on your end.
-The only required setups are `TELEGRAM_CHAT_PASSWD` and `TELEGRAM_TOKEN`.
+The environment variables below are the ones you can customize on your end.
+The only required ones are `TELEGRAM_CHAT_PASSWD` and `TELEGRAM_TOKEN`.
 
-```
+```bash
 DB_HOST=<mongodb-host>
 TELEGRAM_TOKEN=<telegram-token>
 TELEGRAM_CHAT_PASSWD=<chat-password>
@@ -45,7 +45,7 @@ TZ=America/Sao_Paulo
 $ make install
 ```
 
-#### Package only install
+#### Package-only install
 
 ```shell
 $ [sudo] apt install python3.12 python-pip
@@ -56,11 +56,13 @@ $ ./setup.py install
 ## Run locally
 
 ### Docker
+
 ```shell
 $ docker-compose up -d
 ```
 
 ### Package
+
 ```shell
 $ promobot --help
 $ promobot
@@ -69,35 +71,35 @@ $ promobot --bot
 
 ## Telegram chatbot
 
-To be able to interact and get all the promotions found, you should start a chat with your chatbot, ask to register. After that, you can manage your promobot with the available commands.
+To interact with the bot and get all the promotions found, start a chat with your chatbot and ask it to register you. After that, you can manage your PromoBot with the available commands.
 
-### Register your user to the chatbot
+### Register your user in the chatbot
 
-```
+```text
 start <chat-password>
 ```
 
-FYI: The `<chat-password>` must be the same value as the `TELEGRAM_CHAT_PASSWD` environment variable.
+FYI: `<chat-password>` must have the same value as the `TELEGRAM_CHAT_PASSWD` environment variable.
 
-### Commands to manage your promobot
+### Commands to manage your PromoBot
 
-|Command|Description|Example|
+| Command | Description | Example |
 |:-:|:-|:-|
-| add | Add multiple keywords separeted by spaces. | `add tv whey` |
-| config | Customize your times related to delay (in seconds), reset (in hours), and timeout (in seconds). | `config delay=30`<br/>`config reset=96`<br/>`config timeout=15` |
+| add | Add multiple keywords separated by spaces. | `add tv whey` |
+| config | Customize the timing values for delay (in seconds), reset (in hours), and timeout (in seconds). | `config delay=30`<br/>`config reset=96`<br/>`config timeout=15` |
 | del | Delete keywords by using their ID. | `del 31` |
 | help | List all supported commands. | `help` |
 | history | Get the latest promotions found for each added keyword. | `history` |
-| info | General info about the bot. | `info` |
-| kube | Manage your kubernetes if you chose it as the orchestrator. | `kube info`<br/>`kube reload`<br/>`kube status` |
+| info | Show general information about the bot. | `info` |
+| kube | Manage your Kubernetes cluster if you chose it as the orchestrator. | `kube info`<br/>`kube reload`<br/>`kube status` |
 | list | List all added keywords. | `list` |
-| stats | Get the environment stats from where the promobot is running, such as CPUs, Memory, Swap, Disk, and Temperature. | `stats` |
-| url | List all URLs which have been used by your promobot. | `url` |
-| who | List the Telegram users who are registered in your chatbot.  | `who` |
+| stats | Get environment stats from where PromoBot is running, such as CPU, memory, swap, disk, and temperature. | `stats` |
+| url | List all URLs used by your PromoBot. | `url` |
+| who | List the Telegram users registered in your chatbot. | `who` |
 
 ## Docker image
 
-The image is hosted by Docker Hub [promobot docker hub](https://hub.docker.com/r/leandro2r/promobot)
+The image is hosted on Docker Hub: [promobot docker hub](https://hub.docker.com/r/leandro2r/promobot)
 
 ```shell
 $ docker pull leandro2r/promobot:latest
