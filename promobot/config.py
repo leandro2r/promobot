@@ -103,20 +103,14 @@ class Config():
                 protocol="https"
             ).get().as_string()
 
-            self.alert(
-                'INFO',
-                (
-                    f'Setting {region} proxies HTTP {proxy_http} '
-                    f'and HTTPS {proxy_https}'
-                )
+            print(
+                f'Setting {region} proxies HTTP {proxy_http} '
+                f'and HTTPS {proxy_https}'
             )
         except Exception as error:
-            self.alert(
-                'ERROR',
-                (
-                    f'Error when retrieving {region} HTTP and HTTPS '
-                    f'proxies: {error}'
-                )
+            print(
+                f'Error when retrieving {region} HTTP and HTTPS '
+                f'proxies: {error}'
             )
             proxy_http = ''
             proxy_https = ''
