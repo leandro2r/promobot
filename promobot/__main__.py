@@ -6,14 +6,12 @@ if __package__ is None or __package__ == '':
     from data import Data
     from log import Log
     from monitor import Monitor
-    from rss import Rss
 else:
     from promobot import bot
     from promobot.config import Config
     from promobot.data import Data
     from promobot.log import Log
     from promobot.monitor import Monitor
-    from promobot.rss import Rss
 
 
 def create_parser():

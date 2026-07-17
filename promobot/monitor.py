@@ -26,7 +26,10 @@ CHALLENGE_MARKERS = (
 
 
 def is_challenge_page(content):
-    return bool(content) and any(marker in content for marker in CHALLENGE_MARKERS)
+    return bool(content) and any(
+        marker in content
+        for marker in CHALLENGE_MARKERS
+    )
 
 
 def mount(src, each, t_title):
@@ -320,7 +323,8 @@ class Monitor():
                             'ERROR',
                             (
                                 'Error on searching topics in '
-                                f'{src.get("url")} (attempt {attempts}/{max_attempts})'
+                                f'{src.get("url")} '
+                                f'(attempt {attempts}/{max_attempts})'
                             )
                         )
 
@@ -445,7 +449,6 @@ class Monitor():
     def runner(self, url):
         delay = 0
         runtime = randint(0, 300)
-        tool = url.get('tool', '').lower()
 
         self.alert(
             'INFO',
