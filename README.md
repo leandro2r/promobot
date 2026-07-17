@@ -1,8 +1,8 @@
 # PromoBot
 
-PromoBot is a customizable content monitor built with some of the most popular Python libraries, such as Requests, Selenium, BeautifulSoup, and Feedparser. It monitors websites and RSS/Atom feeds by searching for keyword occurrences and reporting the results to a Telegram chatbot [web:13][web:133].
+PromoBot is a customizable content monitor built with some of the most popular Python libraries, such as Requests, Selenium, BeautifulSoup, and Feedparser. It monitors websites and RSS/Atom feeds by searching for keyword occurrences and reporting the results to a Telegram chatbot.
 
-Its main strength is customization, which allows the bot to work with different kinds of sources once you define where it should look for keywords and extract the link to share on Telegram. For HTML pages, this means defining the tags and attributes to parse; for RSS and Atom feeds, it means mapping the entry fields, such as title, link, and summary [web:261][web:263][web:77].
+Its main strength is customization, which allows the bot to work with different kinds of sources once you define where it should look for keywords and extract the link to share on Telegram. For HTML pages, this means defining the tags and attributes to parse; for RSS and Atom feeds, it means mapping the entry fields, such as title, link, and summary.
 
 The default configurations are organized by country or region code, such as BR and CA, and can be found in `config/promobot.yml`.
 
