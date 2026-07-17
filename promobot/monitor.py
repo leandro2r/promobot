@@ -363,7 +363,17 @@ class Monitor():
                     add,
                 )
 
-    def monitor(self, src, driver):
+    def monitor(self, src):
+        tool = src.get('tool').lower()
+        url = src.get('url')
+
+        driver = {}
+        if tool == 'selenium':
+            driver = self.init_driver(
+                driver,
+                url
+            )
+
         keys = list(self.data)
         topics = self.get_topic(src, driver)
 
@@ -426,19 +436,13 @@ class Monitor():
 
     def runner(self, url):
         delay = 0
-        driver = {}
         runtime = randint(0, 300)
+        tool = url.get('tool', '').lower()
 
         self.alert(
             'INFO',
             f'Starting runner at {url.get("url")}'
         )
-
-        if url.get('tool', '').lower() == 'selenium':
-            driver = self.init_driver(
-                driver,
-                url.get('url')
-            )
 
         while time.sleep(delay) is None:
             try:
@@ -452,7 +456,7 @@ class Monitor():
                     keywords
                 )
 
-                self.monitor(url, driver)
+                self.monitor(url)
 
                 if self.flag_result:
                     self.db_data.add_result(
