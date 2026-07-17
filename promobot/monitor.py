@@ -15,6 +15,14 @@ from selenium_stealth import stealth
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import WebDriverException, TimeoutException
 
+CHALLENGE_MARKERS = (
+    'POW_CHALLENGE_DATA',
+    'JavaScript Required',
+    'headless_check',
+)
+
+def is_challenge_page(content):
+    return bool(content) and any(marker in content for marker in CHALLENGE_MARKERS)
 
 def mount(src, each, t_title):
     desc = each.get('title', '')
@@ -96,7 +104,7 @@ class Monitor():
         )
 
         self.options.add_argument('--no-sandbox')
-        self.options.add_argument('--headless')
+        self.options.add_argument('--headless=new')
         self.options.add_argument("start-maximized")
         self.options.add_experimental_option(
             "excludeSwitches",
@@ -264,8 +272,11 @@ class Monitor():
         content = ''
         delay = self.config['monitor'].get('delay') * 2
         topic = []
+        attempts = 0
+        max_attempts = self.config['monitor'].get('max_attempts', 5)
 
-        while len(topic) == 0:
+        while len(topic) == 0 and attempts < max_attempts:
+            attempts += 1
             try:
                 if driver:
                     content = self.load_page(
@@ -275,8 +286,16 @@ class Monitor():
                 else:
                     content = requests.get(
                         src.get('url'),
-                        headers=self.header
+                        headers=self.header,
+                        timeout=self.config['monitor'].get('timeout', 30)
                     ).text
+
+                if is_challenge_page(content):
+                    self.alert(
+                        'ERROR',
+                        f'Blocked by anti-bot challenge in {src.get("url")}'
+                    )
+                    return []
 
                 if content:
                     soup = BeautifulSoup(
@@ -294,7 +313,7 @@ class Monitor():
                             'ERROR',
                             (
                                 'Error on searching topics in '
-                                f'{src.get("url")}: {str(soup):50.50}'
+                                f'{src.get("url")} (attempt {attempts}/{max_attempts})'
                             )
                         )
 
@@ -313,6 +332,12 @@ class Monitor():
 
             if len(topic) == 0:
                 time.sleep(delay)
+
+        if len(topic) == 0:
+            self.alert(
+                'ERROR',
+                f'Skipping {src.get("url")} after {max_attempts} attempts'
+            )
 
         return topic
 
@@ -389,10 +414,7 @@ class Monitor():
             )
 
         try:
-            driver.get(
-                url,
-                proxies=self.data.get('proxies')
-            )
+            driver.get(url)
         except WebDriverException as error:
             driver.delete_all_cookies()
             self.alert(

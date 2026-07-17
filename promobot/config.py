@@ -88,11 +88,9 @@ class Config():
         }
 
     def set_proxy(self, region):
-        countries = []
+        countries = [region.upper()]
         proxy_http = ''
         proxy_https = ''
-
-        countries.append(region.upper())
 
         try:
             proxy_http = ProxyInterface(
@@ -106,18 +104,14 @@ class Config():
             ).get().as_string()
 
             print(
-                (
-                    f'Setting {region} proxies '
-                    f'HTTP {proxy_http} and HTTPS {proxy_https}'
-                )
+                f'Setting {region} proxies HTTP {proxy_http} and HTTPS {proxy_https}'
             )
         except Exception as error:
             print(
-                (
-                    f'Error when retrieving {region} '
-                    f'HTTP and HTTPS proxies: {error}'
-                )
+                f'Error when retrieving {region} HTTP and HTTPS proxies: {error}'
             )
+            proxy_http = ''
+            proxy_https = ''
 
         self.data['proxies'] = {
             'http': proxy_http,
