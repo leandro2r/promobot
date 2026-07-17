@@ -15,7 +15,10 @@ from selenium_stealth import stealth
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import WebDriverException, TimeoutException
 
-from rss import Rss
+if __package__ is None or __package__ == '':
+    from rss import Rss
+else:
+    from promobot.rss import Rss
 
 
 CHALLENGE_MARKERS = (
