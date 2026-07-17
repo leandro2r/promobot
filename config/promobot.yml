@@ -99,6 +99,12 @@ promobot:
             tag: div
             class: ng-binding
       ca:
+        - url: https://www.redflagdeals.com/rss/deals.php?city=toronto&content_type=editorial
+          tool: rss
+          rss:
+            title: title
+            url: link
+            desc: summary
         - url: https://forums.redflagdeals.com/hot-deals-f9/?sk=tt&rfd_sk=tt&sd=d
           topic:
             tag: li

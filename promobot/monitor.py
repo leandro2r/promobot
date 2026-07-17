@@ -15,14 +15,19 @@ from selenium_stealth import stealth
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import WebDriverException, TimeoutException
 
+from rss import Rss
+
+
 CHALLENGE_MARKERS = (
     'POW_CHALLENGE_DATA',
     'JavaScript Required',
     'headless_check',
 )
 
+
 def is_challenge_page(content):
     return bool(content) and any(marker in content for marker in CHALLENGE_MARKERS)
+
 
 def mount(src, each, t_title):
     desc = each.get('title', '')
@@ -97,6 +102,8 @@ class Monitor():
         self.db_data = kwargs.get('data')
         self.report = kwargs.get('report')
         self.flag_result = False
+
+        self.rss = Rss(self.alert)
 
         self.chat_ids = self.db_data.list_chat()
         self.data = self.db_data.clean_up_result(
@@ -364,31 +371,32 @@ class Monitor():
                 )
 
     def monitor(self, src):
-        tool = src.get('tool').lower()
+        keys = list(self.data)
+        tool = src.get('tool', '').lower()
         url = src.get('url')
 
-        driver = {}
-        if tool == 'selenium':
-            driver = self.init_driver(
-                driver,
-                url
+        if tool == 'rss':
+            topics = self.rss.fetch(src)
+            self.run_executor(
+                self.start_lookup_rss,
+                keys,
+                topics
             )
+        else:
+            driver = {}
+            if tool == 'selenium':
+                driver = self.init_driver(
+                    driver,
+                    url
+                )
 
-        keys = list(self.data)
-        topics = self.get_topic(src, driver)
-
-        with ThreadPoolExecutor(max_workers=4) as executor:
-            futures = {
-                executor.submit(self.start_lookup, src, topics, key): key
-                for key in keys
-            }
-
-            for future in as_completed(futures):
-                key = futures[future]
-                try:
-                    future.result()
-                except Exception as error:
-                    self.alert('ERROR', f'Error processing key {key}: {error}')
+            topics = self.get_topic(src, driver)
+            self.run_executor(
+                self.start_lookup,
+                keys,
+                src,
+                topics
+            )
 
         self.alert(
             'DEBUG',
@@ -483,6 +491,33 @@ class Monitor():
 
                 reset = self.config['monitor']['reset']
                 self.data = self.db_data.clean_up_result(reset)
+
+    def run_executor(self, worker, keys, *args):
+        with ThreadPoolExecutor(max_workers=4) as executor:
+            futures = {
+                executor.submit(worker, *args, key): key
+                for key in keys
+            }
+
+            for future in as_completed(futures):
+                key = futures[future]
+                try:
+                    future.result()
+                except Exception as error:
+                    self.alert(
+                        'ERROR',
+                        f'Error processing key {key}: {error}'
+                    )
+
+    def start_lookup_rss(self, topics, key):
+        add = True
+
+        for data in topics:
+            self.lookup(
+                key,
+                data,
+                add,
+            )
 
     def main(self):
         proc = []

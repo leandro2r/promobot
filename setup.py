@@ -19,6 +19,7 @@ setup(
     zip_safe=False,
     install_requires=[
         'bs4<0.1',
+        'feedparser<6.1',
         'pymongo<4.1',
         'pyTelegramBotAPI<4.7',
         'requests>=2.32.0,<2.33.0',
