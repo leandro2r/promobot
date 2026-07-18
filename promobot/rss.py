@@ -51,5 +51,4 @@ class Rss:
                 'url': self.clean_url(entry.get(url_field, ''))
             })
 
-        self.alert('INFO', f'Last RSS lookup from {url}')
         return topic
