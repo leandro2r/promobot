@@ -1,8 +1,6 @@
 import os
 import yaml
 
-from swiftshadow.classes import ProxyInterface
-
 
 class Config():
     data = {}
@@ -29,8 +27,6 @@ class Config():
                     f'data on {config_file}.'
                 )
             )
-
-        self.set_proxy(region)
 
         self.data['monitor'] = {
             'delay': int(os.environ.get('DELAY', 40)),
@@ -85,37 +81,4 @@ class Config():
             'host': os.environ.get('DB_HOST', 'localhost:27017'),
             'user': os.environ.get('MONGO_INITDB_ROOT_USERNAME'),
             'passwd': os.environ.get('MONGO_INITDB_ROOT_PASSWORD'),
-        }
-
-    def set_proxy(self, region):
-        countries = [region.upper()]
-        proxy_http = ''
-        proxy_https = ''
-
-        try:
-            proxy_http = ProxyInterface(
-                countries=countries,
-                protocol="http"
-            ).get().as_string()
-
-            proxy_https = ProxyInterface(
-                countries=countries,
-                protocol="https"
-            ).get().as_string()
-
-            print(
-                f'Setting {region} proxies HTTP {proxy_http} '
-                f'and HTTPS {proxy_https}'
-            )
-        except Exception as error:
-            print(
-                f'Error when retrieving {region} HTTP and HTTPS '
-                f'proxies: {error}'
-            )
-            proxy_http = ''
-            proxy_https = ''
-
-        self.data['proxies'] = {
-            'http': proxy_http,
-            'https': proxy_https
         }
